@@ -55,6 +55,7 @@ async (conn, mek, m, { from, body, isOwner }) => {
     }                
 });
 
+
 //auto reply 
 cmd({
   on: "body"
