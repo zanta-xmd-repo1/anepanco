@@ -994,8 +994,4 @@ res.send("📟 Vajira-Md Working successfully!");
 app.listen(port, () => console.log(`Vajira-Md Server listening on port http://localhost:${port}`));
 setTimeout(() => {
 connectToWA()
-}, 3000);
-    
-    
-    
-    
+}, 3000);    
