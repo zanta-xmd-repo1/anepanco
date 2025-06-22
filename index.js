@@ -154,36 +154,7 @@ async function connectToWA() {
         } else if (connection === 'open') {
 
 
-//──────────────────────────────────────────────────────────────────   
-		
-		
-            console.log('Installing plugins 🔌... ')
-            const path = require('path');
-            fs.readdirSync("./plugins/").forEach((plugin) => {
-                if (path.extname(plugin).toLowerCase() == ".js") {
-                    require("./plugins/" + plugin);
-                }
-            });
-            console.log('Plugins installed ✅')
-            console.log('Bot connected ✅')
-await conn.sendMessage(config.OWNER_NUMBER + "@s.whatsapp.net", {
-text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
-contextInfo: {
-externalAdReply: {
-title: "👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻\nSuccessfully Connected !",	
-thumbnailUrl: "https://cdn.dribbble.com/users/15468/screenshots/2450252/logo.jpg",
-sourceUrl: "",
-mediaType: 1,
-renderLargerThumbnail: true
-}}}) 
-    }
-  })
-
-
-
-
-        
-      
+//
 
 //==================================Welcome================================
 	
@@ -360,7 +331,34 @@ conn.ev.on('messages.update', async(mes) => {
             const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
 
 
-//==================================Button================================
+//
+
+──────────────────────────────────────────────────────────────────   
+		
+		
+            console.log('Installing plugins 🔌... ')
+            const path = require('path');
+            fs.readdirSync("./plugins/").forEach((plugin) => {
+                if (path.extname(plugin).toLowerCase() == ".js") {
+                    require("./plugins/" + plugin);
+                }
+            });
+            console.log('Plugins installed ✅')
+            console.log('Bot connected ✅')
+await conn.sendMessage(config.OWNER_NUMBER + "@s.whatsapp.net", {
+text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
+contextInfo: {
+externalAdReply: {
+title: "👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻\nSuccessfully Connected !",	
+thumbnailUrl: "https://cdn.dribbble.com/users/15468/screenshots/2450252/logo.jpg",
+sourceUrl: "",
+mediaType: 1,
+renderLargerThumbnail: true
+}}}) 
+    }
+  })
+
+==================================Button================================
 	      
 const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text :(type == 'interactiveResponseMessage' ) ? mek.message.interactiveResponseMessage  && mek.message.interactiveResponseMessage.nativeFlowResponseMessage && JSON.parse(mek.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson) && JSON.parse(mek.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson).id :(type == 'templateButtonReplyMessage' )? mek.message.templateButtonReplyMessage && mek.message.templateButtonReplyMessage.selectedId  : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
   
