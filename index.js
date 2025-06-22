@@ -167,7 +167,7 @@ async function sendNews8(details, image) {
 }
 
 
-const jidko = 'After deploy put .newsactivate <group jid> to activate auto news'
+const jidko = 'After deploy put .newsactivate <120363403339893531@g.us> to activate auto news'
 
 
 async function checkForNewsUpdates() {
