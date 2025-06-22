@@ -37,6 +37,7 @@ if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  �
 else BOTOW = "*You are not bot\'s owner or moderator !*"
 
 
+
 //auto reply 
 cmd({
   on: "body"
