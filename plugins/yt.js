@@ -1,1782 +1,947 @@
+const { cmd, commands } = require('../lib/command');
+let { img2url } = require('@blackamda/telegram-image-url');
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson, jsonformat} = require('../lib/functions')
 const config = require('../settings')
-const {
-    default: makeWASocket,
-    generateWAMessageFromContent,
-    prepareWAMessageMedia,
-    proto
-} = require('@whiskeysockets/baileys')
-const l = console.log
-const { cmd, commands } = require('../lib/command')
-const ytmp4q = require('../lib/ytdl')
-const dl = require('@bochilteam/scraper')  
-const yts = require('yt-search')
-const fg = require('api-dylux')
-//const ytdl = require('youtubedl-core')
-const api = require("caliph-api")
-const fs = require('fs-extra')
-var videotime = 60000 // 1000 min
-var request = require("request")
-var cheerio = require("cheerio")
-let soundcloud = async (link) => {
-	return new Promise((resolve, reject) => {
-		const options = {
-			method: 'POST',
-			url: "https://www.klickaud.co/download.php",
-			headers: {
-				'content-type': 'application/x-www-form-urlencoded'
-			},
-			formData: {
-				'value': link,
-				'2311a6d881b099dc3820600739d52e64a1e6dcfe55097b5c7c649088c4e50c37': '710c08f2ba36bd969d1cbc68f59797421fcf90ca7cd398f78d67dfd8c3e554e3'
-			}
-		};
-		request(options, async function(error, response, body) {
+const fs = require('fs');
+const axios = require("axios");
+const got = require("got");
+let { unlink } = require("fs/promises");
+const translate = require('translate-google-api');
+const { promisify } = require("util");
+const FormData = require("form-data");
+const stream = require("stream");
+const pipeline = promisify(stream.pipeline);
+const fileType = require("file-type");
+const { Sticker, createSticker, StickerTypes } = require("wa-sticker-formatter");
+const path = require('path')
+const { tmpdir } = require("os")
+const { spawn } = require('child_process')
+const Crypto = require("crypto")
+const ffmpegPath = require('@ffmpeg-installer/ffmpeg').path;
+const ffmpeg = require('fluent-ffmpeg')
+const os = require("os");
 
-			if (error) throw new Error(error);
-			const $ = cheerio.load(body)
-			resolve({
-				judul: $('#header > div > div > div.col-lg-8 > div > table > tbody > tr > td:nth-child(2)').text(),
-				download_count: $('#header > div > div > div.col-lg-8 > div > table > tbody > tr > td:nth-child(3)').text(),
-				thumb: $('#header > div > div > div.col-lg-8 > div > table > tbody > tr > td:nth-child(1) > img').attr('src'),
-				link: $('#dlMP3').attr('onclick').split(`downloadFile('`)[1].split(`',`)[0]
-			});
-		});
-	})
+
+ffmpeg.setFfmpegPath(ffmpegPath);
+async function videoToWebp (media) {
+
+    const tmpFileOut = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.webp`)
+    const tmpFileIn = path.join(tmpdir(), `${Crypto.randomBytes(6).readUIntLE(0, 6).toString(36)}.mp4`)
+
+    fs.writeFileSync(tmpFileIn, media)
+
+    await new Promise((resolve, reject) => {
+        ffmpeg(tmpFileIn)
+            .on("error", reject)
+            .on("end", () => resolve(true))
+            .addOutputOptions([
+                "-vcodec",
+                "libwebp",
+                "-vf",
+                "scale='min(320,iw)':min'(320,ih)':force_original_aspect_ratio=decrease,fps=15, pad=320:320:-1:-1:color=white@0.0, split [a][b]; [a] palettegen=reserve_transparent=on:transparency_color=ffffff [p]; [b][p] paletteuse",
+                "-loop",
+                "0",
+                "-ss",
+                "00:00:00",
+                "-t",
+                "00:00:05",
+                "-preset",
+                "default",
+                "-an",
+                "-vsync",
+                "0"
+            ])
+            .toFormat("webp")
+            .save(tmpFileOut)
+    })
+
+    const buff = fs.readFileSync(tmpFileOut)
+    fs.unlinkSync(tmpFileOut)
+    fs.unlinkSync(tmpFileIn)
+    return buff
 }
 
-let axios=require("axios");
-async function ssearch (i){let e="https://m.soundcloud.com",t=await axios.get(`${e}/search?q=${encodeURIComponent(i)}`,{headers:{"User-Agent":'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'}}),a=cheerio.load(t.data),d=[];return a("div > ul > li > div").each((function(i,t){let r=a(t).find("a").attr("aria-label"),v=e+a(t).find("a").attr("href"),s=a(t).find("a > div > div > div > picture > img").attr("src"),n=a(t).find("a > div > div > div").eq(1).text(),o=a(t).find("a > div > div > div > div > div").eq(0).text(),u=a(t).find("a > div > div > div > div > div").eq(1).text(),l=a(t).find("a > div > div > div > div > div").eq(2).text();d.push({title:r,url:v,thumb:s,artist:n,views:o,release:l,timestamp:u})})),{status:t.status,creator:"Caliph",result:d}}
+function toAudio(buffer, ext) {
+  return ffmpeg(buffer, [
+    '-vn',
+    '-ac', '2',
+    '-b:a', '128k',
+    '-ar', '44100',
+    '-f', 'mp3'
+  ], ext, 'mp3')
+}
 
+function toPTT(buffer, ext) {
+  return ffmpeg(buffer, [
+    '-vn',
+    '-c:a', 'libopus',
+    '-b:a', '128k',
+    '-vbr', 'on',
+    '-compression_level', '10'
+  ], ext, 'opus')
+}
 
-
-
-function ytreg(url) {
-    const ytIdRegex = /(?:http(?:s|):\/\/|)(?:(?:www\.|)youtube(?:\-nocookie|)\.com\/(?:watch\?.*(?:|\&)v=|embed|shorts\/|v\/)|youtu\.be\/)([-_0-9A-Za-z]{11})/
-    return ytIdRegex.test(url);
+function toVideo(buffer, ext) {
+  return ffmpeg(buffer, [
+    '-c:v', 'libx264',
+    '-c:a', 'aac',
+    '-ab', '128k',
+    '-ar', '44100',
+    '-crf', '32',
+    '-preset', 'slow'
+  ], ext, 'mp4')
 }
 
 
 
-// Function to extract the video ID from youtu.be or YouTube links
-function extractYouTubeId(url) {
-    const regex = /(?:https?:\/\/)?(?:www\.)?(?:youtube\.com\/(?:watch\?v=|embed\/|v\/|shorts\/|playlist\?list=)|youtu\.be\/)([a-zA-Z0-9_-]{11})/;
-    const match = url.match(regex);
-    return match ? match[1] : null;
-}
 
-// Function to convert any YouTube URL to a full YouTube watch URL
-function convertYouTubeLink(q) {
-    const videoId = extractYouTubeId(q);
-    if (videoId) {
-        return `https://www.youtube.com/watch?v=${videoId}`;
+var desct =''
+if(config.LANG === 'SI') desct = 'එය ලබා දී ඇති රූපය url එකක් බවට පරිවර්තනය කරයි.'
+else desct = "It convert given image to url."
+var imgmsg =''
+if(config.LANG === 'SI') imgmsg = '*ඡායාරූපයකට mention දෙන්න !*'
+else imgmsg = "*Reply to a photo !*"
+var cantf =''
+if(config.LANG === 'SI') cantf = '*Server එක කාර්යබහුලයි. පසුව නැවත උත්සාහ කරන්න. !*'
+else cantf = "*Server is busy. Try again later.!*"
+var imgmsgs =''
+if(config.LANG === 'SI') imgmsgs = '*මට anime නමක් දෙන්න !*'
+else imgmsgs = "*Give me a anime name !*"
+var descgs = ''
+if(config.LANG === 'SI') descgs = "එය ලබා දී ඇති anime නම පිළිබඳ විස්තර සපයයි."
+else descgs = "It gives details of given anime name."
+var cants = ''
+if(config.LANG === 'SI') cants = "I cant find this anime."
+else cants = "I cant find this anime."
+var descg = ''
+if(config.LANG === 'SI') descg = "එය ඔබගේ mention දුන් ඡායාරූපය ස්ටිකර් බවට පරිවර්තනය කරයි."
+else descg = "It converts your replied photo to sticker."
+var imgmsg2 =''
+if(config.LANG === 'SI') imgmsg2 = '*ස්ටිකරයකට mention දෙන්න !*'
+else imgmsg2 = "*Reply to a sticker !*"
+var descg2 = ''
+if(config.LANG === 'SI') descg2 = "එය ඔබගේ mention දුන් sticker img බවට පරිවර්තනය කරයි."
+else descg2 = "It converts your replied sticker to img."
+var desct1 =''
+if(config.LANG === 'SI') desct1 = 'එය ලබා දී ඇති රූපය anime image එකක් බවට පරිවර්තනය කරයි.'
+else desct1 = "It convert given image to anime image."
+var desct2 =''
+if(config.LANG === 'SI') desct2 = 'එය ලබා දී ඇති text එකක් ai image එකක් බවට පරිවර්තනය කරයි.'
+else desct2 = "It convert given text to ai image."
+var imgmsg3 =''
+if(config.LANG === 'SI') imgmsg3 = '*උදාහරණයක්: .imagine woman,hair cut collor red,full body,bokeh*'
+else imgmsg3 = "*Example: .imagine woman,hair cut collor red,full body,bokeh*"
+var imgmsg1 =''
+if(config.LANG === 'SI') imgmsg1 = '*වීඩියෝවක් mention දෙන්න !*'
+else imgmsg1 = "*Reply to a video !*"
+var descg3 = ''
+if(config.LANG === 'SI') descg3 = "එය ඔබගේ mention දුන් වීඩියෝව audio බවට පරිවර්තනය කරයි."
+else descg3 = "It converts your replied video to audio [mp3]."
+var N_FOUND =''
+if(config.LANG === 'SI') N_FOUND = "*මට මෙම වීඩියෝව audio බවට පරිවර්තනය කළ නොහැකි විය :(*"
+else N_FOUND = "*I cant convert this video to audio :(*"
+var imgmsg4 =''
+if(config.LANG === 'SI') imgmsg4 = '*කරුණාකර මට text එකක් දෙන්න !*'
+else imgmsg4 = "*Please give me a text !*"
+var descg1 = ''
+if(config.LANG === 'SI') descg1 = "එය text එකක් gif ස්ටිකරයක් බවට පරිවර්තනය කරයි"
+else descg = "it converts a text to gif sticker."
+var descdg1 = ''
+if(config.LANG === 'SI') descdg = "එය text එකක් ස්ටිකරයක් බවට පරිවර්තනය කරයි"
+else descdg = "it converts a text to sticker."
+if(config.LANG === 'SI') cant = "මට මෙම රූපයේ පසුබිම ඉවත් කළ නොහැක."
+else cant = "I can't remove background on this image."
+
+//---------------------------------------------------------------------------
+
+
+cmd({
+    pattern: "vv",
+    alias: ['retrive', '🔥'],
+    desc: "Fetch and resend a ViewOnce message content (image/video).",
+    category: "convert",
+    use: '<query>',
+    filename: __filename
+},
+async (conn, mek, m, { from, reply }) => {
+    try {
+        const quotedMessage = m.msg.contextInfo.quotedMessage; // Get quoted message
+
+        if (quotedMessage && quotedMessage.viewOnceMessageV2) {
+            const quot = quotedMessage.viewOnceMessageV2;
+            if (quot.message.imageMessage) {
+                let cap = quot.message.imageMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(quot.message.imageMessage);
+                return conn.sendMessage(from, { image: { url: anu }, caption: cap }, { quoted: mek });
+            }
+            if (quot.message.videoMessage) {
+                let cap = quot.message.videoMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(quot.message.videoMessage);
+                return conn.sendMessage(from, { video: { url: anu }, caption: cap }, { quoted: mek });
+            }
+            if (quot.message.audioMessage) {
+                let anu = await conn.downloadAndSaveMediaMessage(quot.message.audioMessage);
+                return conn.sendMessage(from, { audio: { url: anu } }, { quoted: mek });
+            }
+        }
+
+        // If there is no quoted message or it's not a ViewOnce message
+        if (!m.quoted) return reply("Please reply to a ViewOnce message.");
+        if (m.quoted.mtype === "viewOnceMessage") {
+            if (m.quoted.message.imageMessage) {
+                let cap = m.quoted.message.imageMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.imageMessage);
+                return conn.sendMessage(from, { image: { url: anu }, caption: cap }, { quoted: mek });
+            }
+            else if (m.quoted.message.videoMessage) {
+                let cap = m.quoted.message.videoMessage.caption;
+                let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.videoMessage);
+                return conn.sendMessage(from, { video: { url: anu }, caption: cap }, { quoted: mek });
+            }
+        } else if (m.quoted.message.audioMessage) {
+            let anu = await conn.downloadAndSaveMediaMessage(m.quoted.message.audioMessage);
+            return conn.sendMessage(from, { audio: { url: anu } }, { quoted: mek });
+        } else {
+            return reply("This is not a ViewOnce message.");
+        }
+    } catch (e) {
+        console.log("Error:", e);
+        reply("An error occurred while fetching the ViewOnce message.");
     }
-    return q;
+});
+
+
+
+
+cmd({
+    pattern: "vcloner",
+    react: "😁",
+    desc: "To clone a voice",
+    category: "main",
+    use: '.vcloner',
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{                   
+    
+    if (!q) {
+        
+        return reply(`*Provide valid input text.*`);
+    }
+
+    const urls = q.split("|");
+    if (urls.length !== 2) {
+        
+        return reply(`*Invalid input format. Provide two audio URLs separated by "|".*`);
+    }
+
+    const initAudioUrl = urls[0].trim();
+    const targetAudioUrl = urls[1].trim();
+
+    
+        const apiUrl = `https://matrixcoder.vercel.app/api/VoiceCloner?init_audio=${encodeURIComponent(initAudioUrl)}&target_audio=${encodeURIComponent(targetAudioUrl)}&key=${vcapiKey}`;
+        const response = await fetch(apiUrl);
+
+        if (!response.ok) {
+            
+            return reply(`Invalid response from the API. Status code: ${response.status}`);
+        }
+
+        const result = await response.json();
+
+        console.log('API Response:', result);
+
+        if (result.status === "success" && result.output && result.output.length > 0) {
+            const audioUrl = result.output[0];
+
+            await conn.sendMessage(from, { audio: { url: audioUrl},mimetype: 'audio/mp4', ptt: true, fileName: `${q}.mp3`}, { quoted: mek })
+
+            
+        } else {
+            
+            return reply(`Invalid or unexpected API response. ${JSON.stringify(result)}`);
+        }
+    
+		    
+await conn.sendMessage(from, { react: { text: `✅`, key: mek.key }}) 
+} catch (e) {
+return reply(`An error occurred while processing the request. ${e.message}`);
+l(e)
 }
+})
 
-const formatViews = views => views >= 1_000_000_000 ? `${(views / 1_000_000_000).toFixed(1)}B` : views >= 1_000_000 ? `${(views / 1_000_000).toFixed(1)}M` : views >= 1_000 ? `${(views / 1_000).toFixed(1)}K` : views.toString(); 
 
 
+
+
+cmd({
+    pattern: "emojimix",
+    react: "😁",
+    desc: "To convert 2 imoji to 1",
+    category: "main",
+    use: '.emojimix',
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{                   
+  let [emoji1, emoji2] = q.split`+`;
+  if (!emoji1) throw `Example: ${prefix + command} 😅+🤔`;
+  if (!emoji2) throw `Example: ${prefix + command} 😅+🤔`;
+  let anu = await fetchJson(`https://tenor.googleapis.com/v2/featured?key=AIzaSyAyimkuYQYF_FXVALexPuGQctUWRURdCYQ&contentfilter=high&media_filter=png_transparent&component=proactive&collection=emoji_kitchen_v5&q=${encodeURIComponent(emoji1)}_${encodeURIComponent(emoji2)}`);
+  for (let res of anu.results) {
+    let encmedia = await conn.sendImageAsSticker(from, res.url, mek, { packname: global.packname, author: global.author, categories: res.tags });
+    await fs.unlinkSync(encmedia);
+  }
+await conn.sendMessage(from, { react: { text: `✅`, key: mek.key }}) 
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
+
+
+cmd({
+    pattern: "trt",
+    react: "🔖",
+    desc: "To convert languages",
+    category: "main",
+    use: '.trt',
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{                   
+    if (!q) return mreply( 'Usage: .trt <language code> <text> or reply message');
+    if (q && mek.quoted && mek.quoted.text) {
+      let lang = q.slice(0, 2);
+try {
+        let data = mek.quoted.q;
+        let result = await translate(`${data}`, {
+          to: lang
+        })
+        reply(result[0]);
+      } catch {
+        return reply(` Language code not supported.`);
+}
+    } else if (q) {
+      let lang = q.slice(0, 2);
+        let data = q.substring(2).trim();
+        let result = await translate(`${data}`, {
+          to: lang
+        });
+        reply(result[0]);
+    }     
+await conn.sendMessage(from, { react: { text: `✅`, key: mek.key }}) 
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
+
+	
+cmd({
+    pattern: "removebg",
+    react: "🔮",
+    alias: ["rmbg"],
+    desc: descg,
+    category: "convert",
+    use: '.removebg <Reply to image>',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, prefix, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+    
+    const isQuotedViewOnce = m.quoted ? (m.quoted.type === 'viewOnceMessage') : false
+    const isQuotedImage = m.quoted ? ((m.quoted.type === 'imageMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'imageMessage') : false)) : false
+    const isQuotedVideo = m.quoted ? ((m.quoted.type === 'videoMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'videoMessage') : false)) : false
+    const isQuotedSticker = m.quoted ? (m.quoted.type === 'stickerMessage') : false
+  if ((m.type === 'imageMessage') || isQuotedImage) {
+    var nameJpg = getRandom('');
+    var namePng = getRandom('');
+    let buff = isQuotedImage ? await m.quoted.download(nameJpg) : await m.download(nameJpg)
+    let type = await fileType.fromBuffer(buff);
+    await fs.promises.writeFile("./" + type.ext, buff);
+    var form = new FormData();
+    form.append("image_file", fs.createReadStream("./" + type.ext));
+    form.append("size", "auto");
+
+    var rbg = await got.stream.post("https://api.remove.bg/v1.0/removebg", {
+      body: form,
+      headers: {
+        "X-Api-Key": 'fLYByZwbPqdyqkdKK6zcBN9H',
+      },
+    });
+await pipeline(rbg, fs.createWriteStream(namePng + ".png"));
+let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
+
+   *🌆 BACKGROUND REMOVER*
+
+`
+
+
+
+
+if (config.MODE === 'nonbutton') {
+
+	  
+const sections = [
+    {
+	title: "",
+	rows: [
+{title: "1", rowId: prefix + 'rbgi ' + namePng + ".png", description: 'IMAGE'}, 
+{title: "2", rowId: prefix + 'rebgs ' + namePng + ".png", description: 'STICKER'}, 
+{title: "3", rowId: prefix + 'rbgd ' + namePng + ".png", description: 'DOCUMENT'}
+]
+    } 
+]
+const listMessage = {
+caption: dat,
+image : { url: config.LOGO },	
+footer: config.FOOTER,
+title: '',
+buttonText: '*🔢 Reply below number*',
+sections
+}
+return await conn.replyList(from, listMessage ,{ quoted : mek })
+
+  
+  
+ } if (config.MODE === 'button') {
+
+
+            let buttons = [
+            {
+                name: "quick_reply",
+                buttonParamsJson: JSON.stringify({
+                    display_text: "IMAGE",
+                    id: prefix + "rbgi"
+                }),
+            },
+            {
+                name: "quick_reply",
+                buttonParamsJson: JSON.stringify({
+                    display_text: "STICKER",
+                    id: prefix + "rebgs "
+                }),
+            },
+            {
+                name: "quick_reply",
+                buttonParamsJson: JSON.stringify({
+                    display_text: "DOCUMENT",
+                    id: prefix + "rbgd "
+                }),
+            }
+            ]
+            let message = {
+                image: config.LOGO,
+                header: '',
+                footer: config.FOOTER,
+                body: dat
+
+            }
+            return await conn.sendButtonMessage(from, buttons, m, message)
         
 
-
-
-
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson, getsize, jsonformat} = require('../lib/functions')
-const dl2 = require('inrl-dl')
-var descv =''
-if(config.LANG === 'SI') descv = "Youtube වෙතින් videos බාගත කරයි."
-else descv = "Download videos from Youtube."
-
-var descs =''
-if(config.LANG === 'SI') descs = "Youtube වෙතින් songs බාගත කරයි."
-else descs = "Download songs from Youtube."
-
-var descyt =''
-if(config.LANG === 'SI') descyt = "Youtube වෙතින් video සහ songs බාගත කරයි."
-else descyt = "Download videos and songs from Youtube."
-
-var descsh =''
-if(config.LANG === 'SI') descsh = "Youtube search බාගත කරයි."
-else descsh = "Search and get details from youtube."
-
-var N_FOUND =''
-if(config.LANG === 'SI') N_FOUND = "*මට කිසිවක් සොයාගත නොහැකි විය :(*"
-else N_FOUND = "*I couldn't find anything :(*"
-
-var urlneed =''
-if(config.LANG === 'SI') urlneed = "*කරුණාකර Youtube url එකක් ලබා දෙන්න*"
-else urlneed = "*Please give me youtube url..*"
-
-var urlneed1 =''
-if(config.LANG === 'SI') urlneed1 = "එය soundcloud වෙතින් songs බාගත කරයි."
-else urlneed1 = "It downloads songs from soundcloud."
-
-var imgmsg =''
-if(config.LANG === 'SI') imgmsg = "```කරුණාකර වචන කිහිපයක් ලියන්න!```"
-else imgmsg = "```Please write a few words!```"
-
-var sizetoo =''
-if(config.LANG === 'SI') sizetoo = "_This file size is too big_\n ​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​  *මෙම file එක upload කිරීමට මෙම bot host වෙන platform එකේ bandwith එක ප්‍රමානවත් නැත !*"
-else sizetoo =  "_This file size is too big_\n​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​​ *The bandwidth of the platform where this bot is hosted is not enough to upload this file!*"
-
-
-
-
+}
  
+  
+  
+  
+ 
+  }else return await  reply(imgmsg)
+} catch (e) {
+  reply('*ERROR !!*')
+  l(e)
+}
+})
 
-cmd({ 
-	pattern: "song2", 
-	desc: "Download songs", 
-	category: "download", 
-	filename: __filename }, 
-    async (conn, mek, m, { from, q, reply }) => { 
-	    try { 
-		    if (!q) { 
-	    await conn.sendPresenceUpdate('recording', from); 
-			    await conn.sendMessage(from, { audio: { url: 'https://github.com/themiyadilann/DilaMD-Media/raw/main/voice/song.mp3' }, mimetype: 'audio/mpeg', ptt: true }, { quoted: mek }); return; } 
-		    const search = await yts(q); 
-		    const data = search.videos[0]; 
-		    const url = data.url; 
-		    let desc = `> VAJIRA MD YTDL\n\n🎶 *𝗧𝗶𝘁𝗹𝗲*: _${data.title}_\n👤 *𝗖𝗵𝗮𝗻𝗻𝗲𝗹*: _${data.author.name}_\n📝 *𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻*: _${data.description}_\n⏳ *𝗧𝗶𝗺𝗲*: _${data.timestamp}_\n⏱️ *𝗔𝗴𝗼*: _${data.ago}_\n👁️‍🗨️ *𝗩𝗶𝗲𝘄𝘀*: _${formatViews(data.views)}_\n🔗 *𝗟𝗶𝗻𝗸*: ${url}`; 
-		    await conn.sendPresenceUpdate('typing', from); 
-		    await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek }); 
-		    let down = await fg.yta(url); 
-		    let downloadUrl = down.dl_url; 
-		    await conn.sendPresenceUpdate('recording', from); 
-		    await conn.sendMessage(from, { audio: { url: downloadUrl }, mimetype: "audio/mpeg" }, { quoted: mek }); 
-		    await conn.sendMessage(from, { document: { url: downloadUrl }, mimetype: "audio/mpeg", fileName: `${data.title}.mp3`, caption: "💻 *VAJIRA MD YTDL*" }, { quoted: mek }); 
-	    } catch (e) { 
-		    console.log(e); 
-		    reply(`Error: ${e.message}`); 
-	    } }); 
+cmd({
+  pattern: "rbgi",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
+await conn.sendMessage(from, { image: fs.readFileSync(q), caption: config.FOOTER }, { quoted: mek })
+await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
+} catch (e) {
+  reply('*ERROR !!*')
+l(e)
+}
+})
 
-cmd({ 
-     pattern: "video2", 
-     desc: "Download videos", 
-     category: "download", 
-     filename: __filename }, 
-    async (conn, mek, m, { from, q, reply }) => { 
-	    try { 
-		    if (!q) { 
-			    await conn.sendPresenceUpdate('recording', from); 
-			    await conn.sendMessage(from, { audio: { url: 'https://github.com/themiyadilann/DilaMD-Media/raw/main/voice/video.mp3' }, mimetype: 'audio/mpeg', ptt: true }, { quoted: mek }); 
-			    return; 
-		    } 
-		    const search = await yts(q); 
-		    const data = search.videos[0]; 
-		    const url = data.url; 
-		    let desc = `VAJIRA MD YTDL\n\n🎶 *𝗧𝗶𝘁𝗹𝗲*: _${data.title}_\n👤 *𝗖𝗵𝗮𝗻𝗻𝗲𝗹*: _${data.author.name}_\n📝 *𝗗𝗲𝘀𝗰𝗿𝗶𝗽𝘁𝗶𝗼𝗻*: _${data.description}_\n⏳ *𝗧𝗶𝗺𝗲*: _${data.timestamp}_\n⏱️ *𝗔𝗴𝗼*: _${data.ago}_\n👁️‍🗨️ *𝗩𝗶𝗲𝘄𝘀*: _${formatViews(data.views)}_\n🔗 *𝗟𝗶𝗻𝗸*: ${url}`; 
-		    await conn.sendPresenceUpdate('typing', from); 
-		    await conn.sendMessage(from, { image: { url: data.thumbnail }, caption: desc }, { quoted: mek }); 
-		    let down = await fg.ytv(url); 
-		    let downloadUrl = down.dl_url; 
-		    await conn.sendMessage(from, { video: { url: downloadUrl }, mimetype: "video/mp4" }, { quoted: mek }); 
-		    await conn.sendMessage(from, { document: { url: downloadUrl }, mimetype: "video/mp4", fileName: `${data.title}.mp4`, caption: "💻 *VAJIRA MD YTDL*" }, { quoted: mek }); 
-	    } catch (e) { 
-		    console.log(e); 
-		    reply(`Error: ${e.message}`); 
-	    } 
+
+cmd({
+  pattern: "rebgs",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
+let sticker = new Sticker(q, {
+  pack: pushname, // The pack name
+  author: '', // The author name
+  type: q.includes("--crop" || '-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
+  categories: ["🤩", "🎉"], // The sticker category
+  id: "12345", // The sticker id
+  quality: 75, // The quality of the output file
+  background: "transparent", // The sticker background color (only for full stickers)
+});
+const buffer = await sticker.toBuffer();
+await conn.sendMessage(from, {sticker: buffer}, {quoted: mek })
+await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
+} catch (e) {
+  reply('*ERROR !!*')
+l(e)
+}
+})
+
+cmd({
+  pattern: "rbgd",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
+await conn.sendMessage(from, { document: fs.readFileSync(q), mimetype: 'image/x-png', fileName: 'Removebg' + '.png',caption: config.FOOTER  }, { quoted: mek })
+await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
+} catch (e) {
+  reply('*ERROR !!*')
+l(e)
+}
+})
+
+
+
+cmd({
+    pattern: "attp",
+    react: "✨",
+    alias: ["texttogif"],
+    desc: descg1,
+    category: "convert",
+    use: '.attp HI',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return await reply(imgmsg4)
+let bufff = await getBuffer("https://vihangayt.me/maker/text2gif?q=" + q)
+await conn.sendMessage(from, {sticker: await videoToWebp(bufff)}, {quoted: mek })
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
+
+cmd({
+    pattern: "ttp",
+    react: "✨",
+    alias: ["ttp","texttoimg"],
+    desc: descdg1,
+    category: "convert",
+    use: '.ttp HI',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return await reply(imgmsg4)
+let bufff = await getBuffer("https://vihangayt.me/maker/text2img?q=" + q)
+let sticker = new Sticker(bufff, {
+    pack: pushname, // The pack name
+    author: '', // The author name
+    type: q.includes("--crop" || '-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
+    categories: ["🤩", "🎉"], // The sticker category
+    id: "12345", // The sticker id
+    quality: 75, // The quality of the output file
+    background: "transparent", // The sticker background color (only for full stickers)
+});
+const buffer = await sticker.toBuffer();
+return conn.sendMessage(from, {sticker: buffer}, {quoted: mek })
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
+
+cmd({
+    pattern: "toptt",
+    react: "🔊",
+    alias: ["toaudio"],
+    desc: descg3,
+    category: "convert",
+    use: '.toptt <Reply to video>',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+    let isquotedvid = m.quoted ? (m.quoted.type === 'videoMessage') : m ? (m.type === 'videoMessage') : false
+    if(!isquotedvid) return await reply(imgmsg1)
+    let media = m.quoted ? await m.quoted.download() : await m.download()
+    let auddio = await toPTT(media, 'mp4')
+    let senda =  await conn.sendMessage(m.chat, {audio: auddio.options, mimetype:'audio/mpeg'}, {quoted:m})
+    await conn.sendMessage(from, { react: { text: '🎼', key: senda.key }})
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
+
+
+//============================================================================
+
+cmd({
+    pattern: "imagine",
+    alias: ["texttoimage","toimage","aiimage"],
+    react: '🤖',
+    desc: desct2,
+    category: "search",
+    use: '.imagine  woman,hair cut collor red,full body,bokeh',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if(!q) return reply(imgmsg3)
+let apilist = await fetchJson('https://gist.githubusercontent.com/vihangayt0/7dbb65f6adfe21538f7febd13982569a/raw/apilis.json')
+let list = apilist.users
+let apikey = list[Math.floor(Math.random() * list.length)]
+const dataget = await fetchJson(apilist.xz +'api/text-to-image?text='+ encodeURIComponent(q) +'&apikey='+ apikey)
+return await conn.sendMessage(from, { image: await getBuffer(dataget.imageUrl), caption: `\n*${dataget.promptEn}*\n`}, { quoted: mek })
+} catch (e) {
+reply(cantf)
+l(e)
+}
+})
+
+
+
+
+cmd({
+    pattern: "img2url",
+    react: "🔗",
+    alias: ["tourl","imgurl","telegraph","imgtourl"],
+    desc: desct,
+    category: "convert",
+    use: '.img2url <reply image>',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+    
+
+const targetMsg = quoted ? quoted : m;
+    const mimeType = (targetMsg.msg || targetMsg).mimetype || "";
+
+    if (!mimeType || !mimeType.startsWith("image")) {
+      return reply("❌ Please reply to an image.");
+    }
+
+    reply("🔄 Uploading image...");
+
+    const imageBuffer = await targetMsg.download();
+    const tempFilePath = path.join(os.tmpdir(), "temp_image.jpg");
+    fs.writeFileSync(tempFilePath, imageBuffer);
+
+    const formData = new FormData();
+    formData.append("image", fs.createReadStream(tempFilePath));
+
+    const { data } = await axios.post("https://api.imgbb.com/1/upload?key=e909ac2cc8d50250c08f176afef0e333", formData, {
+      headers: formData.getHeaders(),
     });
 
+    fs.unlinkSync(tempFilePath); // Delete temp file
+
+    if (!data || !data.data || !data.data.url) {
+      throw "❌ Failed to upload the image.";
+    }
+
+    const imageUrl = data.data.url;
+    const msgContext = {
+      mentionedJid: [sender],
+      forwardingScore: 999,
+      isForwarded: true,
+      forwardedNewsletterMessageInfo: {
+        newsletterJid: "120363354023106228@newsletter",
+        newsletterName: "JawadTechX",
+        serverMessageId: 143
+      }
+    };
+
+	  
+    reply(
+      `✅ *Image uploaded successfully!*\n\n✅ *Image Uploaded Successfully 📸*\n📏 *Size:* ${imageBuffer.length} Bytes\n🔗 *URL:* ${imageUrl}\n\n> ⚖️ *Uploaded via VAJIRA-MD*`
+    );
+  } catch (err) {
+    console.error(err);
+    reply(` *An error occurred while uploading the image:*\n${err.message}`);
+    }
+})
+
+cmd({
+    pattern: "enhance",
+    react: "↗️",
+    alias: ["imgenhance","quality","qualityimage","tohd"],
+    desc: desct,
+    category: "convert",
+    use: '.enhance <reply low quality image>',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+    const isQuotedViewOnce = m.quoted ? (m.quoted.type === 'viewOnceMessage') : false
+    const isQuotedImage = m.quoted ? ((m.quoted.type === 'imageMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'imageMessage') : false)) : false
+    if ((m.type === 'imageMessage') || isQuotedImage) {
+const fileType = require("file-type");
+  var nameJpg = getRandom('');
+  let buff = isQuotedImage ? await m.quoted.download(nameJpg) : await m.download(nameJpg)
+  let type = await fileType.fromBuffer(buff);
+  await fs.promises.writeFile("./" + type.ext, buff);
+  img2url("./" + type.ext).then(async url => {
+      await conn.sendMessage(from, { image: await getBuffer('https://vihangayt.me/tools/enhance?url='+url), caption: config.FOOTER }, { quoted: mek })
+});
+    } else return reply(imgmsg)
+} catch (e) {
+  reply(cantf);
+  l(e);
+}
+})
 
 
 cmd({
-    pattern: "play",
-    react: "📱",
-    desc: urlneed1,
-    category: "download",
-    use: '.soundcloud lelena',
+    pattern: "colorize",
+    react: "🎨",
+    alias: ["colorizer","tocolour","colourize"],
+    desc: desct,
+    category: "convert",
+    use: '.colorize <reply black & white image>',
     filename: __filename
 },
-async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if (!q) return await conn.sendMessage(from , { text: imgmsg }, { quoted: mek } )        
-const data2 = await ssearch(q)
-const data = data2.result
+async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+    const isQuotedViewOnce = m.quoted ? (m.quoted.type === 'viewOnceMessage') : false
+    const isQuotedImage = m.quoted ? ((m.quoted.type === 'imageMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'imageMessage') : false)) : false
+    if ((m.type === 'imageMessage') || isQuotedImage) {
+const fileType = require("file-type");
+  var nameJpg = getRandom('');
+  let buff = isQuotedImage ? await m.quoted.download(nameJpg) : await m.download(nameJpg)
+  let type = await fileType.fromBuffer(buff);
+  await fs.promises.writeFile("./" + type.ext, buff);
+  img2url("./" + type.ext).then(async url => {
+    try{
+      await conn.sendMessage(from, { image: await getBuffer('https://vihangayt.me/tools/colorize?url='+url), caption: config.FOOTER }, { quoted: mek })
+    } catch (e) {
+      let apilist = await fetchJson('https://gist.githubusercontent.com/vihangayt0/7dbb65f6adfe21538f7febd13982569a/raw/apilis.json')
+      let list = apilist.users
+      let apikey = list[Math.floor(Math.random() * list.length)]
+      await conn.sendMessage(from, { image: { url: apilist.xz +'api/colorizer?url='+url+'&apikey=' + apikey }, caption: config.FOOTER }, { quoted: mek })
+    }
+});
+    } else return reply(imgmsg)
+} catch (e) {
+  reply(cantf);
+  l(e);
+}
+})
 
-if (data.length < 1) return await conn.sendMessage(from, { text: N_FOUND }, { quoted: mek } )
+//===============================ANIME COMMAN=======================================
+
+
+cmd({
+    pattern: "anime",
+    alias: ["animesearch","sanime"],
+    react: "⛩️",
+    desc: descgs,
+    category: "search",
+    use: '.anime astro',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+if (!q) return reply(imgmsgs)
+let anu = await fetchJson(`https://api.jikan.moe/v4/anime?q=${q}`)
+/*let sections = []   
+for (let i of anu.data) {
+const list = {title: `${i.title}`,	      
+rows: [
+{
+title: i + 1,
+rowId: `${prefix}animeeg ${i.mal_id}`,
+description: `${i.title}`
+}, 
+]
+}
+sections.push(list)   
+}
+
+*/
+if (anu.length < 1) return await conn.sendMessage(from, { text: "*මට කිසිවක් සොයාගත නොහැකි විය :(*" }, { quoted: mek } )
 var srh = [];  
-for (var i = 0; i < data.length; i++) {
-  if(data[i].thumb && !data[i].views.includes('Follow')){
+for (var i = 0; i < anu.data.length; i++) {
 srh.push({
 title: i + 1,
-description: data[i].title + ' | ' + data[i].artist + ' | ' + data[i].views + ' | '+ data[i].release + ' | '+ data[i].timestamp,
-/**
-	description: data[i].artist + ' | ' + data[i].views + ' | '+ data[i].release + ' | '+ data[i].timestamp,
-	**/
-rowId: prefix + 'selectaud3 ' + data[i].url
+rowId: `${prefix}animeeg ${anu.data[i].mal_id}`,
+description: `${anu.data[i].title}`
 });
-  }
 }
 const sections = [{
-title: "_[Result from m.soundcloud.com]_",
+title: "_[Result from ginisisila.]_",
 rows: srh
-}]
-const listMessage = {
+}]	
+let listMessage = {
 text: `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
 
-   *SOUNDCLOUD DOWNLOADER*
-
-*📱 Entered Name:* ${q}`,
+   *ANIME SEARCH*
+   
+*Search Results From* ${q}`,
 footer: config.FOOTER,
-title: 'Result from m.soundcloud.com 📲',
-buttonText: '*🔢 Reply below number*',
-sections
-}
-await conn.replyList(from, listMessage ,{ quoted : mek }) 
-} catch (e) {
-  reply('*ERROR !!*')
-  l(e)
-}
-})
-
-cmd({
-  alias: ["selectaud3"],
-  filename: __filename
-},
-async(conn, mek, m,{from, l, quoted, prefix, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-
-let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-  *SELECT VIDEO QUALITY*`
-
-if (config.MODE === 'nonbutton') {
-	
-const sections = [
-    {
-	title: "",
-	rows: [
-  {title: "1", rowId: prefix + 'ytmp3 ' + q , description: 'Normal type song 🎶'}, 
-  {title: "2", rowId: prefix + 'ytdocs ' + q , description: 'Document type song 📁'},
-]
-    } 
-]
-  const listMessage = {
- text : dat ,
-footer: config.FOOTER,
-title: '',
+title: "",
 buttonText: '*🔢 Reply below number*',
 sections
 }
 return await conn.replyList(from, listMessage ,{ quoted : mek })
-
-
-
-} if (config.MODE === 'button') {
-
-
-            let sections = [{
-                title: 'VAJIRA MD',
-                rows: [{
-                        title: 'Audio 🎧',
-                        description: `Download Audio file`,
-                        id: `${prefix}ytmp3 ` + data.url + '|' + data.title
-                    },
-                    {
-                        title: 'Document 📁',
-                        description: `Download Document file`,
-                        id: `${prefix}ytdocs ` + data.url + '|' + data.title
-                    },
-                ]
-            }
-        ]
-
-        let listMessage = {
-            title: 'Click Here⎙',
-            sections
-        };
-        conn.sendMessage(from, {
-            image: {url: data.thumbnail},
-    caption: cap,
-    footer: config.FOOTER,
-                buttons: [
-			{
-                    buttonId: `${prefix}ytmp3  ${data.url}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Audio 🎧'
-                    },
-                },
-		{
-                    buttonId: `${prefix}ytdocs  ${data.url}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Document 📁'
-                    },
-                },	
-                {
-                    buttonId: 'action',
-                    buttonText: {
-                        displayText: 'ini pesan interactiveMeta'
-                    },
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify(listMessage),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
-        }, {
-            quoted: m
-        });
-	
-        
-
-}
-	
 } catch (e) {
   reply('*ERROR !!*')
   l(e)
 }
 })
-
-
-
-
-
-
 	
 
 
-
 cmd({
-    pattern: "sounddoc",
+    pattern: "animeeg",
     dontAddCommandList: true,
     filename: __filename
-},
-async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
-if(!q) return await conn.sendMessage(from , { text: '*Need link...*' }, { quoted: mek } ) 
-const data = await soundcloud(q)
-let listdata = `*📚 Name :* ${data.judul}
-*📺 Down Count :* ${data.download_count}`
-await conn.sendMessage(from, { image: { url: data.thumb }, caption: listdata }, { quoted: mek })
-let sendapk = await conn.sendMessage(from , { document : { url : data.link  } ,mimetype: 'audio/mpeg', fileName : data.judul + '.' + 'mp3'} , { quoted: mek })
-await conn.sendMessage(from, { react: { text: '📁', key: sendapk.key }})
-await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
-} catch (e) {
-    reply('*ERROR !!*')
+  },
+  async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+  try{
+  await conn.sendMessage(from, { react: { text: '🔃', key: mek.key }})
+  res = await fetchJson(`https://api.jikan.moe/v4/anime/${q}`)
+  let txt = `*TITLE:* *${res.data.title}*\n*ENGLISH:* *${res.data.title_english}*\n*JAPANESE:* *${res.data.title_japanese}*\n*TYPE ANIME:* *${res.data.type}*\n*ADAPTER:* *${res.data.source}*\n*TOTAL EPISODE:* *${res.data.episodes}*\n*STATUS:* *${res.data.status}*\n*ONGOING:* *${res.data.airing ? 'Ya' : 'DRIS'}*\n*AIRED:* *${res.data.aired.string}*\n*DURATION:* *${res.data.duration}*\n*RATING:* *${res.data.rating}*\n*SCORE:* *${res.data.score}*\n*RANK:* *${res.data.rank}* `
+  conn.sendMessage(from, { image : { url : res.data.images.jpg.image_url}, caption : txt}, {quoted :mek }).catch((err) => reply(''))
+  await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
+  } catch (e) {
+  reply(cants)
   l(e)
-}
-})
-
-cmd({
-  pattern: "soundaud",
-  dontAddCommandList: true,
-  filename: __filename
-},
-async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
-if(!q) return await conn.sendMessage(from , { text: '*Need link...*' }, { quoted: mek } ) 
-const data = await soundcloud(q)
-let listdata = `*📚 Name :* ${data.judul}
-*📺 Down Count :* ${data.download_count}`
-await conn.sendMessage(from, { image: { url: data.thumb }, caption: listdata }, { quoted: mek })
-let sendapk = await conn.sendMessage(from , { audio : { url : data.link  } ,mimetype: 'audio/mpeg', fileName : data.judul + '.' + 'mp3'} , { quoted: mek })
-await conn.sendMessage(from, { react: { text: '📁', key: sendapk.key }})
-await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
-} catch (e) {
-  reply('*ERROR !!*')
-l(e)
-}
-})
-
-
-
-
-cmd({
-    pattern: "yts",
-    alias: ["ytsearch"],
-    use: '.yts lelena',
-    react: "🔎",
-    desc: descsh,
-    category: "search",
-    filename: __filename
-
-},
-
-async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if (!q) return await reply(imgmsg)
-if(isUrl(q) && !ytreg(q)) return await reply(imgmsg)
-try {
-let yts = require("yt-search")
-var arama = await yts(q);
-} catch(e) {
-    l(e)
-return await conn.sendMessage(from , { text: '*Error !!*' }, { quoted: mek } )
-}
-var mesaj = '';
-arama.all.map((video) => {
-mesaj += ' *🖲️' + video.title + '*\n🔗 ' + video.url + '\n\n'
-});
-await conn.sendMessage(from , { text:  mesaj }, { quoted: mek } )
-} catch (e) {
-    l(e)
-  reply('*Error !!*')
-}
-})
-
-
-
-
-
-cmd({
-    pattern: "yt",
-    use: '.yt [song name or link]',
-    react: "🎬",
-    desc: descyt,
-    category: "download",
-    filename: __filename
-
-},
-
-async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-
-if (!q) return await reply(imgmsg)
-if(isUrl(q) && !ytreg(q)) return await reply(imgmsg)
-
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url = data.url;	
-
-	const cap = `📽️ *ᴠᴀᴊɪʀᴀ-ᴍᴅ ꜱᴏɴʜ-ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*📽️
-
-┌──────────────────
-
-*ℹ️ Title:* ${data.title}
-*👁️‍🗨️ Views:* ${data.views}
-*🕘 Duration:* ${data.timestamp}
-*📌 Ago :* ${data.ago}
-*🔗 Url:* ${data.url} 
-
-└──────────────────`
-
-if (config.MODE === 'nonbutton') {
-	
-if(isUrl(q) && q.includes('/shorts')){let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-   *SELECT SONG TYPE*`
-				      
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${q}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${q}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-const listMessage = {
-  text: cap,
-  footer: `*ᴠᴀᴊɪʀᴀ ᴍᴅ ᴍᴜʟᴛɪ-ᴅᴇᴠɪᴄᴇ ʙᴏᴛ:ᴠ-ɪ*\n*ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴛᴇᴄʜɴɪᴄᴀʟ ᴄʏʙᴇʀꜱ*`,
-  buttonText: "```🔢 Reply below number you need song type,```",
-  sections
-}
-
-return await conn.replyList(from, listMessage ,{ quoted : mek }) 				      
-				     }
-if(ytreg(q)){let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-*SELECT SONG TYPE*`
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${q}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${q}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-const listMessage = {
-  text: cap,
-  footer: `*ᴠᴀᴊɪʀᴀ-ᴍᴅ ᴍᴜʟᴛɪ-ᴅᴇᴠɪᴄᴇ ʙᴏᴛ:ᴠ-ɪ*\n*ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴛᴇᴄʜɴɪᴄᴀʟ ᴄʏʙᴇʀꜱ*`,
-  buttonText: "```🔢 Reply below number you need song type,```",
-  sections }	
-
-	     
-return await conn.replyList(from, listMessage ,{ quoted : mek }) 
-	    }
-        
-
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${data.url}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${data.url}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-const listMessage = {
-  image: {url: data.thumbnail},
-  caption: cap,
-footer: config.FOOTER,
-title: '',
-buttonText: '*🔢 Reply below number*',
-sections
-}
-return await conn.replyList(from, listMessage ,{ quoted : mek })
-
-
-
-} if (config.MODE === 'button') {
-
-
-        let sections = [{
-                title: 'VAJIRA MD',
-                rows: [{
-                        title: 'Audio 🎧',
-                        description: `Download Audio file`,
-                        id: `${prefix}ytmp3 ` + data.url + '|' + data.title
-                    },
-                    {
-                        title: 'Document 📁',
-                        description: `Download Document file`,
-                        id: `${prefix}ytdocs ` + data.url + '|' + data.title
-                    },
-                ]
-            }
-        ]
-
-        let listMessage = {
-            title: 'Click Here⎙',
-            sections
-        };
-        conn.sendMessage(from, {
-            image: {url: data.thumbnail},
-    caption: cap,
-    footer: config.FOOTER,
-                buttons: [
-			{
-                    buttonId: `${prefix}ytmp3  ${data.url}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Audio 🎧'
-                    },
-                },
-		{
-                    buttonId: `${prefix}ytdocs  ${data.url}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Document 📁'
-                    },
-                },	
-                {
-                    buttonId: 'action',
-                    buttonText: {
-                        displayText: 'ini pesan interactiveMeta'
-                    },
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify(listMessage),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
-        }, {
-            quoted: m
-        });
-	
-}
-	
-} catch (e) {
-  reply('*ERROR !!*')
-  l(e)
-}
-})
-
-
-
-cmd({
-    pattern: "video",
-    alias: ["ytvideo"],
-    use: '.video lelena',
-    react: "📽️",
-    desc: descv,
-    category: "download",
-    filename: __filename
-
-},
-
-async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if (!q) return await  reply(imgmsg)
-if(isUrl(q) && !ytreg(q)) return await reply(imgmsg)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url = data.url;	
-
-	const cap = `📽️ *ᴠᴀᴊɪʀᴀ-ᴍᴅ ꜱᴏɴɢ-ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*📽️
-
-┌──────────────────
-
-*ℹ️ Title:* ${data.title}
-*👁️‍🗨️ Views:* ${data.views}
-*🕘 Duration:* ${data.timestamp}
-*📌 Ago :* ${data.ago}
-*🔗 Url:* ${data.url} 
-
-└──────────────────`
-	
-if (config.MODE === 'nonbutton') {
-	
-
-if(isUrl(q) && q.includes('/shorts')){let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-   *SELECT VIDEO TYPE*`
-				      
-const sections = [
-    {
-	title: '*[1] NORMAL QUALITY 🎶*',
-	rows: [
-	    {title: "    1.1", rowId: prefix + `240p ${q}` , description: '```240p```'} ,
-            {title: "    1.2", rowId: prefix + `360p ${q}` , description: '```320p```'},
-	    {title: "    1.3", rowId: prefix + `480p ${q}` , description: '```480p```'} ,
-	    {title: "    1.4", rowId: prefix + `720p ${q}` , description: '```720p```'},
-	    {title: "    1.5", rowId: prefix + `1080p ${q}` , description: '```1080p```'} ,
-	]
-    } ,
-
-   {
-	title: '*[2] DOCUMENT QUALITY 📂*',
-	rows: [
-	    {title: "    2.1", rowId: prefix + `24p ${q}` , description: '```240p```'} ,
-            {title: "    2.2", rowId: prefix + `36p ${q}` , description: '```320p```'},
-	    {title: "    2.3", rowId: prefix + `48p ${q}` , description: '```480p```'} ,
-	    {title: "    2.4", rowId: prefix + `72p ${q}` , description: '```720p```'},
-	    {title: "    2.5", rowId: prefix + `108p ${q}` , description: '```1080p```'} ,
-	]
-    } 	
-]
-
-const listMessage = {
-  text: cap,
-  footer: `*ᴠᴀᴊɪʀᴀ ᴍᴅ ᴍᴜʟᴛɪ-ᴅᴇᴠɪᴄᴇ ʙᴏᴛ:ᴠ-ɪ*\n*ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴛᴇᴄʜɴɪᴄᴀʟ ᴄʏʙᴇʀꜱ*`,
-  buttonText: "```🔢 Reply below number you need song type,```",
-  sections
-}
-return await conn.replyList(from, listMessage ,{ quoted : mek }) 				      
-				     }
-if(ytreg(q)){let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-*SELECT VIDEO TYPE*`
-const sections = [
-    {
-	title: '*[1] NORMAL QUALITY 🎶*',
-	rows: [
-	    {title: "    1.1", rowId: prefix + `240p ${q}` , description: '```240p```'} ,
-            {title: "    1.2", rowId: prefix + `360p ${q}` , description: '```320p```'},
-	    {title: "    1.3", rowId: prefix + `480p ${q}` , description: '```480p```'} ,
-	    {title: "    1.4", rowId: prefix + `720p ${q}` , description: '```720p```'},
-	    {title: "    1.5", rowId: prefix + `1080p ${q}` , description: '```1080p```'} ,
-	]
-    } ,
-
-   {
-	title: '*[2] DOCUMENT QUALITY 📂*',
-	rows: [
-	    {title: "    2.1", rowId: prefix + `24p ${q}` , description: '```240p```'} ,
-            {title: "    2.2", rowId: prefix + `36p ${q}` , description: '```320p```'},
-	    {title: "    2.3", rowId: prefix + `48p ${q}` , description: '```480p```'} ,
-	    {title: "    2.4", rowId: prefix + `72p ${q}` , description: '```720p```'},
-	    {title: "    2.5", rowId: prefix + `108p ${q}` , description: '```1080p```'} ,
-	]
-    } 	
-]
-const listMessage = {
-  text: cap,
-  footer: config.FOOTER,
-  buttonText: "🔢 Reply below number,",
-  sections 
-}	
-
-	     
-return await conn.replyList(from, listMessage ,{ quoted : mek }) 
-	}
-
-     
-
-const sections = [
-    {
-	title: '*[1] NORMAL QUALITY 🎶*',
-	rows: [
-	    {title: "    1.1", rowId: prefix + `240p ${data.url}` , description: '```240p```'} ,
-            {title: "    1.2", rowId: prefix + `360p ${data.url}` , description: '```320p```'},
-	    {title: "    1.3", rowId: prefix + `480p ${data.url}` , description: '```480p```'} ,
-	    {title: "    1.4", rowId: prefix + `720p ${data.url}` , description: '```720p```'},
-	    {title: "    1.5", rowId: prefix + `1080p ${data.url}` , description: '```1080p```'} ,
-	]
-    } ,
-
-   {
-	title: '*[2] DOCUMENT QUALITY 📂*',
-	rows: [
-	    {title: "    2.1", rowId: prefix + `24p ${data.url}` , description: '```240p```'} ,
-            {title: "    2.2", rowId: prefix + `36p ${data.url}` , description: '```320p```'},
-	    {title: "    2.3", rowId: prefix + `48p ${data.url}` , description: '```480p```'} ,
-	    {title: "    2.4", rowId: prefix + `72p ${data.url}` , description: '```720p```'},
-	    {title: "    2.5", rowId: prefix + `108p ${data.url}` , description: '```1080p```'} ,
-	]
-    } 	
-]
-const listMessage = {
-caption: cap,
-image : { url: data.thumbnail },	
-footer: config.FOOTER,
-title: '',
-buttonText: '*🔢 Reply below number*',
-sections
-}
-return await conn.replyList(from, listMessage ,{ quoted : mek })
-
-
-} if (config.MODE === 'button') {
-
-let sections = [{
-                title: 'Normal types videos 🎧',
-                rows: [{
-                        header: "",
-                    title: "240P VIDEO",
-                    description: "Download 240 quality video",
-                    id: `${prefix}240p ` + data.url
-                    },
-                    {
-                       header: "",
-                    title: "360P VIDEO",
-                    description: "Download 360 quality video",
-                    id: `${prefix}360p ` + data.url
-                    },
-                    {
-                        header: "",
-                    title: "480P VIDEO",
-                    description: "Download 480 quality video",
-                    id: `${prefix}480p ` + data.url
-                    },
-                    {
-                        header: "",
-                    title: "720P VIDEO",
-                    description: "Download 720 quality video",
-                    id: `${prefix}720p ` + data.url
-                    },
-		    {
-                        header: "",
-                    header: "",
-                    title: "1080P VIDEO",
-                    description: "Download 1080 quality video",
-                    id: `${prefix}1080p ` + data.url
-                    },   
-                ]
-            },
-            {
-                title: 'Document types videos 📁',
-                rows: [{
-                        header: "",
-                    title: "240P VIDEO",
-                    description: "Download 240 quality video",
-                    id: `${prefix}24p ` + data.url
-                    },
-                    {
-                        header: "",
-                    title: "360P VIDEO",
-                    description: "Download 360 quality video",
-                    id: `${prefix}36p ` + data.url
-                    },
-                    {
-                        header: "",
-                    title: "480P VIDEO",
-                    description: "Download 480 quality video",
-                    id: `${prefix}48p ` + data.url
-                    },
-                    {
-                        header: "",
-                    title: "720P VIDEO",
-                    description: "Download 720 quality video",
-                    id: `${prefix}72p ` + data.url
-                    },
-                    {
-                        header: "",
-                    title: "1080P VIDEO",
-                    description: "Download 1080 quality video",
-                    id: `${prefix}108p ` + data.url
-                    },
-                ]
-	    }
-        ]
-
-        let listMessage = {
-            title: 'Click Here⎙',
-            sections
-        };
-        conn.sendMessage(from, {
-            image: {url: data.thumbnail},
-    caption: cap,
-    footer: config.FOOTER,
-                buttons: [
-			{
-                    buttonId: `${prefix}360p  ${anu.url}`,
-                    buttonText: {
-                        displayText: 'NORMAL VIDEO'
-                    },
-                },
-		{
-                    buttonId: `${prefix}36p  ${anu.url}`,
-                    buttonText: {
-                        displayText: 'DOCUMENT VIDEO'
-                    },
-		},				
-                {
-                    buttonId: 'action',
-                    buttonText: {
-                        displayText: 'ini pesan interactiveMeta'
-                    },
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify(listMessage),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
-        }, {
-            quoted: m
-        });
-	
-
-                    
-
-
-
-}
-	
-} catch (e) {
-reply('*Error !!*')
-l(e)
-}
-})
-
-
-
-//---------------------------------------------------------------------------
-
-
-		    
-cmd({
-    pattern: "song",
-    alias: ["ytsong"],
-    use: '.song lelena',
-    react: "🎧",
-    desc: descs,
-    category: "download",
-    filename: __filename
-},
-
-async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-if (!q) return await reply(imgmsg)
-if(isUrl(q) && !ytreg(q)) return await reply(imgmsg)
-
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url = data.url;	
-
-	const cap = `📽️ *ᴠᴀᴊɪʀᴀ-ᴍᴅ ꜱᴏɴʜ-ᴅᴏᴡɴʟᴏᴀᴅᴇʀ*📽️
-
-┌──────────────────
-
-*ℹ️ Title:* ${data.title}
-*👁️‍🗨️ Views:* ${data.views}
-*🕘 Duration:* ${data.timestamp}
-*📌 Ago :* ${data.ago}
-*🔗 Url:* ${data.url} 
-
-└──────────────────`
-
-if (config.MODE === 'nonbutton') {
-	
-if(isUrl(q) && q.includes('/shorts')){let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-   *SELECT SONG TYPE*`
-				      
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${q}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${q}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-const listMessage = {
-  text: dat,
-  footer: `*ᴠᴀᴊɪʀᴀ ᴍᴅ ᴍᴜʟᴛɪ-ᴅᴇᴠɪᴄᴇ ʙᴏᴛ:ᴠ-ɪ*\n*ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴛᴇᴄʜɴɪᴄᴀʟ ᴄʏʙᴇʀꜱ*`,
-  buttonText: "```🔢 Reply below number you need song type,```",
-  sections
-}
-
-return await conn.replyList(from, listMessage ,{ quoted : mek }) 				      
-				     }
-if(ytreg(q)){let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-*SELECT SONG TYPE*`
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${q}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${q}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-const listMessage = {
-  text: dat,
-  footer: `*ᴠᴀᴊɪʀᴀ-ᴍᴅ ᴍᴜʟᴛɪ-ᴅᴇᴠɪᴄᴇ ʙᴏᴛ:ᴠ-ɪ*\n*ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴛᴇᴄʜɴɪᴄᴀʟ ᴄʏʙᴇʀꜱ*`,
-  buttonText: "```🔢 Reply below number you need song type,```",
-  sections }	
-
-	     
-return await conn.replyList(from, listMessage ,{ quoted : mek }) 
-	    }
-        
-
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${data.url}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${data.url}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-const listMessage = {
-  image: {url: data.thumbnail},
-  caption: cap,
-footer: config.FOOTER,
-title: '',
-buttonText: '*🔢 Reply below number*',
-sections
-}
-return await conn.replyList(from, listMessage ,{ quoted : mek })
-
-
-
-} if (config.MODE === 'button') {
-
-
-            
-let sections = [{
-                title: 'VAJIRA MD',
-                rows: [{
-                        title: 'Audio 🎧',
-                        description: `Download Audio file`,
-                        id: `${prefix}ytmp3 ` + data.url + '|' + data.title
-                    },
-                    {
-                        title: 'Document 📁',
-                        description: `Download Document file`,
-                        id: `${prefix}ytdocs ` + data.url + '|' + data.title
-                    },
-                ]
-            }
-        ]
-
-        let listMessage = {
-            title: 'Click Here⎙',
-            sections
-        };
-        conn.sendMessage(from, {
-            image: {url: data.thumbnail},
-    caption: cap,
-    footer: config.FOOTER,
-                buttons: [
-			{
-                    buttonId: `${prefix}ytmp3  ${data.url}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Audio 🎧'
-                    },
-                },
-		{
-                    buttonId: `${prefix}ytdocs  ${data.url}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Document 📁'
-                    },
-                },	
-                {
-                    buttonId: 'action',
-                    buttonText: {
-                        displayText: 'ini pesan interactiveMeta'
-                    },
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify(listMessage),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
-        }, {
-            quoted: m
-        });
-	
-
-
-	
-}
-
-} catch (e) {
-  reply('*ERROR !!*')
-  l(e)
-}
-})
-
-
-
-cmd({
-  alias: ["selectaud"],
-  filename: __filename
-},
-async(conn, mek, m,{from, l, quoted, prefix, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-
-let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-  *SELECT VIDEO QUALITY*`
-if (config.MODE === 'nonbutton') {	
-const sections = [
-    {
-	title: "",
-	rows: [
-	    {title: "1", rowId: prefix + `ytmp3 ${q}|${data.title}` , description: 'Normal type song 🎶'},
-	    {title: "2", rowId: prefix + `ytdocs ${q}|${data.title}` , description: 'Document type song 📂'},
-
-	]
-    } 
-]
-  const listMessage = {
-text: dat,
-footer: config.FOOTER,
-title: '',
-buttonText: '*🔢 Reply below number*',
-sections
-}
-return await conn.replyList(from, listMessage ,{ quoted : mek })
-
-
-} if (config.MODE === 'button') {
-
-
-            let sections = [{
-                title: 'VAJIRA MD',
-                rows: [{
-                        title: 'Audio 🎧',
-                        description: `Download Audio file`,
-                        id: `${prefix}ytmp3 ` + q + '|' + data.title
-                    },
-                    {
-                        title: 'Document 📁',
-                        description: `Download Document file`,
-                        id: `${prefix}ytdocs ` + q + '|' + data.title
-                    },
-                ]
-            }
-        ]
-
-        let listMessage = {
-            title: 'Click Here⎙',
-            sections
-        };
-        conn.sendMessage(from, {
-            //image: {url: data.thumbnail},
-    text: cap,
-    footer: config.FOOTER,
-                buttons: [
-			{
-                    buttonId: `${prefix}ytmp3  ${q}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Audio 🎧'
-                    },
-                },
-		{
-                    buttonId: `${prefix}ytdocs  ${q}|${data.title}`,
-                    buttonText: {
-                        displayText: 'Document 📁'
-                    },
-                },	
-                {
-                    buttonId: 'action',
-                    buttonText: {
-                        displayText: 'ini pesan interactiveMeta'
-                    },
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify(listMessage),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
-        }, {
-            quoted: m
-        });
-	
-        
-
-}
-
-} catch (e) {
-  reply('*ERROR !!*')
-  l(e)
-}
-})
-
-
-cmd({
-  alias: ["selectvid"],
-  filename: __filename
-},
-async(conn, mek, m,{from, l, quoted, prefix, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-let dat = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
-
-  *SELECT VIDEO QUALITY*`
-
-if (config.MODE === 'nonbutton') {
-
-
-const sections = [
-    {
-	title: '*[1] NORMAL QUALITY 🎶*',
-	rows: [
-            {title: "    1.1", rowId: prefix + `360p ${q}` , description: '```360p```'},
-	    {title: "    1.2", rowId: prefix + `480p ${q}` , description: '```480p```'} ,
-	    {title: "    1.3", rowId: prefix + `720p ${q}` , description: '```720p```'},
-	    {title: "    1.4", rowId: prefix + `1080p ${q}` , description: '```1080p```'} ,
-	    {title: "    1.5", rowId: prefix + `1440p ${q}` , description: '```1440p```'},
-	    {title: "    1.6", rowId: prefix + `40k ${q}` , description: '```4K```'} ,	
-	]
-    } ,
-
-   {
-	title: '*[2] DOCUMENT QUALITY 📂*',
-	rows: [
-            {title: "    2.1", rowId: prefix + `36p ${q}` , description: '```360p```'},
-	    {title: "    2.2", rowId: prefix + `48p ${q}` , description: '```480p```'} ,
-	    {title: "    2.3", rowId: prefix + `72p ${q}` , description: '```720p```'},
-	    {title: "    2.4", rowId: prefix + `108p ${q}` , description: '```1080p```'} ,
-	    {title: "    2.5", rowId: prefix + `144p ${q}` , description: '```1440p```'},
-	    {title: "    2.6", rowId: prefix + `4k ${q}` , description: '```4K```'} ,	
-	]
-    } 	
-]
-  const listMessage = {
-text: dat,
-footer: config.FOOTER,
-title: '',
-buttonText: '*🔢 Reply below number*',
-sections
-}
-return await conn.replyList(from, listMessage ,{ quoted : mek })
-
-
-} if (config.MODE === 'button') {
-
-
-            
-let sections = [{
-                title: '©𝐕𝐀𝐉𝐈𝐑𝐀-𝐌𝐃 💚',
-                rows: [{
-                       header: "",
-                    title: "360P VIDEO",
-                    description: "Download 360 quality video",
-                    id: `${prefix}360p ` + q
-                    },
-                    {
-                        header: "",
-                    title: "480P VIDEO",
-                    description: "Download 480 quality video",
-                    id: `${prefix}480p ` + q
-                    },
-                    {
-                        header: "",
-                    title: "720P VIDEO",
-                    description: "Download 720 quality video",
-                    id: `${prefix}720p ` + q
-                    },
-		    {
-                        header: "",
-                    header: "",
-                    title: "1080P VIDEO",
-                    description: "Download 1080 quality video",
-                    id: `${prefix}1080p ` + q
-                    },   
-		    {
-                        header: "",
-                    title: "1440 VIDEO",
-                    description: "Download 1440 quality video",
-                    id: `${prefix}1440p ` + q
-                    },
-		    {
-                        header: "",
-                    header: "",
-                    title: "4K VIDEO",
-                    description: "Download 4K quality video",
-                    id: `${prefix}40k ` + q
-                    },     
-                ]
-            },
-            {
-                title: '2',
-                rows: [{
-                        header: "",
-                    title: "360P VIDEO",
-                    description: "Download 360 quality video",
-                    id: `${prefix}36p ` + q
-                    },
-                    {
-                        header: "",
-                    title: "480P VIDEO",
-                    description: "Download 480 quality video",
-                    id: `${prefix}48p ` + q
-                    },
-                    {
-                        header: "",
-                    title: "720P VIDEO",
-                    description: "Download 720 quality video",
-                    id: `${prefix}72p ` + q
-                    },
-                    {
-                        header: "",
-                    title: "1080P VIDEO",
-                    description: "Download 1080 quality video",
-                    id: `${prefix}108p ` + q
-                    },
-		    {
-                        header: "",
-                    title: "1440 VIDEO",
-                    description: "Download 1440 quality video",
-                    id: `${prefix}144p ` + q
-                    },
-		    {
-                        header: "",
-                    header: "",
-                    title: "4K VIDEO",
-                    description: "Download 4K quality video",
-                    id: `${prefix}4k ` + q
-                    },       
-                ]
-	    }
-        ]
-
-        let listMessage = {
-            title: 'Click Here⎙',
-            sections
-        };
-        conn.sendMessage(from, {
-            image: {url: data.thumbnail},
-    caption: cap,
-    footer: config.FOOTER,
-                buttons: [
-			{
-                    buttonId: `${prefix}360p  ${q}`,
-                    buttonText: {
-                        displayText: 'NORMAL VIDEO'
-                    },
-                },
-		{
-                    buttonId: `${prefix}36p  ${q}`,
-                    buttonText: {
-                        displayText: 'DOCUMENT VIDEO'
-                    },
-		},					
-                {
-                    buttonId: 'action',
-                    buttonText: {
-                        displayText: 'ini pesan interactiveMeta'
-                    },
-                    type: 4,
-                    nativeFlowInfo: {
-                        name: 'single_select',
-                        paramsJson: JSON.stringify(listMessage),
-                    },
-                },
-            ],
-            headerType: 1,
-            viewOnce: true
-        }, {
-            quoted: m
-        });
-	
-
-
-
-}
-
-
-} catch (e) {
-reply('*Error !!*')
-l(e)
-}
-})
-
-
-
-
-
-
-//===================================================================================================
-/*
+  }
+  })
   
-cmd({
-  pattern: "ytmp3",
-  dontAddCommandList: true,
-  filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
-        try {
-await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
-if(!q) return await conn.sendMessage(from , { text: '*Need link...*' }, { quoted: mek } ) 
-let dl = await fg.yta(q)
-let sendapk = await conn.sendMessage(from , { audio : { url : dl.dl_url  } ,mimetype: 'audio/mpeg', fileName : dl.title + '.' + 'mp3'} , { quoted: mek })
-await conn.sendMessage(from, { react: { text: '📁', key: sendapk.key }})
-await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
-} catch (e) {
-  reply('*ERROR !!*')
-l(e)
-}
-})*/
-//---------------------------------------------------------------------------
 
 cmd({
-  pattern: "ytmp4",
-  use: '.ytmp4 <yt url>',
-  react: "🎧",
-  desc: "Download yt song.",
-  category: "download",
-  filename: __filename
+    pattern: "toanime",
+    react: "🏮",
+    alias: ["imgtoanime","animeimg"],
+    desc: desct1,
+    category: "convert",
+    use: '.toanime <reply image>',
+    filename: __filename
 },
-
-async (conn, mek, m, { from, q, reply }) => {
-  try {
-    if (!q) return reply("Harap masukkan link YouTube.");
-    const result = await ytmp3(q, 'mp4');
-        console.log('Title:', result.title);
-        console.log('Download Link:', result.link);
-
-const message = {
-            video: await getBuffer(result.link),
-	    caption: `${result.title}\n\n${config.FOOTER}`,
-            mimetype: "video/mp4",
-            fileName: `${result.title}.mp4`,
-        };	    
-        await conn.sendMessage(from, message );
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
+async(conn, mek, m,{from, l, prefix, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+    try{
+    const isQuotedViewOnce = m.quoted ? (m.quoted.type === 'viewOnceMessage') : false
+    const isQuotedImage = m.quoted ? ((m.quoted.type === 'imageMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'imageMessage') : false)) : false
+    if ((m.type === 'imageMessage') || isQuotedImage) {
+const fileType = require("file-type");
+  var nameJpg = getRandom('');
+  let buff = isQuotedImage ? await m.quoted.download(nameJpg) : await m.download(nameJpg)
+  let type = await fileType.fromBuffer(buff);
+  await fs.promises.writeFile("./" + type.ext, buff);
+  img2url("./" + type.ext).then(async url => {
+    try{
+    await conn.sendMessage(from, { image: await getBuffer('https://vihangayt.me/tools/toanime?url='+url), caption: config.FOOTER }, { quoted: mek })
+  } catch (e) {
+    let apilist = await fetchJson('https://gist.githubusercontent.com/vihangayt0/7dbb65f6adfe21538f7febd13982569a/raw/apilis.json')
+    let list = apilist.users
+    let apikey = list[Math.floor(Math.random() * list.length)]
+    await conn.sendMessage(from, { image: { url: apilist.xz +'api/toanime?url='+url+'&apikey=' + apikey }, caption: config.FOOTER }, { quoted: mek })
+  }
 });
-//---------------------------------------------------------------------------
-cmd({
-  pattern: "ytmp3",
-  dontAddCommandList: true,
-  filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
-        try {
-await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
-if(!q) return await conn.sendMessage(from , { text: '*Need link...*' }, { quoted: mek } ) 
-
-const mediaUrl = q.split("|")[0]
-        const title = q.split("|")[1]  || 'VAJIRA-MD'
-
-        const result = await fetchJson(`https://vajira-api-0aaeb51465b5.herokuapp.com/download/ytmp3?url=${mediaUrl}`);
-      
-		
-const message = {
-            audio: await getBuffer(result.result.dl_link),
-	    caption: `${title}\n\n${config.FOOTER}`,
-            mimetype: "audio/mpeg",
-            fileName: `${title}.mp3`,
-        };	    
-        await conn.sendMessage(from, message );
-		
-await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
+    } else return reply(imgmsg)
 } catch (e) {
-  reply('*ERROR !!*')
-l(e)
-}
-})
-
-cmd({
-  pattern: "ytdocs",
-  dontAddCommandList: true,
-  filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
-        try {
-await conn.sendMessage(from, { react: { text: '📥', key: mek.key }})
-if(!q) return await conn.sendMessage(from , { text: '*Need link...*' }, { quoted: mek } )
-const mediaUrl = q.split("|")[0]
-        const title = q.split("|")[1]  || 'VAJIRA-MD'
-
-        const result = await fetchJson(`https://vajira-api-0aaeb51465b5.herokuapp.com/download/ytmp3?url=${mediaUrl}`);
-		
-		
-const message = {
-            document: await getBuffer(result.result.dl_link),
-	    caption: `${title}\n\n${config.FOOTER}`,
-            mimetype: "audio/mpeg",
-            fileName: `${title}.mp3`,
-        };	    
-        await conn.sendMessage(from, message );
-		
-await conn.sendMessage(from, { react: { text: '✔', key: mek.key }})
-} catch (e) {
-  reply('*ERROR !!*')
-l(e)
+  reply(cantf);
+  l(e);
 }
 })
 
 
-//---------------------------------------------------------------------------
-
 cmd({
-  pattern: "ytdocv",
-  use: '.ytdoc <yt url>',
-  react: "🎧",
-  desc: "Download yt song.",
-  category: "download",
-  filename: __filename
+    pattern: "sticker",
+    react: "🔮",
+    alias: ["s","stic"],
+    desc: descg,
+    category: "convert",
+    use: '.sticker <Reply to image>',
+    filename: __filename
 },
-
 async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-if (!ytreg(q)) return await  reply(urlneed)
-const dllink = await fetchJson(`https://vajira-api-0aaeb51465b5.herokuapp.com/download/ytmp4?url=${q}`)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url = data.url;	
-	
-const message = {
-            document: await getBuffer(dllink.result.dl_link),
-	    caption: `${data.title}\n\n${config.FOOTER}`,
-            mimetype: "video/mp4",
-            fileName: `${data.title}.mp4`,
-        };	    
-        await conn.sendMessage(from, message );
+    const isQuotedViewOnce = m.quoted ? (m.quoted.type === 'viewOnceMessage') : false
+    const isQuotedImage = m.quoted ? ((m.quoted.type === 'imageMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'imageMessage') : false)) : false
+    const isQuotedVideo = m.quoted ? ((m.quoted.type === 'videoMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'videoMessage') : false)) : false
+    const isQuotedSticker = m.quoted ? (m.quoted.type === 'stickerMessage') : false
+     if ((m.type === 'imageMessage') || isQuotedImage) {
+      var nameJpg = getRandom('')
+      isQuotedImage ? await m.quoted.download(nameJpg) : await m.download(nameJpg)
+    let sticker = new Sticker(nameJpg + '.jpg', {
+      pack: pushname, // The pack name
+      author: '', // The author name
+      type: q.includes("--crop" || '-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
+      categories: ["🤩", "🎉"], // The sticker category
+      id: "12345", // The sticker id
+      quality: 75, // The quality of the output file
+      background: "transparent", // The sticker background color (only for full stickers)
+  });
+  const buffer = await sticker.toBuffer();
+  return conn.sendMessage(from, {sticker: buffer}, {quoted: mek })
+}  else if ( isQuotedSticker ) { 
 
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
+    var nameWebp = getRandom('')
+    await m.quoted.download(nameWebp)
+  let sticker = new Sticker(nameWebp + '.webp', {
+    pack: pushname, // The pack name
+    author: '', // The author name
+    type: q.includes("--crop" || '-c') ? StickerTypes.CROPPED : StickerTypes.FULL,
+    categories: ["🤩", "🎉"], // The sticker category
+    id: "12345", // The sticker id
+    quality: 75, // The quality of the output file
+    background: "transparent", // The sticker background color (only for full stickers)
 });
-//---------------------------------------------------------------------------
-
-
-
-//---------------------------------------------------------------------------
-cmd({
-  pattern: "360p",
-  react: "📽️",
-  dontAddCommandList: true,
-    filename: __filename
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '360'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        video: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-
-//---------------------------------------------------------------------------
-
-cmd({
-  pattern: "480p",
-  react: "📽️",
-  dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '480'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        video: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-
-//---------------------------------------------------------------------------
-
-cmd({
-    pattern: "720p",
-    react: "📽️",
-    dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '720'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        video: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-//---------------------------------------------------------------------------
-
-cmd({
-  pattern: "1080p",
-  react: "📽️",
-  dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '1080'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        video: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-
-
-
-cmd({
-    pattern: "1440p",
-    react: "📽️",
-    dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '1440'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        video: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-
-
-
-
-cmd({
-    pattern: "40k",
-    react: "📽️",
-    dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '4k'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        video: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-
-
-
-	
-cmd({
-    pattern: "36p",
-    react: "📽️",
-    dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '360'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        document: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-await conn.sendMessage(from, { react: { text: '🎥', key: senda.key }})
+const buffer = await sticker.toBuffer();
+return conn.sendMessage(from, {sticker: buffer}, {quoted: mek })
+}else return await  reply(imgmsg)
 } catch (e) {
-reply(N_FOUND)
+reply('*Error !!*')
+l(e)
+}
+})
+
+
+cmd({
+    pattern: "toimg",
+    react: "🔮",
+    alias: ["s","stic"],
+    desc: descg2,
+    category: "convert",
+    use: '.sticker <Reply to image>',
+    filename: __filename
+},
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+    const isQuotedViewOnce = m.quoted ? (m.quoted.type === 'viewOnceMessage') : false
+    const isQuotedImage = m.quoted ? ((m.quoted.type === 'imageMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'imageMessage') : false)) : false
+    const isQuotedVideo = m.quoted ? ((m.quoted.type === 'videoMessage') || (isQuotedViewOnce ? (m.quoted.msg.type === 'videoMessage') : false)) : false
+    const isQuotedSticker = m.quoted ? (m.quoted.type === 'stickerMessage') : false
+if ( isQuotedSticker ) { 
+
+var nameJpg = getRandom('');
+let buff = isQuotedSticker ? await m.quoted.download(nameJpg) : await m.download(nameJpg)
+let type = await fileType.fromBuffer(buff);
+await fs.promises.writeFile("./" + type.ext, buff);  
+await conn.sendMessage(from, { image: fs.readFileSync("./" + type.ext), caption: config.FOOTER }, { quoted: mek })
+
+}else return await  reply(imgmsg2)
+} catch (e) {
+reply('*Error !!*')
 l(e)
 }
 })
@@ -1784,124 +949,61 @@ l(e)
 
 
 cmd({
-    pattern: "48p",
-    react: "📽️",
-    dontAddCommandList: true,
+    pattern: "tomp3",
+    react: "🔊",
+    alias: ["toaudio","tosong"],
+    desc: descg,
+    category: "convert",
+    use: '.toptt <Reply to video>',
     filename: __filename
 },
-
-async (conn, m, mek, { from, q, reply }) => {
+async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-if (!ytreg(q)) return await  reply(urlneed)
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '480'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        document: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
-
-				      
-
-cmd({
-    pattern: "72p",
-    react: "📽️",
-    dontAddCommandList: true,
-    filename: __filename
-
-},
-
-async (conn, m, mek, { from, q, reply }) => {
-try{
-if (!ytreg(q)) return await  reply(urlneed)
-
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '720'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        document: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-	
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
+    let isquotedvid = m.quoted ? (m.quoted.type === 'videoMessage') : m ? (m.type === 'videoMessage') : false
+    if(!isquotedvid) return await reply(imgmsg)
+    let media = m.quoted ? await m.quoted.download() : await m.download()
+    let auddio = await toPTT(media, 'mp4')
+    let senda =  await conn.sendMessage(m.chat, {audio: auddio.options, mimetype:'audio/mpeg'}, {quoted:m})
+    await conn.sendMessage(from, { react: { text: '🎼', key: senda.key }})
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
 
 
 cmd({
-    pattern: "108p",
-    react: "📽️",
-    dontAddCommandList: true,
+    pattern: "toqr",
+    react: "🔊",
+    desc: descg,
+    category: "convert",
+    use: '.toqr <Reply a text or a url>',
     filename: __filename
-
 },
-
-async (conn, m, mek, { from, q, reply }) => {
+async(conn, mek, m,{from, l, quoted, body, prefix, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
-if (!ytreg(q)) return await  reply(urlneed)
-
-q = convertYouTubeLink(q);
-        const search = await yts(q);
-        const data = search.videos[0];
-        const url1 = data.url;	
-	
- const url = q
-        const format = '1080'; // or any other supported format
-
-        const result = await ytmp4q.download(url, format);
-        console.log('Download details:', result);       
-conn.sendMessage(from, {
-                        document: {
-                            url: result.downloadUrl
-                        },
-                        mimetype: 'video/mp4',
-                        fileName: data.title + '.mp4',
-                        caption: `${data.title}\n\n${config.FOOTER}`
-                    }, {
-                        quoted: m
-                    })
-
-        await conn.sendMessage(from, { react: { text: '✅', key: mek.key } });
-    } catch (error) {
-        console.error('Error fetching or sending', error);
-        await conn.sendMessage(from, '*Error fetching or sending *', { quoted: mek });
-    }
-});
+ if (!q) return reply(' Please include link or text!')
+                const QrCode = require('qrcode-reader')
+                const qrcode = require('qrcode')
+                let qyuer = await qrcode.toDataURL(q, {
+                    scale: 35
+                })
+                let data = new Buffer.from(qyuer.replace('data:image/png;base64,', ''), 'base64')
+                let buff = getRandom('.jpg')
+                await fs.writeFileSync('./' + buff, data)
+                let medi = fs.readFileSync('./' + buff)
+                await conn.sendMessage(from, {
+                    image: medi,
+                    caption: "Here you go!"
+                }, {
+                    quoted: m
+                })
+                setTimeout(() => {
+                    fs.unlinkSync(buff)
+                }, 10000)
+await conn.sendMessage(from, { react: { text: '🎼', key: mek.key }})
+} catch (e) {
+reply('*Error !!*')
+l(e)
+}
+})
