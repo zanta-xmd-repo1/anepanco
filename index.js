@@ -406,29 +406,14 @@ conn.sendMessage(conn.user.id, {
 text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
 contextInfo: {
 externalAdReply: {
-title: "👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻\nSuccessfully Connected !",	
+title: "zanta-xmd\nSuccessfully Connected !",	
 thumbnailUrl: "https://cdn.dribbble.com/users/15468/screenshots/2450252/logo.jpg",
 sourceUrl: "",
 mediaType: 1,
 renderLargerThumbnail: true
 }}}) 
     }
-  })",
-contextInfo: {
-externalAdReply: {
-title: "🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️\nSuccessfully Connected !",	
-thumbnailUrl: "https://cdn.dribbble.com/users/15468/screenshots/2450252/logo.jpg",
-sourceUrl: "",
-mediaType: 1,
-renderLargerThumbnail: true
-}}}) 
-    }
-  })
-
-
-
-
-        
+  })",        
       
 //==================================================================
 
