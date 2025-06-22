@@ -91,43 +91,293 @@ if (!fs.existsSync(__dirname + '/lib/session/creds.json')) {
 // <<==========PORTS===========>>
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 9090;
 
 
 //====================================
 async function connectToWA() {
-    const {
-        version,
-        isLatest
-    } = await fetchLatestBaileysVersion()
-    console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
-    const {
-        state,
-        saveCreds
-    } = await useMultiFileAuthState(__dirname + '/lib//session/')
-    const conn = makeWASocket({
-        logger: P({
-            level: "fatal"
-        }).child({
-            level: "fatal"
-        }),
-        printQRInTerminal: true,
-        generateHighQualityLinkPreview: true,
-        auth: state,
-        defaultQueryTimeoutMs: undefined,
-        msgRetryCounterCache
-    })
+  console.log("Connecting to WhatsApp 🥷...");
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/lib/session/')
+  var { version } = await fetchLatestBaileysVersion()
+  
+  const conn = makeWASocket({
+          logger: P({ level: 'silent' }),
+          printQRInTerminal: false,
+          browser: Browsers.macOS("Firefox"),
+          syncFullHistory: true,
+          auth: state,
+          version
+          })
+      
+  conn.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update
+  if (connection === 'close') {
+  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+  connectToWA()
+  }
+  } else if (connection === 'open') {
 
-    conn.ev.on('connection.update', async (update) => {
-        const {
-            connection,
-            lastDisconnect
-        } = update
-        if (connection === 'close') {
-            if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-                connectToWA()
-            }
-        } else if (connection === 'open') {
+
+
+let storedLink = null;  
+let storedLink1 = null;  
+let storedLink2 = null;  
+let storedLink3 = null;  
+let storedLink4 = null;  
+let storedLink5 = null;
+let storedLink6 = null;
+let storedLink7 = null;    
+let storedLink8 = null;    		
+    
+async function sendNews(title, desc, date, link, img) {
+    const message = `ＶＡＪＩＲＡ-ＭＤ ＨＩＲＵ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: img} , caption: message })  
+}
+async function sendNews1(title, desc, date, url, image) {
+    const message1 = `ＶＡＪＩＲＡ-ＭＤ ＬＡＮＫＡＤＥＥＰＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message1 })  
+}
+async function sendNews2(title, desc, url, image) {
+    const message2 = `ＶＡＪＩＲＡ-ＭＤ ＢＢＣ - ＮＥＷＳ\n\n*${title}*\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message2 })  
+}
+async function sendNews3(title, desc, date, link, image) {
+    const message3 = `ＶＡＪＩＲＡ-ＭＤ ＩＴＮ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message3 })  
+}
+async function sendNews4(title, desc, date, link, image) {
+    const message4 = `ＶＡＪＩＲＡ-ＭＤ ＧＯＳＳＩＰＬＡＮＫＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message4 })  
+}
+async function sendNews5(title, desc, date, link, image) {
+    const message5 = `ＶＡＪＩＲＡ-ＭＤ ＳＩＹＡＴＨＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message5 })  
+}
+async function sendNews6(title, desc, date, url, image) {
+    const message6 = `ＶＡＪＩＲＡ-ＭＤ ＤＥＲＡＮＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message6 })  
+}
+async function sendNews7(title, desc, date, link, image) {
+    const message7 = `ＶＡＪＩＲＡ-ＭＤ ＤＡＳＡＴＨＡＬＡＮＫＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message7 })  
+}
+async function sendNews8(details, image) {
+    const message8 = `${details}`;
+    await conn.sendMessage( conn.user.id , { image: { url: image} , caption: message8 })  
+}
+
+
+const jidko = 'After deploy put .newsactivate <group jid> to activate auto news'
+
+
+async function checkForNewsUpdates() {
+    try {
+        const data = await fetchJson(`${config.NEWS}hiru`)
+        const { link, title, desc, date, img } = data.result;
+
+        if (storedLink !== link) {  
+            await sendNews(title, desc, date, link, img);
+            
+            storedLink = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates();
+
+    
+//───────────────────────────────────────────────────────────────────
+    
+ 
+async function checkForNewsUpdates1() {
+    try {
+        const data = await fetchJson(`${config.NEWS}lankadeepa`)
+        const { url, title, desc, date, image } = data.result;
+
+        if (storedLink1 !== url) {  
+            await sendNews1(title, desc, date, url, image);
+            
+            storedLink1 = url;
+        } 
+    } catch (error) {
+        console.error(jidko);;
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates1, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates1();
+
+
+    
+//──────────────────────────────────────────────────────────────────
+
+ async function checkForNewsUpdates2() {
+    try {
+        const data = await fetchJson(`${config.NEWS}bbc`)
+        const { url, title, desc, image } = data.result;
+
+        if (storedLink2 !== url) {  
+            await sendNews2(title, desc, url, image);
+            
+            storedLink2 = url;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates2, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates2();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+async function checkForNewsUpdates3() {
+    try {
+        const data = await fetchJson(`${config.NEWS}itn`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink3 !== link) {  
+            await sendNews3(title, desc, date, link, image);
+            
+            storedLink3 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates3, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates3();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+    async function checkForNewsUpdates4() {
+    try {
+        const data = await fetchJson(`${config.NEWS}gossiplankanews`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink4 !== link) {  
+            await sendNews4(title, desc, date, link, image);
+            
+            storedLink4 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates4, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates4();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+     async function checkForNewsUpdates5() {
+    try {
+        const data = await fetchJson(`${config.NEWS}siyatha`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink5 !== link) {  
+            await sendNews5(title, desc, date, link, image);
+            
+            storedLink5 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates5, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates5();
+
+    
+//──────────────────────────────────────────────────────────────────   
+   
+     async function checkForNewsUpdates6() {
+    try {
+        const data = await fetchJson(`${config.NEWS}derana`)
+        const { url, title, desc, date, image } = data.result;
+
+        if (storedLink6 !== url) {  
+            await sendNews6(title, desc, date, url, image);
+            
+            storedLink6 = url;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates6, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates6();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+async function checkForNewsUpdates7() {
+    try {
+        const data = await fetchJson(`${config.NEWS}dasathalankanews`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink7 !== link) {  
+            await sendNews7(title, desc, date, link, image);
+            
+            storedLink7 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates7, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates7();
+
+
+
+//──────────────────────────────────────────────────────────────────   
+
+
+async function checkForNewsUpdates8() {
+    try {
+        const data = await fetchJson(`${config.NEWS}server`)
+        const { details, image } = data.result;
+
+        if (storedLink8 !== image) {  
+            await sendNews8(details, image);
+            
+            storedLink8 = image;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates8, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates8();
+
 
 
 //──────────────────────────────────────────────────────────────────   
@@ -142,7 +392,7 @@ async function connectToWA() {
             });
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
-await conn.sendMessage(config.OWNER_NUMBER + "@s.whatsapp.net", {
+conn.sendMessage(conn.user.id, {
 text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
 contextInfo: {
 externalAdReply: {
@@ -160,7 +410,26 @@ renderLargerThumbnail: true
 
         
       
+//==================================================================
 
+	
+conn.ev.on("call", async(json) => {
+	  if(config.ANTI_CALL === "true" ) { 
+    	for(const id of json) {
+    		if(id.status == "offer") {
+    			if(id.isGroup == false) {
+    				await conn.sendMessage(id.from, {
+    					text: `⚠️︱Call rejected automaticaly Because owner is busy right now\nහිමිකරු දැන් කාර්ය බහුල බැවින් ඇමතුම ස්වයංක්‍රීයව ප්‍රතික්ෂේප විය`, 
+							mentions: [id.from]
+    				});
+    				await conn.rejectCall(id.id, id.from);
+    			} else {
+    				await conn.rejectCall(id.id, id.from);
+    			}
+    		}
+    	}}
+    }); 
+	
 //==================================Welcome================================
 	
 
@@ -203,7 +472,188 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
 
 	
 
+  //farewell/welcome
+    conn.ev.on('group-participants.update', async (anu) => {
+    	if (config.WELCOME === 'true') {
+console.log(anu)
+try {
+let metadata = await conn.groupMetadata(anu.id)
+let participants = anu.participants
+for (let num of participants) {
+try {
+ppuser = await conn.profilePictureUrl(num, 'image')
+} catch (err) {
+ppuser = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
+}
+try {
+ppgroup = await conn.profilePictureUrl(anu.id, 'image')
+} catch (e) {
+ppgroup = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
+}
+//welcome\\
+memb = metadata.participants.length
+connWlcm = await getBuffer(ppuser)
+connLft = await getBuffer(ppuser)
+                if (anu.action == 'add') {
+                const connbuffer = await getBuffer(ppuser)
+                let connName = num
+                const xtime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+	            const xdate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+	            const xmembers = metadata.participants.length
+                connbody = `┌─❖
+│「 𝗛𝗶 👋 」
+└┬❖ 「  @${connName.split("@")[0]}  」
+   │✑  𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 
+   │✑  ${metadata.subject}
+   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
+   │✑ ${xmembers}th
+   │✑  𝗝𝗼𝗶𝗻𝗲𝗱 : 
+   │✑ ${xtime} ${xdate}
+   └───────────────┈ ⳹
+   DESCRIPTION
 
+   OWNER NAME = Vajira Rathnayaka
+
+   TEAM = Technical Cybers (T.C)
+
+   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
+
+   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
+
+👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
+			    
+   `
+conn.sendMessage(anu.id,
+ { text: connbody,
+ contextInfo:{
+mentionedJid:[num],
+"externalAdReply": {
+"showAdAttribution": true,
+"renderLargerThumbnail": true,
+"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
+"body": `${metadata.subject}`,	
+"containsAutoReply": true,
+"mediaType": 1, 
+"thumbnail": connLft,
+"sourceUrl": `${ppuser}`
+}
+}
+})
+                } else if (anu.action == 'remove') {
+                	const connbuffer = await getBuffer(ppuser)
+                    const conntime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+	                const conndate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+                	let connName = num
+                    const connmembers = metadata.participants.length
+                    connbody = `┌─❖
+│「 𝗚𝗼𝗼𝗱𝗯𝘆𝗲 👋 」
+└┬❖ 「 @${connName.split("@")[0]}  」
+   │✑  𝗟𝗲𝗳𝘁 
+   │✑ ${metadata.subject}
+   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
+   │✑ ${connmembers}th
+   │✑  𝗧𝗶𝗺𝗲 : 
+   │✑  ${conntime} ${conndate}
+   └───────────────┈ ⳹
+   DESCRIPTION
+
+   OWNER NAME = Vajira Rathnayaka
+
+   TEAM = Technical Cybers (T.C)
+
+   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
+
+   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
+
+👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
+			    `
+conn.sendMessage(anu.id,
+ { text: connbody,
+ contextInfo:{
+mentionedJid:[num],
+"externalAdReply": {
+"showAdAttribution": true,
+"renderLargerThumbnail": true,
+"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
+"body": `${metadata.subject}`,	
+"containsAutoReply": true,
+"mediaType": 1, 
+"thumbnail": connLft,
+"sourceUrl": `${ppuser}`
+}
+}
+})
+
+			
+	  }
+}
+} catch (e) {
+console.log(e)
+}
+}
+})      
+                  
+//==================================================================
+
+conn.ev.on('group-participants.update', async (anu) => {
+    	if (config.ADMIN_EVENT === 'true') {
+console.log(anu)
+try {
+let participants = anu.participants
+for (let num of participants) {
+try {
+ppuser = await conn.profilePictureUrl(num, 'image')
+} catch (err) {
+ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
+}
+try {
+ppgroup = await conn.profilePictureUrl(anu.id, 'image')
+} catch (err) {
+ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+}
+ if (anu.action == 'promote') {
+const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+let xeonName = num
+xeonbody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${xeonName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
+   conn.sendMessage(anu.id,
+ { text: xeonbody,
+ contextInfo:{
+ mentionedJid:[num],
+ "externalAdReply": {"showAdAttribution": true,
+ "containsAutoReply": true,
+ "title": "VAJIRA MD",
+"body": "Vajira Rathnayaka",
+ "previewType": "PHOTO",
+"thumbnailUrl": ``,
+"thumbnail": XeonWlcm,
+"sourceUrl": `${wagc}`}}})
+} else if (anu.action == 'demote') {
+const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+let xeonName = num
+xeonbody = `𝗢𝗼𝗽𝘀‼️ @${xeonName.split("@")[0]}, you have been *demoted* from *admin* 😬`
+conn.sendMessage(anu.id,
+ { text: xeonbody,
+ contextInfo:{
+ mentionedJid:[num],
+ "externalAdReply": {"showAdAttribution": true,
+ "containsAutoReply": true,
+ "title": "VAJIRA MD",
+"body": "Vajira Rathnayaka",
+ "previewType": "PHOTO",
+"thumbnailUrl": ``,
+"thumbnail": XeonLft,
+"sourceUrl": `${wagc}`}}})
+}
+}
+} catch (err) {
+console.log(err)
+}
+}
+})
+	      
+	      
 	
 //==================================================================
 
@@ -328,13 +778,6 @@ conn.ev.on('messages.update', async(mes) => {
             if (!mek.message) return
 	    var id_db = require('./lib/id_db')    
             mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-            const m = sms(conn, mek)
-	    var smg = m
-            const type = getContentType(mek.message)
-            const content = JSON.stringify(mek.message)
-            const from = mek.key.remoteJid
-            const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
-
 
 //==================================Button================================
 	      
