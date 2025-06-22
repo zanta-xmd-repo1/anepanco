@@ -12,8 +12,8 @@ const herokuapi = process.env.HEROKU_API
 const pingSt = new Date();
 const { cmd, commands } = require('../lib/command')
 const DB = require('../lib/scraper')
-const owner = JSON.parse(fs.readFileSync('./lib/owner.json'))
-const devlopernumber = "94711453361"
+const DB sampurna  peliyai
+const owner sampurna peliyai
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson,clockString, jsonformat} = require('../lib/functions')
 var { updateCMDStore,isbtnID,getCMDStore,getCmdForCmdId,connectdb,input,get, updb,updfb } = require("../lib/database")
 const {
