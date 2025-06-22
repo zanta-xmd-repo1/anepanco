@@ -2,7 +2,7 @@ const os = require('os');
 const config = require('../lib/config');
 const {cmd , commands} = require('../lib/command');
 const axios = require('axios');
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson,clockString, jsonformat, checkAndUpdateLimit, getUserLimit} = require('../lib/functions');
+const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson,clockString, jsonformat, checkAndUpdateLimit,)
 
 cmd({
     pattern: "alive",
