@@ -381,25 +381,7 @@ checkForNewsUpdates8();
 
 
 //──────────────────────────────────────────────────────────────────   
-		
-		
-            console.log('Installing plugins 🔌... ')
-            const path = require('path');
-            fs.readdirSync("./plugins/").forEach((plugin) => {
-                if (path.extname(plugin).toLowerCase() == ".js") {
-                    require("./plugins/" + plugin);
-                }
-            });
-            console.log('Plugins installed ✅')
-            console.log('Bot connected ✅')
-conn.sendMessage(conn.user.id, {
-text: "console.log('Installing plugins 🔌... ')
-            const path = require('path');
-            fs.readdirSync("./plugins/").forEach((plugin) => {
-                if (path.extname(plugin).toLowerCase() == ".js") {
-                    require("./plugins/" + plugin);
-                }
-            });
+            
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
 conn.sendMessage(conn.user.id, {
