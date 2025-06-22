@@ -91,293 +91,43 @@ if (!fs.existsSync(__dirname + '/lib/session/creds.json')) {
 // <<==========PORTS===========>>
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 9090;
+const port = process.env.PORT || 8000;
 
 
 //====================================
 async function connectToWA() {
-  console.log("Connecting to WhatsApp 🥷...");
-  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/lib/session/')
-  var { version } = await fetchLatestBaileysVersion()
-  
-  const conn = makeWASocket({
-          logger: P({ level: 'silent' }),
-          printQRInTerminal: false,
-          browser: Browsers.macOS("Firefox"),
-          syncFullHistory: true,
-          auth: state,
-          version
-          })
-      
-  conn.ev.on('connection.update', (update) => {
-  const { connection, lastDisconnect } = update
-  if (connection === 'close') {
-  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-  connectToWA()
-  }
-  } else if (connection === 'open') {
+    const {
+        version,
+        isLatest
+    } = await fetchLatestBaileysVersion()
+    console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
+    const {
+        state,
+        saveCreds
+    } = await useMultiFileAuthState(__dirname + '/lib//session/')
+    const conn = makeWASocket({
+        logger: P({
+            level: "fatal"
+        }).child({
+            level: "fatal"
+        }),
+        printQRInTerminal: true,
+        generateHighQualityLinkPreview: true,
+        auth: state,
+        defaultQueryTimeoutMs: undefined,
+        msgRetryCounterCache
+    })
 
-
-
-let storedLink = null;  
-let storedLink1 = null;  
-let storedLink2 = null;  
-let storedLink3 = null;  
-let storedLink4 = null;  
-let storedLink5 = null;
-let storedLink6 = null;
-let storedLink7 = null;    
-let storedLink8 = null;    		
-    
-async function sendNews(title, desc, date, link, img) {
-    const message = `ＶＡＪＩＲＡ-ＭＤ ＨＩＲＵ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: img} , caption: message })  
-}
-async function sendNews1(title, desc, date, url, image) {
-    const message1 = `ＶＡＪＩＲＡ-ＭＤ ＬＡＮＫＡＤＥＥＰＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message1 })  
-}
-async function sendNews2(title, desc, url, image) {
-    const message2 = `ＶＡＪＩＲＡ-ＭＤ ＢＢＣ - ＮＥＷＳ\n\n*${title}*\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message2 })  
-}
-async function sendNews3(title, desc, date, link, image) {
-    const message3 = `ＶＡＪＩＲＡ-ＭＤ ＩＴＮ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message3 })  
-}
-async function sendNews4(title, desc, date, link, image) {
-    const message4 = `ＶＡＪＩＲＡ-ＭＤ ＧＯＳＳＩＰＬＡＮＫＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message4 })  
-}
-async function sendNews5(title, desc, date, link, image) {
-    const message5 = `ＶＡＪＩＲＡ-ＭＤ ＳＩＹＡＴＨＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message5 })  
-}
-async function sendNews6(title, desc, date, url, image) {
-    const message6 = `ＶＡＪＩＲＡ-ＭＤ ＤＥＲＡＮＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message6 })  
-}
-async function sendNews7(title, desc, date, link, image) {
-    const message7 = `ＶＡＪＩＲＡ-ＭＤ ＤＡＳＡＴＨＡＬＡＮＫＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
-    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message7 })  
-}
-async function sendNews8(details, image) {
-    const message8 = `${details}`;
-    await conn.sendMessage( conn.user.id , { image: { url: image} , caption: message8 })  
-}
-
-
-const jidko = 'After deploy put .newsactivate <group jid> to activate auto news'
-
-
-async function checkForNewsUpdates() {
-    try {
-        const data = await fetchJson(`${config.NEWS}hiru`)
-        const { link, title, desc, date, img } = data.result;
-
-        if (storedLink !== link) {  
-            await sendNews(title, desc, date, link, img);
-            
-            storedLink = link;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates();
-
-    
-//───────────────────────────────────────────────────────────────────
-    
- 
-async function checkForNewsUpdates1() {
-    try {
-        const data = await fetchJson(`${config.NEWS}lankadeepa`)
-        const { url, title, desc, date, image } = data.result;
-
-        if (storedLink1 !== url) {  
-            await sendNews1(title, desc, date, url, image);
-            
-            storedLink1 = url;
-        } 
-    } catch (error) {
-        console.error(jidko);;
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates1, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates1();
-
-
-    
-//──────────────────────────────────────────────────────────────────
-
- async function checkForNewsUpdates2() {
-    try {
-        const data = await fetchJson(`${config.NEWS}bbc`)
-        const { url, title, desc, image } = data.result;
-
-        if (storedLink2 !== url) {  
-            await sendNews2(title, desc, url, image);
-            
-            storedLink2 = url;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates2, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates2();
-
-    
-//──────────────────────────────────────────────────────────────────   
-
-async function checkForNewsUpdates3() {
-    try {
-        const data = await fetchJson(`${config.NEWS}itn`)
-        const { link, title, desc, date, image } = data.result;
-
-        if (storedLink3 !== link) {  
-            await sendNews3(title, desc, date, link, image);
-            
-            storedLink3 = link;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates3, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates3();
-
-    
-//──────────────────────────────────────────────────────────────────   
-
-    async function checkForNewsUpdates4() {
-    try {
-        const data = await fetchJson(`${config.NEWS}gossiplankanews`)
-        const { link, title, desc, date, image } = data.result;
-
-        if (storedLink4 !== link) {  
-            await sendNews4(title, desc, date, link, image);
-            
-            storedLink4 = link;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates4, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates4();
-
-    
-//──────────────────────────────────────────────────────────────────   
-
-     async function checkForNewsUpdates5() {
-    try {
-        const data = await fetchJson(`${config.NEWS}siyatha`)
-        const { link, title, desc, date, image } = data.result;
-
-        if (storedLink5 !== link) {  
-            await sendNews5(title, desc, date, link, image);
-            
-            storedLink5 = link;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates5, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates5();
-
-    
-//──────────────────────────────────────────────────────────────────   
-   
-     async function checkForNewsUpdates6() {
-    try {
-        const data = await fetchJson(`${config.NEWS}derana`)
-        const { url, title, desc, date, image } = data.result;
-
-        if (storedLink6 !== url) {  
-            await sendNews6(title, desc, date, url, image);
-            
-            storedLink6 = url;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates6, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates6();
-
-    
-//──────────────────────────────────────────────────────────────────   
-
-async function checkForNewsUpdates7() {
-    try {
-        const data = await fetchJson(`${config.NEWS}dasathalankanews`)
-        const { link, title, desc, date, image } = data.result;
-
-        if (storedLink7 !== link) {  
-            await sendNews7(title, desc, date, link, image);
-            
-            storedLink7 = link;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates7, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates7();
-
-
-
-//──────────────────────────────────────────────────────────────────   
-
-
-async function checkForNewsUpdates8() {
-    try {
-        const data = await fetchJson(`${config.NEWS}server`)
-        const { details, image } = data.result;
-
-        if (storedLink8 !== image) {  
-            await sendNews8(details, image);
-            
-            storedLink8 = image;
-        } 
-    } catch (error) {
-        console.error(jidko);
-    }
-
-    // Re-run the function after a 5-minute delay
-    setTimeout(checkForNewsUpdates8, 5 * 60 * 1000); // 5 minutes in milliseconds
-}
- 
-checkForNewsUpdates8();
-
+    conn.ev.on('connection.update', async (update) => {
+        const {
+            connection,
+            lastDisconnect
+        } = update
+        if (connection === 'close') {
+            if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+                connectToWA()
+            }
+        } else if (connection === 'open') {
 
 
 //──────────────────────────────────────────────────────────────────   
@@ -392,7 +142,7 @@ checkForNewsUpdates8();
             });
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
-conn.sendMessage(conn.user.id, {
+await conn.sendMessage(config.OWNER_NUMBER + "@s.whatsapp.net", {
 text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
 contextInfo: {
 externalAdReply: {
@@ -410,26 +160,7 @@ renderLargerThumbnail: true
 
         
       
-//==================================================================
 
-	
-conn.ev.on("call", async(json) => {
-	  if(config.ANTI_CALL === "true" ) { 
-    	for(const id of json) {
-    		if(id.status == "offer") {
-    			if(id.isGroup == false) {
-    				await conn.sendMessage(id.from, {
-    					text: `⚠️︱Call rejected automaticaly Because owner is busy right now\nහිමිකරු දැන් කාර්ය බහුල බැවින් ඇමතුම ස්වයංක්‍රීයව ප්‍රතික්ෂේප විය`, 
-							mentions: [id.from]
-    				});
-    				await conn.rejectCall(id.id, id.from);
-    			} else {
-    				await conn.rejectCall(id.id, id.from);
-    			}
-    		}
-    	}}
-    }); 
-	
 //==================================Welcome================================
 	
 
@@ -472,188 +203,7 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
 
 	
 
-  //farewell/welcome
-    conn.ev.on('group-participants.update', async (anu) => {
-    	if (config.WELCOME === 'true') {
-console.log(anu)
-try {
-let metadata = await conn.groupMetadata(anu.id)
-let participants = anu.participants
-for (let num of participants) {
-try {
-ppuser = await conn.profilePictureUrl(num, 'image')
-} catch (err) {
-ppuser = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
-}
-try {
-ppgroup = await conn.profilePictureUrl(anu.id, 'image')
-} catch (e) {
-ppgroup = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
-}
-//welcome\\
-memb = metadata.participants.length
-connWlcm = await getBuffer(ppuser)
-connLft = await getBuffer(ppuser)
-                if (anu.action == 'add') {
-                const connbuffer = await getBuffer(ppuser)
-                let connName = num
-                const xtime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-	            const xdate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-	            const xmembers = metadata.participants.length
-                connbody = `┌─❖
-│「 𝗛𝗶 👋 」
-└┬❖ 「  @${connName.split("@")[0]}  」
-   │✑  𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 
-   │✑  ${metadata.subject}
-   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
-   │✑ ${xmembers}th
-   │✑  𝗝𝗼𝗶𝗻𝗲𝗱 : 
-   │✑ ${xtime} ${xdate}
-   └───────────────┈ ⳹
-   DESCRIPTION
 
-   OWNER NAME = Vajira Rathnayaka
-
-   TEAM = Technical Cybers (T.C)
-
-   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
-
-   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
-
-👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
-			    
-   `
-conn.sendMessage(anu.id,
- { text: connbody,
- contextInfo:{
-mentionedJid:[num],
-"externalAdReply": {
-"showAdAttribution": true,
-"renderLargerThumbnail": true,
-"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
-"body": `${metadata.subject}`,	
-"containsAutoReply": true,
-"mediaType": 1, 
-"thumbnail": connLft,
-"sourceUrl": `${ppuser}`
-}
-}
-})
-                } else if (anu.action == 'remove') {
-                	const connbuffer = await getBuffer(ppuser)
-                    const conntime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-	                const conndate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-                	let connName = num
-                    const connmembers = metadata.participants.length
-                    connbody = `┌─❖
-│「 𝗚𝗼𝗼𝗱𝗯𝘆𝗲 👋 」
-└┬❖ 「 @${connName.split("@")[0]}  」
-   │✑  𝗟𝗲𝗳𝘁 
-   │✑ ${metadata.subject}
-   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
-   │✑ ${connmembers}th
-   │✑  𝗧𝗶𝗺𝗲 : 
-   │✑  ${conntime} ${conndate}
-   └───────────────┈ ⳹
-   DESCRIPTION
-
-   OWNER NAME = Vajira Rathnayaka
-
-   TEAM = Technical Cybers (T.C)
-
-   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
-
-   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
-
-👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
-			    `
-conn.sendMessage(anu.id,
- { text: connbody,
- contextInfo:{
-mentionedJid:[num],
-"externalAdReply": {
-"showAdAttribution": true,
-"renderLargerThumbnail": true,
-"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
-"body": `${metadata.subject}`,	
-"containsAutoReply": true,
-"mediaType": 1, 
-"thumbnail": connLft,
-"sourceUrl": `${ppuser}`
-}
-}
-})
-
-			
-	  }
-}
-} catch (e) {
-console.log(e)
-}
-}
-})      
-                  
-//==================================================================
-
-conn.ev.on('group-participants.update', async (anu) => {
-    	if (config.ADMIN_EVENT === 'true') {
-console.log(anu)
-try {
-let participants = anu.participants
-for (let num of participants) {
-try {
-ppuser = await conn.profilePictureUrl(num, 'image')
-} catch (err) {
-ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
-}
-try {
-ppgroup = await conn.profilePictureUrl(anu.id, 'image')
-} catch (err) {
-ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
-}
- if (anu.action == 'promote') {
-const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let xeonName = num
-xeonbody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${xeonName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
-   conn.sendMessage(anu.id,
- { text: xeonbody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": "VAJIRA MD",
-"body": "Vajira Rathnayaka",
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": XeonWlcm,
-"sourceUrl": `${wagc}`}}})
-} else if (anu.action == 'demote') {
-const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let xeonName = num
-xeonbody = `𝗢𝗼𝗽𝘀‼️ @${xeonName.split("@")[0]}, you have been *demoted* from *admin* 😬`
-conn.sendMessage(anu.id,
- { text: xeonbody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": "VAJIRA MD",
-"body": "Vajira Rathnayaka",
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": XeonLft,
-"sourceUrl": `${wagc}`}}})
-}
-}
-} catch (err) {
-console.log(err)
-}
-}
-})
-	      
-	      
 	
 //==================================================================
 
@@ -778,6 +328,13 @@ conn.ev.on('messages.update', async(mes) => {
             if (!mek.message) return
 	    var id_db = require('./lib/id_db')    
             mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
+            const m = sms(conn, mek)
+	    var smg = m
+            const type = getContentType(mek.message)
+            const content = JSON.stringify(mek.message)
+            const from = mek.key.remoteJid
+            const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
+
 
 //==================================Button================================
 	      
@@ -1400,344 +957,43 @@ events.commands.map(async (command) => {
                 return trueFileName
             }	      
 
-//==================================Settings================================
-if (config.OWNER_REACT === 'true') {
 
-if (mek.sender == '94758179948@s.whatsapp.net') {
-    //  await conn.sendMessage(from, { react: { text: `♥️`, key: mek.key }})
-      //await conn.sendMessage(from, { react: { text: `🙂️`, key: mek.key }})
-     // await conn.sendMessage(from, { react: { text: `️🥀`, key: mek.key }})
-      await conn.sendMessage(from, { react: { text: `💟️`, key: mem.key }})
-      
-      }
-      if (mek.sender == '94719199757@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      if (mek.sender == '94772108460@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      if (mek.sender == '94772801923@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      if (mek.sender == '94759874797@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      if (mek.sender == '94754487261@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      if (mek.sender == '94756310995@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      if (mek.sender == '94751150234@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }      
-      if (mek.sender == '94778500326@s.whatsapp.net') {
-      await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
-      }
-      }
-//==================================================================
+
+//==================================================================	
+
 	      
-if (config.AUTO_VOICE === 'true') {
-const url = 'https://gist.github.com/VajiraOfficial/8b7491c0d244de90526cc3ed31f66be6/raw'
-let { data } = await axios.get(url)
-for (vr in data){
-if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { url : data[vr]},mimetype: 'audio/mpeg',ptt:true},{quoted:mek})   
- }}
+            switch (command) {
+        case 'jid':
+        reply(from)
+        break
 
- 
-if (config.AUTO_STICKER === 'true') {
-const url = 'https://gist.github.com/VajiraOfficial/8597e09fcb83f1ab9217b0ca9336699c/raw'
-let { data } = await axios.get(url)
-for (vr in data){
-if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: { url : data[vr]},package: 'made by vajira'},{quoted:mek})   
- }}
-
-                                        	      
-if (config.AUTO_REPLY === 'true') {
-const url = 'https://gist.github.com/VajiraOfficial/f1dc27d6b04c72393d123c973622c99d/raw'
-let { data } = await axios.get(url)
-for (vr in data){
-if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) m.reply(data[vr])
- }}	
-
-//==================================================================	      
-
-
-    
-	      
-let icmd = body ? prefixRegex.test(body[0]) : "false";
-		 if (config.READ_CMD_ONLY === "true" && icmd) {
-                    await conn.readMessages([mek.key])
-		 }
-		
-if (config.AUTO_READ === 'true') {
-        conn.readMessages([mek.key])
+			    
+        default:				
+        if (isOwner && body.startsWith('$')) {
+        let bodyy = body.split('$')[1]
+        let code2 = bodyy.replace("°", ".toString()");
+        try {
+        let resultTest = await eval(code2);l
+        if (typeof resultTest === "object") {
+        reply(util.format(resultTest));
+        } else {
+        reply(util.format(resultTest));
         }
-	    
-if (config.AUTO_TYPING === 'true') {
-	conn.sendPresenceUpdate('composing', from)		
-	}
-
-if (config.AUTO_RECORDING === 'true') {
-
-        conn.sendPresenceUpdate('recording', from)
-
-        }    
-
-if (config.AUTO_BIO === 'true') {
-        conn.updateProfileStatus(`Hey, future leaders! 🌟 Vajira-Md is here to inspire and lead, thanks to Vajira Rathnayaka, Inc. 🚀 ${runtime(process.uptime())} `).catch(_ => _)
-        }	
-
-if (config.ALWAYS_ONLINE === 'false') {
-                await conn.sendPresenceUpdate('unavailable')
-		}
-
-if (config.ALWAYS_ONLINE === 'true') {
-                await conn.sendPresenceUpdate('available')
-		}	    
-	    
-if (config.AUTO_BLOCK == 'true' && m.chat.endsWith("@s.whatsapp.net")) {
-            return conn.updateBlockStatus(m.sender, 'block')
+        } catch (err) {
+        reply(util.format(err));
+        }}}
+        } catch (e) {
+            const isError = String(e)
+            console.log(isError)
         }
-	
-//==================================================================
-	   
-if (config.ANTI_LINK == "true"){
-if (isAnti && isBotAdmins) {
-  if(!isAdmins){
-  if(!isMe){
-if (body.match(`https`)) {
-    await conn.sendMessage(from, { delete: mek.key })	  	  
-  reply('*「 ⚠️ 𝑳𝑰𝑵𝑲 𝑫𝑬𝑳𝑬𝑻𝑬𝑫 ⚠️ 」*')
+    })
 }
-}
-}
-}
-}
-//==================================================================
-
-	
-if (config.ANTI_BOT == "true"){
-if (!isCreator && !isDev && isGroup && !isBotAdmins) {
-   reply(`\`\`\`🤖 Bot Detected!!\`\`\`\n\n_✅ Kicked *@${mek.sender.split("@")[0]}*_`, { mentions: [mek.sender] });
-  conn.groupParticipantsUpdate(from, [mek.sender], 'remove');
-  }}
-//==================================================================
-		    
+app.get("/", (req, res) => {
+res.send("📟 Vajira-Md Working successfully!");
+});
+app.listen(port, () => console.log(`Vajira-Md Server listening on port http://localhost:${port}`));
+setTimeout(() => {
+connectToWA()
+}, 3000);
     
-const bad = await fetchJson(`https://raw.githubusercontent.com/chamiofficial/server-/main/badby_alpha.json`)
-if (config.ANTI_BAD == "true"){
-  if (!isAdmins && !isDev) {
-  for (any in bad){
-  if (body.toLowerCase().includes(bad[any])){  
-    if (!body.includes('tent')) {
-      if (!body.includes('docu')) {
-        if (!body.includes('https')) {
-  if (groupAdmins.includes(sender)) return 
-  if (mek.key.fromMe) return   
-  await conn.sendMessage(from, { delete: mek.key })  
-  await conn.sendMessage(from , { text: '*Bad word detected..!*'})
-  await conn.groupParticipantsUpdate(from,[sender], 'remove')
-  }}}}}}}
-   
-//==================================================================		    
-
-
-
-
-if(!isOwner) {	//!isOwner) {	
-    if(config.ANTI_DELETE === "true" ) {
-        
-    if (!m.id.startsWith("BAE5")) {
     
-    // Ensure the base directory exists
-    const baseDir = 'message_data';
-    if (!fs.existsSync(baseDir)) {
-      fs.mkdirSync(baseDir);
-    }
-    
-    function loadChatData(remoteJid, messageId) {
-      const chatFilePath = path.join(baseDir, remoteJid, `${messageId}.json`);
-      try {
-        const data = fs.readFileSync(chatFilePath, 'utf8');
-        return JSON.parse(data) || [];
-      } catch (error) {
-        return [];
-      }
-    }
-    
-    function saveChatData(remoteJid, messageId, chatData) {
-      const chatDir = path.join(baseDir, remoteJid);
-    
-      if (!fs.existsSync(chatDir)) {
-        fs.mkdirSync(chatDir, { recursive: true });
-      }
-    
-      const chatFilePath = path.join(chatDir, `${messageId}.json`);
-    
-      try {
-        fs.writeFileSync(chatFilePath, JSON.stringify(chatData, null, 2));
-       // console.log('Chat data saved successfully.');
-      } catch (error) {
-        console.error('Error saving chat data:', error);
-      }
-    }
-        
-    function handleIncomingMessage(message) {
-      const remoteJid = from //message.key.remoteJid;
-      const messageId = message.key.id;
-    
-      const chatData = loadChatData(remoteJid, messageId);
-    
-      chatData.push(message);
-    
-      saveChatData(remoteJid, messageId, chatData);
-    
-    //  console.log('Message received and saved:', messageId);
-    }
-    
-    const delfrom = config.DELETEMSGSENDTO !=='' ? config.DELETEMSGSENDTO + 'chat.whatsapp.com': from
-    function handleMessageRevocation(revocationMessage) {
-    //const remoteJid = revocationMessage.message.protocolMessage.key.remoteJid;
-     //const messageId = revocationMessage.message.protocolMessage.key.id;
-    const remoteJid = from // revocationMessage.msg.key.remoteJid;
-    const messageId = revocationMessage.msg.key.id;
-    
-        
-     // console.log('Received revocation message with ID:', messageId);
-    
-      const chatData = loadChatData(remoteJid, messageId);
-    
-       const originalMessage = chatData[0]   
-    
-      if (originalMessage) {
-        const deletedBy = revocationMessage.sender.split('@')[0];
-        const sentBynn = originalMessage.key.participant ?? revocationMessage.sender;
-    const sentBy = sentBynn.split('@')[0];
-          if ( deletedBy.includes(botNumber) || sentBy.includes(botNumber) ) return;
-     if(originalMessage.message && originalMessage.message.conversation && originalMessage.message.conversation !== ''){
-         const messageText = originalMessage.message.conversation;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-         var xx = '```'
-     conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${xx}${messageText}${xx}` });
-    //........................................//........................................
-    }else if(originalMessage.msg.type ==='MESSAGE_EDIT'){
-     conn.sendMessage(delfrom, { text: `❌ *edited message detected* ${originalMessage.message.editedMessage.message.protocolMessage.editedMessage.conversation}` },{quoted: mek});
-     
-    //........................................//........................................
-    } else if(originalMessage.message && originalMessage.message.exetendedTextMessage && originalMessage.msg.text ){ //&& originalMessage.message.exetendedTextMessage.text && originalMessage.message.exetendedTextMessage.text !== ''){
-        const messageText = originalMessage.msg.text;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-    
-     var xx = '```'
-     conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${xx}${messageText}${xx}` });
-    } else if(originalMessage.message && originalMessage.message.exetendedTextMessage ){ //&& originalMessage.message.exetendedTextMessage.text && originalMessage.message.exetendedTextMessage.text !== ''){
-        const messagetext = originalMessage.message.extendedTextMessage.text;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-     var xx = '```'
-     conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${xx}${originalMessage.body}${xx}` });
-    }else if(originalMessage.type === 'extendedTextMessage') {
-    async function quotedMessageRetrive(){     
-    var nameJpg = getRandom('');
-    const ml = sms(conn, originalMessage)
-                
-    if(originalMessage.message.extendedTextMessage){
-    const messagetext = originalMessage.message.extendedTextMessage.text;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-        var xx = '```'
-     conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${xx}${originalMessage.message.extendedTextMessage.text}${xx}` });
-    }else{
-    const messagetext = originalMessage.message.extendedTextMessage.text;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-        conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${xx}${originalMessage.message.extendedTextMessage.text}${xx}` });
-    }
-    }
-    
-    quotedMessageRetrive()
-           
-    }else if(originalMessage.type === 'imageMessage') {
-          async function imageMessageRetrive(){      var nameJpg = getRandom('');
-    const ml = sms(conn, originalMessage)
-                let buff =  await ml.download(nameJpg)
-                let fileType = require('file-type');
-                let type = fileType.fromBuffer(buff);
-                await fs.promises.writeFile("./" + type.ext, buff);
-    if(originalMessage.message.imageMessage.caption){
-    const messageText = originalMessage.message.imageMessage.caption;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-    
-        await conn.sendMessage(delfrom, { image: fs.readFileSync("./" + type.ext), caption: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${originalMessage.message.imageMessage.caption}` })
-    }else{
-        await conn.sendMessage(delfrom, { image: fs.readFileSync("./" + type.ext), caption: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_` })
-    }       
-        }
-    imageMessageRetrive()
-     
-    }else if(originalMessage.type === 'videoMessage') {
-          async function videoMessageRetrive(){      var nameJpg = getRandom('');
-    const ml = sms(conn, originalMessage)
-    
-    const vData = originalMessage.message.videoMessage.fileLength
-    const vTime = originalMessage.message.videoMessage.seconds;
-    const fileDataMB = config.MAX_SIZE
-    const fileLengthBytes = vData
-    const fileLengthMB = fileLengthBytes / (1024 * 1024);
-    const fileseconds = vTime
-    if(originalMessage.message.videoMessage.caption){
-    if (fileLengthMB < fileDataMB && fileseconds < 30*60 ) {
-                let buff =  await ml.download(nameJpg)
-                let fileType = require('file-type');
-                let type = fileType.fromBuffer(buff);
-                await fs.promises.writeFile("./" + type.ext, buff);
-    const messageText = originalMessage.message.videoMessage.caption;
-    if (isGroup && messageText.includes('chat.whatsapp.com')) return;
-    
-        await conn.sendMessage(delfrom, { video: fs.readFileSync("./" + type.ext), caption: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n\n> 🔓 Message Text: ${originalMessage.message.videoMessage.caption}` })
-           }
-    }else{
-                let buff =  await ml.download(nameJpg)
-                let fileType = require('file-type');
-                let type = fileType.fromBuffer(buff);
-                await fs.promises.writeFile("./" + type.ext, buff);
-        const vData = originalMessage.message.videoMessage.fileLength
-    const vTime = originalMessage.message.videoMessage.seconds;
-    const fileDataMB = config.MAX_SIZE
-    const fileLengthBytes = vData
-    const fileLengthMB = fileLengthBytes / (1024 * 1024);
-    const fileseconds = vTime
-    if (fileLengthMB < fileDataMB && fileseconds < 30*60 ) {
-        await conn.sendMessage(delfrom, { video: fs.readFileSync("./" + type.ext), caption: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_` })
-    }
-    }       
-    }
-    videoMessageRetrive()
-    }else if(originalMessage.type === 'documentMessage') {
-          async function documentMessageRetrive(){      var nameJpg = getRandom('');
-    const ml = sms(conn, originalMessage)
-                let buff =  await ml.download(nameJpg)
-                let fileType = require('file-type');
-                let type = fileType.fromBuffer(buff);
-                await fs.promises.writeFile("./" + type.ext, buff);
-    
-        
-    
-    if(originalMessage.message.documentWithCaptionMessage){
-    
-    await conn.sendMessage(delfrom, { document: fs.readFileSync("./" + type.ext), mimetype: originalMessage.message.documentMessage.mimetype, fileName: originalMessage.message.documentMessage.fileName, caption: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n`});
-     
-    }else{
-    
-    await conn.sendMessage(delfrom, { document: fs.readFileSync("./" + type.ext), mimetype: originalMessage.message.documentMessage.mimetype, fileName: originalMessage.message.documentMessage.fileName, caption: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n`});
-    
-    }
-     }
-    
-    documentMessageRetrive()
-    }else if(originalMessage.type === 'audioMessage') {
-          async function audioMessageRetrive(){      var nameJpg = getRandom('');
-    const ml = sms(conn, originalMessage)
-                let buff =  await ml.download(nameJpg)
-                let fileType = require('file-type');
-                let type = fileType.fromBuffer(buff);
-                await fs.promises.writeFile("./" + type.ext, buff);
-    if(originalMessage.message.audioMessage
