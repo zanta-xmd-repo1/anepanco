@@ -10,7 +10,6 @@
     "restart":"pm2 restart vajira"},
   "dependencies":{
     "@adiwajshing/keyed-db":"^0.2.4",
-    "@adiwajshing/baileys": "github:@whiskeysockets/baileys",
     "@blackamda/telegram-image-url":"^1.0.0",
     "@bochilteam/scraper":"^4.0.22-alpha.0",
     "@distube/ytdl-core":"^4.13.5",
@@ -21,7 +20,8 @@
     "@sl-code-lords/photooxy":"^1.0.1",
     "@sl-code-lords/si-subdl":"^1.1.1",
     "@sl-code-lords/text-pro-me":"^1.0.0",
-    "@whiskeysockets/baileys": "npm:@whiskeysockets/baileys@^6.7.9",
+    "@whiskeysockets/baileys":
+    "npm:@whiskeysockets/baileys@^6.7.9",
     "@xct007/frieren-scraper":"^0.0.2",
     "api-dylux":"latest",
     "async-g-i-s":"^1.4.0",
