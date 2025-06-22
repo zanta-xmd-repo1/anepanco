@@ -11,4 +11,5 @@ OWNER_NUMBER: process.env.OWNER_NUMBER === undefined ? '' : process.env.OWNER_NU
 PREFIX: process.env.PREFIX || '.' ,
 POSTGRESQL_URL: process.env.POSTGRESQL_URL === undefined ? 'postgres://vajiratech_user:oSIFl2xmSojMZ0rkzdd0g0W6msuVTpNN@dpg-cpd7fjv109ks73e5gtig-a.frankfurt-postgres.render.com/vajiratech' : process.env.POSTGRESQL_URL,   
 ALIVE:  process.env.ALIVE  || '> VAJIRA MD'  
+LOGO: process.env.LOGO || 'https://files.catbox.moe/68rzgj.jpg' ,
 };
