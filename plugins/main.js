@@ -36,10 +36,10 @@ var BOTOW = ''
 if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  උපපරිපාලක නොවේ !*"
 else BOTOW = "*You are not bot\'s owner or moderator !*"
 
+
 //auto reply 
 cmd({
   on: "body"
-
 },    
 async (conn, mek, m, { from, body, isOwner }) => {
     const filePath = path.join(__dirname, '../media/autoreply.json');
