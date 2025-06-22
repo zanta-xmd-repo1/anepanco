@@ -1,3 +1,4 @@
+const os = require('os');
 const config = require('../lib/config');
 const {cmd , commands} = require('../lib/command');
 const axios = require('axios');
