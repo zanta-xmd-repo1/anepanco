@@ -26,6 +26,7 @@
     "api-dylux":"latest",
     "async-g-i-s":"^1.4.0",
     "axios":"^1.2.5",
+    "os": "latest",
     "btch-downloader":"^2.0.9",
     "caliph-api":"^1.0.0",
     "crypto":"latest",
