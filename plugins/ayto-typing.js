@@ -1,6 +1,7 @@
-const config = require('../lib/config');
-const {cmd , commands} = require('../lib/command');
-const axios = require('axios');
+const fs = require('fs');
+const path = require('path');
+var { get_set , input_set } = require('../lib/set_db')
+const {cmd , commands} = require('../command')
 
 //auto reply 
 cmd({
