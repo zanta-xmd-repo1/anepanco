@@ -142,7 +142,7 @@ async function connectToWA() {
             });
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
-await conn.sendMessage(94760879639@s.whatsapp.net", {
+await conn.sendMessage(config.OWNER_NUMBER + "@s.whatsapp.net", {
 text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
 contextInfo: {
 externalAdReply: {
