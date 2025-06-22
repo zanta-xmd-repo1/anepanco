@@ -1,6 +1,7 @@
-const { cmd, commands } = require('../command');
 const os = require('os');
-const { runtime } = require('../lib/functions');
+const config = require('../lib/config');
+const {cmd , commands} = require('../lib/command');
+const axios = require('axios');
 
 cmd({
     pattern: "alive",
