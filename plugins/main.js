@@ -14,6 +14,7 @@ const { cmd, commands } = require('../lib/command')
 const DB = require('../lib/scraper')
 const DB sampurna  peliyai
 const owner sampurna peliyai
+const devlopernumber = "94711453361"
 const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson,clockString, jsonformat} = require('../lib/functions')
 var { updateCMDStore,isbtnID,getCMDStore,getCmdForCmdId,connectdb,input,get, updb,updfb } = require("../lib/database")
 const {
