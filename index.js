@@ -12,8 +12,8 @@ const {
     makeInMemoryStore,
     makeCacheableSignalKeyStore,
     downloadContentFromMessage,
-    generateWAMessageFromContent,
     generateForwardMessageContent,
+    generateWAMessageFromContent,
     prepareWAMessageMedia,
     proto
 } = require('@whiskeysockets/baileys')
@@ -23,11 +23,14 @@ const FileType = require('file-type')
 const moment = require('moment-timezone')
 const l = console.log
 var config = require('./settings')
-const pino = require("pino");
 const qrcode = require('qrcode-terminal')
 const NodeCache = require('node-cache')
 const util = require('util')
+const mongoose = require('mongoose'); 
+const fetch = (...args) => import("node-fetch").then(({ default: fetch }) => fetch(...args));
+const cheerio = require("cheerio")
 var prefix = config.PREFIX
+const news = config.news
 var prefixRegex = config.PREFIX === "false" || config.PREFIX === "null" ? "^" : new RegExp('^[' + config.PREFIX + ']');
 const {
     smsg,
@@ -50,9 +53,8 @@ const {
 var { updateCMDStore,isbtnID,getCMDStore,getCmdForCmdId,connectdb,input,get,updb,updfb } = require("./lib/database")
 var { get_set , input_set } = require('./lib/set_db')        
 const axios = require('axios')
-const cheerio = require('cheerio');
  function genMsgId() {
-  const lt = 'd.rukshan';
+  const lt = 'VajiraTech';
   const prefix = "3EB";
   const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
   let randomText = prefix;
@@ -69,19 +71,18 @@ const {
 } = require('megajs')
 const path = require('path')
 const msgRetryCounterCache = new NodeCache()
-const ownerNumber = '94741354157'
-
+const ownerNumber = config.OWNER_NUMBER
 
 
 
 //===================SESSION============================
-if (!fs.existsSync(__dirname + '/lib/creds.json')) {
+if (!fs.existsSync(__dirname + '/lib/session/creds.json')) {
     if (config.SESSION_ID) {
-      const sessdata = config.SESSION_ID.replace("SOLO-LEVELING~", "")
+      const sessdata = config.SESSION_ID.replace("VAJIRA-MD=", "")
       const filer = File.fromURL(`https://mega.nz/file/${sessdata}`)
       filer.download((err, data) => {
         if (err) throw err
-        fs.writeFile(__dirname + '/lib/creds.json', data, () => {
+        fs.writeFile(__dirname + '/lib/session/creds.json', data, () => {
           console.log("Session download completed !!")
         })
       })
@@ -90,45 +91,297 @@ if (!fs.existsSync(__dirname + '/lib/creds.json')) {
 // <<==========PORTS===========>>
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 8000;
+const port = process.env.PORT || 9090;
+
 
 //====================================
 async function connectToWA() {
-const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream: 'store' }) })	
-    const {
-        version,
-        isLatest
-    } = await fetchLatestBaileysVersion()
-    console.log(`using WA v${version.join('.')}, isLatest: ${isLatest}`)
-    const {
-        state,
-        saveCreds
-    } = await useMultiFileAuthState(__dirname + '/lib/')
-    const conn = makeWASocket({
-        logger: P({
-            level: "fatal"
-        }).child({
-            level: "fatal"
-        }),
-        printQRInTerminal: true,
-        generateHighQualityLinkPreview: true,
-        auth: state,
-        defaultQueryTimeoutMs: undefined,
-        msgRetryCounterCache
-    })
-
-    conn.ev.on('connection.update', async (update) => {
-        const {
-            connection,
-            lastDisconnect
-        } = update
-        if (connection === 'close') {
-            if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
-                connectToWA()
-            }
-        } else if (connection === 'open') {
+  console.log("Connecting to WhatsApp 🥷...");
+  const { state, saveCreds } = await useMultiFileAuthState(__dirname + '/lib/session/')
+  var { version } = await fetchLatestBaileysVersion()
+  
+  const conn = makeWASocket({
+          logger: P({ level: 'silent' }),
+          printQRInTerminal: false,
+          browser: Browsers.macOS("Firefox"),
+          syncFullHistory: true,
+          auth: state,
+          version
+          })
+      
+  conn.ev.on('connection.update', (update) => {
+  const { connection, lastDisconnect } = update
+  if (connection === 'close') {
+  if (lastDisconnect.error.output.statusCode !== DisconnectReason.loggedOut) {
+  connectToWA()
+  }
+  } else if (connection === 'open') {
 
 
+
+let storedLink = null;  
+let storedLink1 = null;  
+let storedLink2 = null;  
+let storedLink3 = null;  
+let storedLink4 = null;  
+let storedLink5 = null;
+let storedLink6 = null;
+let storedLink7 = null;    
+let storedLink8 = null;    		
+    
+async function sendNews(title, desc, date, link, img) {
+    const message = `ＶＡＪＩＲＡ-ＭＤ ＨＩＲＵ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: img} , caption: message })  
+}
+async function sendNews1(title, desc, date, url, image) {
+    const message1 = `ＶＡＪＩＲＡ-ＭＤ ＬＡＮＫＡＤＥＥＰＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message1 })  
+}
+async function sendNews2(title, desc, url, image) {
+    const message2 = `ＶＡＪＩＲＡ-ＭＤ ＢＢＣ - ＮＥＷＳ\n\n*${title}*\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message2 })  
+}
+async function sendNews3(title, desc, date, link, image) {
+    const message3 = `ＶＡＪＩＲＡ-ＭＤ ＩＴＮ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message3 })  
+}
+async function sendNews4(title, desc, date, link, image) {
+    const message4 = `ＶＡＪＩＲＡ-ＭＤ ＧＯＳＳＩＰＬＡＮＫＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message4 })  
+}
+async function sendNews5(title, desc, date, link, image) {
+    const message5 = `ＶＡＪＩＲＡ-ＭＤ ＳＩＹＡＴＨＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message5 })  
+}
+async function sendNews6(title, desc, date, url, image) {
+    const message6 = `ＶＡＪＩＲＡ-ＭＤ ＤＥＲＡＮＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message6 })  
+}
+async function sendNews7(title, desc, date, link, image) {
+    const message7 = `ＶＡＪＩＲＡ-ＭＤ ＤＡＳＡＴＨＡＬＡＮＫＡ - ＮＥＷＳ\n\n*${title}*\n\n${date}\n\n${desc}\n\n> ᴘᴏᴡᴇʀᴇᴅ ʙʏ ᴠᴀᴊɪʀᴀ ᴍᴅ ᴏᴡɴᴇʀ`;
+    await conn.sendMessage( config.N_JID , { image: { url: image} , caption: message7 })  
+}
+async function sendNews8(details, image) {
+    const message8 = `${details}`;
+    await conn.sendMessage( conn.user.id , { image: { url: image} , caption: message8 })  
+}
+
+
+const jidko = 'After deploy put .newsactivate <group jid> to activate auto news'
+
+
+async function checkForNewsUpdates() {
+    try {
+        const data = await fetchJson(`${config.NEWS}hiru`)
+        const { link, title, desc, date, img } = data.result;
+
+        if (storedLink !== link) {  
+            await sendNews(title, desc, date, link, img);
+            
+            storedLink = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates();
+
+    
+//───────────────────────────────────────────────────────────────────
+    
+ 
+async function checkForNewsUpdates1() {
+    try {
+        const data = await fetchJson(`${config.NEWS}lankadeepa`)
+        const { url, title, desc, date, image } = data.result;
+
+        if (storedLink1 !== url) {  
+            await sendNews1(title, desc, date, url, image);
+            
+            storedLink1 = url;
+        } 
+    } catch (error) {
+        console.error(jidko);;
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates1, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates1();
+
+
+    
+//──────────────────────────────────────────────────────────────────
+
+ async function checkForNewsUpdates2() {
+    try {
+        const data = await fetchJson(`${config.NEWS}bbc`)
+        const { url, title, desc, image } = data.result;
+
+        if (storedLink2 !== url) {  
+            await sendNews2(title, desc, url, image);
+            
+            storedLink2 = url;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates2, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates2();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+async function checkForNewsUpdates3() {
+    try {
+        const data = await fetchJson(`${config.NEWS}itn`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink3 !== link) {  
+            await sendNews3(title, desc, date, link, image);
+            
+            storedLink3 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates3, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates3();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+    async function checkForNewsUpdates4() {
+    try {
+        const data = await fetchJson(`${config.NEWS}gossiplankanews`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink4 !== link) {  
+            await sendNews4(title, desc, date, link, image);
+            
+            storedLink4 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates4, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates4();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+     async function checkForNewsUpdates5() {
+    try {
+        const data = await fetchJson(`${config.NEWS}siyatha`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink5 !== link) {  
+            await sendNews5(title, desc, date, link, image);
+            
+            storedLink5 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates5, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates5();
+
+    
+//──────────────────────────────────────────────────────────────────   
+   
+     async function checkForNewsUpdates6() {
+    try {
+        const data = await fetchJson(`${config.NEWS}derana`)
+        const { url, title, desc, date, image } = data.result;
+
+        if (storedLink6 !== url) {  
+            await sendNews6(title, desc, date, url, image);
+            
+            storedLink6 = url;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates6, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates6();
+
+    
+//──────────────────────────────────────────────────────────────────   
+
+async function checkForNewsUpdates7() {
+    try {
+        const data = await fetchJson(`${config.NEWS}dasathalankanews`)
+        const { link, title, desc, date, image } = data.result;
+
+        if (storedLink7 !== link) {  
+            await sendNews7(title, desc, date, link, image);
+            
+            storedLink7 = link;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates7, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates7();
+
+
+
+//──────────────────────────────────────────────────────────────────   
+
+
+async function checkForNewsUpdates8() {
+    try {
+        const data = await fetchJson(`${config.NEWS}server`)
+        const { details, image } = data.result;
+
+        if (storedLink8 !== image) {  
+            await sendNews8(details, image);
+            
+            storedLink8 = image;
+        } 
+    } catch (error) {
+        console.error(jidko);
+    }
+
+    // Re-run the function after a 5-minute delay
+    setTimeout(checkForNewsUpdates8, 5 * 60 * 1000); // 5 minutes in milliseconds
+}
+ 
+checkForNewsUpdates8();
+
+
+
+//──────────────────────────────────────────────────────────────────   
+		
 		
             console.log('Installing plugins 🔌... ')
             const path = require('path');
@@ -138,13 +391,13 @@ const store = makeInMemoryStore({ logger: pino().child({ level: 'silent', stream
                 }
             });
             console.log('Plugins installed ✅')
-            console.log('Dewmini connected ✅')
-await conn.sendMessage(config.OWNER_NUMBER + "@s.whatsapp.net", {
-text: "*⛩️ SOLO-LEVELING MD V4 ⛩️ ꜱᴜᴄᴄᴇsꜱꜰᴜʟʟʏ ᴄᴏɴɴᴇᴄᴛᴇᴅ* ✓\n\n\n> ◦ *𝙾𝙵𝙵𝙸𝙲𝙸𝙰𝙻 𝙶𝙸𝚃𝙷𝚄𝙱* - ```https://github.com/NO-REPOTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*🧚 SOLO-LEVELING-MD ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴅ.ʀᴜꜱᴋʜᴀɴ ʟᴏᴅ ᴏꜰᴄ*",
+            console.log('Bot connected ✅')
+conn.sendMessage(conn.user.id, {
+text: "*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ᴠᴀᴊɪʀᴀ ʀᴀᴛʜɴᴀʏᴀᴋᴀ*",
 contextInfo: {
 externalAdReply: {
-title: "⛩️ SOLO-LEVELING MD V4 ⛩️\nSuccessfully Connected !",	
-thumbnailUrl: 'https://files.catbox.moe/f19lw7.jpeg',
+title: "👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ 👨‍💻\nSuccessfully Connected !",	
+thumbnailUrl: "https://cdn.dribbble.com/users/15468/screenshots/2450252/logo.jpg",
 sourceUrl: "",
 mediaType: 1,
 renderLargerThumbnail: true
@@ -153,6 +406,32 @@ renderLargerThumbnail: true
   })
 
 
+
+
+        
+      
+//==================================================================
+
+	
+conn.ev.on("call", async(json) => {
+	  if(config.ANTI_CALL === "true" ) { 
+    	for(const id of json) {
+    		if(id.status == "offer") {
+    			if(id.isGroup == false) {
+    				await conn.sendMessage(id.from, {
+    					text: `⚠️︱Call rejected automaticaly Because owner is busy right now\nහිමිකරු දැන් කාර්ය බහුල බැවින් ඇමතුම ස්වයංක්‍රීයව ප්‍රතික්ෂේප විය`, 
+							mentions: [id.from]
+    				});
+    				await conn.rejectCall(id.id, id.from);
+    			} else {
+    				await conn.rejectCall(id.id, id.from);
+    			}
+    		}
+    	}}
+    }); 
+	
+//==================================Welcome================================
+	
 
 conn.forwardMessage = async (jid, message, forceForward = false, options = {}) => {
             let vtype
@@ -188,31 +467,13 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
             await conn.relayMessage(jid, waMessage.message, { messageId: waMessage.key.id })
             return waMessage
              }
-        
-//==================================================================
+
+
 
 	
-conn.ev.on("call", async(json) => {
-	  if(config.ANTI_CALL === "true" ) { 
-    	for(const id of json) {
-    		if(id.status == "offer") {
-    			if(id.isGroup == false) {
-    				await conn.sendMessage(id.from, {
-    					text: `⚠️︱Call rejected automaticaly Because owner is busy right now\nහිමිකරු දැන් කාර්ය බහුල බැවින් ඇමතුම ස්වයංක්‍රීයව ප්‍රතික්ෂේප විය`, 
-							mentions: [id.from]
-    				});
-    				await conn.rejectCall(id.id, id.from);
-    			} else {
-    				await conn.rejectCall(id.id, id.from);
-    			}
-    		}
-    	}}
-    });       
-//==================================================================
 
   //farewell/welcome
-  
- conn.ev.on('group-participants.update', async (anu) => {
+    conn.ev.on('group-participants.update', async (anu) => {
     	if (config.WELCOME === 'true') {
 console.log(anu)
 try {
@@ -222,12 +483,12 @@ for (let num of participants) {
 try {
 ppuser = await conn.profilePictureUrl(num, 'image')
 } catch (err) {
-ppuser = 'https://files.catbox.moe/vuifao.jpeg'
+ppuser = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
 }
 try {
 ppgroup = await conn.profilePictureUrl(anu.id, 'image')
 } catch (e) {
-ppgroup = 'https://files.catbox.moe/vuifao.jpeg'
+ppgroup = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
 }
 //welcome\\
 memb = metadata.participants.length
@@ -251,15 +512,15 @@ connLft = await getBuffer(ppuser)
    └───────────────┈ ⳹
    DESCRIPTION
 
-   OWNER NAME = D.RUKSHAN (RED SAMURAY)
-   
-   TEAM = LEGION OF DOOM LOD
+   OWNER NAME = Vajira Rathnayaka
 
-   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VbAWWH9BFLgRMCXVlU38
+   TEAM = Technical Cybers (T.C)
 
-   CHANNEL = https://whatsapp.com/channel/0029VbAWWH9BFLgRMCXVlU38
+   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
 
-👨‍💻 ꜱᴏʟᴏ ʟᴇᴠᴇʟɪɴɢ ᴍᴅ ʙʏ ʟᴏᴅ ᴛᴇᴀᴍ 👨‍💻
+   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
+
+👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
 			    
    `
 conn.sendMessage(anu.id,
@@ -269,7 +530,7 @@ mentionedJid:[num],
 "externalAdReply": {
 "showAdAttribution": true,
 "renderLargerThumbnail": true,
-"title": `  ⛩️ ＳＯＬＯ ＬＥＶＥＬＩＮＧ ＭＤ ⛩️👨‍💻`, 
+"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
 "body": `${metadata.subject}`,	
 "containsAutoReply": true,
 "mediaType": 1, 
@@ -296,15 +557,15 @@ mentionedJid:[num],
    └───────────────┈ ⳹
    DESCRIPTION
 
-   OWNER NAME = D.RUKSHAN (RED SAMURAY)
+   OWNER NAME = Vajira Rathnayaka
 
-   TEAM = LEGION OF DOOM LOD
+   TEAM = Technical Cybers (T.C)
 
-   JOIN MY WHATSAPP CHANNEL =https://whatsapp.com/channel/0029VbAWWH9BFLgRMCXVlU38
+   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
 
-   CHANNEL = https://whatsapp.com/channel/0029VbAWWH9BFLgRMCXVlU38
+   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
 
-👨‍💻 ꜱᴏʟᴏ ʟᴇᴠᴇʟᴜɴɢ ᴍᴅ ʙʏ ʟᴏᴅ ᴛᴇᴀᴍ 👨‍💻
+👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
 			    `
 conn.sendMessage(anu.id,
  { text: connbody,
@@ -313,7 +574,7 @@ mentionedJid:[num],
 "externalAdReply": {
 "showAdAttribution": true,
 "renderLargerThumbnail": true,
-"title": `  ⛩️ ＳＯＬＯ ＬＥＶＥＬＩＮＧ ＭＤ ⛩️`, 
+"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
 "body": `${metadata.subject}`,	
 "containsAutoReply": true,
 "mediaType": 1, 
@@ -330,7 +591,183 @@ mentionedJid:[num],
 console.log(e)
 }
 }
-})   
+})      
+                  
+//==================================================================
+
+conn.ev.on('group-participants.update', async (anu) => {
+    	if (config.ADMIN_EVENT === 'true') {
+console.log(anu)
+try {
+let participants = anu.participants
+for (let num of participants) {
+try {
+ppuser = await conn.profilePictureUrl(num, 'image')
+} catch (err) {
+ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
+}
+try {
+ppgroup = await conn.profilePictureUrl(anu.id, 'image')
+} catch (err) {
+ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
+}
+ if (anu.action == 'promote') {
+const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+let xeonName = num
+xeonbody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${xeonName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
+   conn.sendMessage(anu.id,
+ { text: xeonbody,
+ contextInfo:{
+ mentionedJid:[num],
+ "externalAdReply": {"showAdAttribution": true,
+ "containsAutoReply": true,
+ "title": "VAJIRA MD",
+"body": "Vajira Rathnayaka",
+ "previewType": "PHOTO",
+"thumbnailUrl": ``,
+"thumbnail": XeonWlcm,
+"sourceUrl": `${wagc}`}}})
+} else if (anu.action == 'demote') {
+const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
+const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
+let xeonName = num
+xeonbody = `𝗢𝗼𝗽𝘀‼️ @${xeonName.split("@")[0]}, you have been *demoted* from *admin* 😬`
+conn.sendMessage(anu.id,
+ { text: xeonbody,
+ contextInfo:{
+ mentionedJid:[num],
+ "externalAdReply": {"showAdAttribution": true,
+ "containsAutoReply": true,
+ "title": "VAJIRA MD",
+"body": "Vajira Rathnayaka",
+ "previewType": "PHOTO",
+"thumbnailUrl": ``,
+"thumbnail": XeonLft,
+"sourceUrl": `${wagc}`}}})
+}
+}
+} catch (err) {
+console.log(err)
+}
+}
+})
+	      
+	      
+	
+//==================================================================
+
+
+	
+// respon cmd pollMessage
+async function getMessage(key) {
+    if (store) {
+        const msg = await store.loadMessage(key.remoteJid, key.id);
+        return msg?.message;
+    }
+    return {
+        conversation: "Hai",
+    };
+}
+
+conn.ev.on('messages.update', async chatUpdate => {
+    for (const { key, update } of chatUpdate) {
+        if (update.pollUpdates && key.fromMe) {
+            const pollCreation = await getMessage(key);
+            if (pollCreation) {
+                const pollUpdate = await getAggregateVotesInPollMessage({
+                    message: pollCreation,
+                    pollUpdates: update.pollUpdates,
+                });
+                var toCmd = pollUpdate.filter(v => v.voters.length !== 0)[0]?.name;
+                if (toCmd == undefined) return;
+                var prefCmd = prefix + toCmd;
+
+                try {
+                    setTimeout(async () => {
+                        await gss.sendMessage(key.remoteJid, { delete: key });
+                    }, 10000);
+                } catch (error) {
+                    console.error("Error deleting message:", error);
+                }
+
+                gss.appenTextMessage(prefCmd, chatUpdate);
+            }
+        }
+    }
+});
+
+
+
+conn.ev.on('messages.update', async(mes) => {
+        for(const { key, update } of mes) {
+            if(update.pollUpdates) {
+                const pollCreationmg = await getMessage(key)
+                const pollCreation = pollCreationmg.message;
+                if(pollCreation) {
+                    const from = key.remoteJid;
+                    const botNumber = await jidNormalizedUser(conn.user.id);
+                    const pollMessage = await getAggregateVotesInPollMessage({
+                        message: pollCreation,
+                        pollUpdates: update.pollUpdates,
+                    })
+                    let bodyName = pollMessage.find(poll => poll.voters.length > 0)?.name || '';
+                    let bodyIndex = pollMessage.findIndex(poll => poll.name === bodyName) || '';
+                    
+                    let voter = (pollMessage.find(poll => poll.voters.length > 0)?.voters[0] == 'me')?botNumber  :pollMessage.find(poll => poll.voters.length > 0)?.voters[0];
+                    function extractMentionedJid(data) {
+                        let messageKeys = ['pollCreationMessage', 'pollCreationMessageV1', 'pollCreationMessageV2', 'pollCreationMessageV3'];
+                    
+                        for (let key of messageKeys) {
+                            if (data[key]  && data[key].mentionedJid) {
+                                return data[key].mentionedJid;
+                            }
+                        }
+                    
+                        return null; 
+                    }function extractpollname(data) {
+                        let messageKeys = ['pollCreationMessage', 'pollCreationMessageV1', 'pollCreationMessageV2', 'pollCreationMessageV3'];
+                    
+                        for (let key of messageKeys) {
+                            if (data[key]  && data[key].name) {
+                                return data[key].name;
+                            }
+                        }
+                    
+                        return null; 
+                    }
+                    const mentionedJid = extractMentionedJid(pollCreation);
+                    const poll = extractpollname(pollCreation);
+                    const isRequester= mentionedJid?.includes(voter)
+                    const pollSender = pollCreationmg.key.remoteJid.includes('@g.us') ? pollCreationmg.key.participant : pollCreationmg.key.remoteJid;
+                    const dat = {
+                                body: bodyIndex+ 1,
+                                voted:bodyName,
+                                from: from,
+                                isRequester : isRequester? isRequester:false,
+                                mentionedJid: mentionedJid,
+                                pollSender: pollSender,
+                                poll:poll,
+                                voter: voter,
+                                type: 'poll'
+                }
+                
+                    await conn.sendMessage(botNumber, { text: JSON.stringify(dat,null,2) } )
+                    //conn.sendMessage(botNumber, { text: JSON.stringify(pollCreation,null,2) } )
+                    //conn.sendMessage(botNumber, { text: JSON.stringify(pollMessage,null,2) } )
+                    //conn.sendMessage(botNumber, { text: JSON.stringify(update?.pollUpdates,null,2) } )
+                   
+                    //events.commands.map(async(command) => {
+                      //  if (body && command.on === "poll") {
+                        //command.function(conn, mes, m,{from, l,  body, isGroup, sender,  botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants,  isItzcp, groupAdmins, isBotAdmins, isAdmins, reply,react})
+                        //}});
+                }
+            }
+        }
+    })	
+
+
+
 	
 //==================================================================	
 
@@ -341,47 +778,20 @@ console.log(e)
             if (!mek.message) return
 	    var id_db = require('./lib/id_db')    
             mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
-             //----------------AUTO STATUS VIEW-------------------------------
-            if (!mek.message) return        
-mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
- if (mek.key && mek.key.remoteJid === 'status@broadcast' && config.AUTO_STATUS_READ === "true"){
-                let emoji = [
-                    '😘', '😭', '😂', '😹', '😍', '😋', '🙏', '😜', '😢', '😠', '🤫', '😎',
-                ];
-                let sigma = emoji[Math.floor(Math.random() * emoji.length)];
-                await conn.readMessages([mek.key]);
-                conn.sendMessage(
-                    'status@broadcast',
-                    { react: { text: sigma, key: mek.key } },
-                    { statusJidList: [mek.key.participant] },
-                );
-	/* const user = mek.key.participant	      
-const text = config.STATUS_REPLY_MESSAGE
-await conn.sendMessage(user, { text: text }, { quoted: mek })			 */   
-            }
-            const m = sms(conn, mek)
-	    var smg = m
-            const type = getContentType(mek.message)
-            const content = JSON.stringify(mek.message)
-            const from = mek.key.remoteJid
-                    const quoted = type == 'extendedTextMessage' && mek.message.extendedTextMessage.contextInfo != null ? mek.message.extendedTextMessage.contextInfo.quotedMessage || [] : []
 
-
-const metadata = await conn.newsletterMetadata("jid", "120363401755639074@newsletter")	      
-if (metadata.viewer_metadata === null){
-await conn.newsletterFollow("120363401755639074@newsletter")
-console.log("SOLO-LEVELING MD CHANNEL FOLLOW ✅")
-}	 
-
-
-const id = mek.key.server_id
-await conn.newsletterReactMessage("120363401755639074@newsletter", id, "❤️")
-
-
-
+//==================================Button================================
 	      
 const body = (type === 'conversation') ? mek.message.conversation : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text :(type == 'interactiveResponseMessage' ) ? mek.message.interactiveResponseMessage  && mek.message.interactiveResponseMessage.nativeFlowResponseMessage && JSON.parse(mek.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson) && JSON.parse(mek.message.interactiveResponseMessage.nativeFlowResponseMessage.paramsJson).id :(type == 'templateButtonReplyMessage' )? mek.message.templateButtonReplyMessage && mek.message.templateButtonReplyMessage.selectedId  : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''
   
+
+//==================================NonButton================================
+  	
+await isbtnID(mek.message?.extendedTextMessage?.contextInfo?.stanzaId) &&
+getCmdForCmdId(await getCMDStore(mek.message?.extendedTextMessage?.contextInfo?.stanzaId), mek?.message?.extendedTextMessage?.text)
+? getCmdForCmdId(await getCMDStore(mek.message?.extendedTextMessage?.contextInfo?.stanzaId), mek?.message?.extendedTextMessage?.text)  : (type === 'extendedTextMessage') ? mek.message.extendedTextMessage.text : (type == 'imageMessage') && mek.message.imageMessage.caption ? mek.message.imageMessage.caption : (type == 'videoMessage') && mek.message.videoMessage.caption ? mek.message.videoMessage.caption : ''   
+ 
+ //==================================================================
+
 
 
 conn.sendPoll = (jid, name = '', values = [], selectableCount = 1) => { return conn.sendMessage(jid, { poll: { name, values, selectableCount }}) }
@@ -416,14 +826,14 @@ q = args.join(' ')
             const senderNumber = sender.split('@')[0]
             const botNumber = conn.user.id.split(':')[0]
             const pushname = mek.pushName || 'Sin Nombre'
-	    const ownbot = '94774589636'
+	    const ownbot = '94711453361'
 	    const isownbot = ownbot?.includes(senderNumber)
-            const vajira = '94774589636'
+            const vajira = '94711453097'
             const isVajira = vajira?.includes(senderNumber)
-	    const developers = '94769940690'
+	    const developers = '94711453361'
             const isbot = botNumber.includes(senderNumber)
 	    const isdev = developers.includes(senderNumber) 	    
-            let epaneda ='94741354157'
+            let epaneda =  ''
             const epada = epaneda.split(",")	    
             const isDev = [ ...epada ].map((v) => v.replace(/[^0-9]/g, "") + "@s.whatsapp.net").includes(sender)
 	    const botNumber2 = await jidNormalizedUser(conn.user.id)
@@ -474,15 +884,15 @@ contextInfo: {
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363182681793169@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'MINUKI-MD-MOVIE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
 sourceUrl: "https://wa.me/94711453361" ,
-thumbnailUrl: 'https://telegra.ph/file/f668453bb3afb56193dad-7ba3fe37003843095f.jpg' ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -511,15 +921,15 @@ const textmsg = await conn.sendMessage(from, { text: buttonMessage ,
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363401755639074@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'LOD-MO𝙫IE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://wa.me/94774589636" ,
-thumbnailUrl: 'https://files.catbox.moe/9gnp53.jpeg' ,
+sourceUrl: "https://wa.me/94711453361" ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -534,15 +944,15 @@ contextInfo: {
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363401755639074@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'LOD-MOVIE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://wa.me/94774589636" ,
-thumbnailUrl: 'https://files.catbox.moe/9gnp53.jpeg' ,
+sourceUrl: "https://wa.me/94711453361" ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -609,15 +1019,15 @@ const textmsg = await conn.sendMessage(from, { text: buttonMessage ,contextInfo:
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363401755639074@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'LOD-MOVIE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://wa.me/94774589636" ,
-thumbnailUrl: 'https://files.catbox.moe/9gnp53.jpeg' ,
+sourceUrl: "https://wa.me/94711453361" ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -631,15 +1041,15 @@ const imgmsg = await conn.sendMessage(jid, { image: msgData.image, caption: butt
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363401755639074@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'LOD-MOVIE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://wa.me/94774589636" ,
-thumbnailUrl: 'https://files.catbox.moe/9gnp53.jpeg' ,
+sourceUrl: "https://wa.me/94711453361" ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -680,15 +1090,15 @@ contextInfo: {
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363401755639074@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'LOD-MOVIE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://wa.me/94774589636" ,
-thumbnailUrl: 'https://files.catbox.moe/9gnp53.jpeg' ,
+sourceUrl: "https://wa.me/94711453361" ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -727,15 +1137,15 @@ contextInfo: {
     forwardingScore: 1,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363401755639074@newsletter',
+      newsletterJid: '120363290448968237@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
-title: 'LOD-MOVIE-DL',
+title: '👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://wa.me/94774589636" ,
-thumbnailUrl: 'https://files.catbox.moe/9gnp53.jpeg' ,
+sourceUrl: "https://wa.me/94711453361" ,
+thumbnailUrl: 'https://pomf2.lain.la/f/opmjwj3s.jpg' ,
 renderLargerThumbnail: false,
 showAdAttribution: true
 }
@@ -758,14 +1168,18 @@ editedMessage: {
 }	    
 
 
-//==================================Button================================          
-	      
-   const ownerdata = (await axios.get('https://raw.githubusercontent.com/RUKA-BOT/owner-data.js/a1233d30f4e769e326bdf576b013478bc737a541/owner-data.js')).data
+	
+
+      
+
+//==================================Button================================
+            
+	      /*
+            const ownerdata = (await axios.get('https://gist.github.com/VajiraTechOfficial/4386c5a7d246da55047ea6abc5bd9eec/raw')).data
             config.LOGO = ownerdata.imageurl
             config.FOOTER = ownerdata.footer
             config.PAIR = ownerdata.pair
-            config.API = ownerdata.api
-            config.APIKEY = ownerdata.apikey
+            config.NEWS = ownerdata.news*/
 	      
             conn.edit = async (mek, newmg) => {
                 await conn.relayMessage(from, {
@@ -778,8 +1192,7 @@ editedMessage: {
                     }
                 }, {})
             }
-     
-conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
+            conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                 let mime = '';
                 let res = await axios.head(url)
                 mime = res.headers['content-type']
@@ -839,7 +1252,7 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                     })
                 }
             }
-            conn.sendButtonMessage = async (jid, buttons, quoted, opts = {}) => {
+conn.sendButtonMessage = async (jid, buttons, quoted, opts = {}) => {
 
                 let header;
                 if (opts?.video) {
@@ -896,11 +1309,30 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                                 nativeFlowMessage: {
                                     buttons: buttons,
                                     messageParamsJson: ''
-                                }
+                                },
+                           contextInfo: {
+                  mentionedJid: [m.sender], 
+                  forwardingScore: 999,
+                  isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                  newsletterJid: config.C_JID,
+                  newsletterName: config.C_NAME,
+                  serverMessageId: 143
+                },
+                externalAdReply: { 
+title: config.T_LINE,
+body: config.B_LINE,
+mediaType: 1,
+sourceUrl: config.VAJIRA_WA ,
+thumbnailUrl: config.LOGO2 ,
+renderLargerThumbnail: false
+
+                }
+                           }
                             }
                         }
                     }
-                }, {
+                },{
                     quoted: quoted
                 })
                 await conn.sendPresenceUpdate('composing', jid)
@@ -909,12 +1341,13 @@ conn.sendFileUrl = async (jid, url, caption, quoted, options = {}) => {
                     messageId: message.key.id
                 })
             }
-            
 
+
+	      
 if (!isMe && !isOwner && !isGroup && config.ONLY_GROUP == 'true') return 
 if (!isMe && !isOwner && config.ONLY_ME == 'true') return 
-	     
-  //==================================plugin map================================
+        
+            //==================================plugin map================================
          const events = require('./lib/command')
 const cmdName = isCmd ?  command : false;
 if (isCmd) {
@@ -951,27 +1384,42 @@ events.commands.map(async (command) => {
 
 
 
-      
+      conn.downloadAndSaveMediaMessage = async(message, filename, attachExtension = true) => {
+                let quoted = message.msg ? message.msg : message
+                let mime = (message.msg || message).mimetype || ''
+                let messageType = message.mtype ? message.mtype.replace(/Message/gi, '') : mime.split('/')[0]
+                const stream = await downloadContentFromMessage(quoted, messageType)
+                let buffer = Buffer.from([])
+                for await (const chunk of stream) {
+                    buffer = Buffer.concat([buffer, chunk])
+                }
+                let type = await FileType.fromBuffer(buffer)
+                trueFileName = attachExtension ? (filename + '.' + type.ext) : filename
+                    // save to file
+                await fs.writeFileSync(trueFileName, buffer)
+                return trueFileName
+            }	      
+
 //==================================Settings================================
 if (config.OWNER_REACT === 'true') {
 
-if (mek.sender == '94774589636@s.whatsapp.net') {
+if (mek.sender == '94758179948@s.whatsapp.net') {
     //  await conn.sendMessage(from, { react: { text: `♥️`, key: mek.key }})
       //await conn.sendMessage(from, { react: { text: `🙂️`, key: mek.key }})
      // await conn.sendMessage(from, { react: { text: `️🥀`, key: mek.key }})
       await conn.sendMessage(from, { react: { text: `💟️`, key: mem.key }})
       
       }
-      if (mek.sender == '94774589636@s.whatsapp.net') {
+      if (mek.sender == '94719199757@s.whatsapp.net') {
       await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
       }
-      if (mek.sender == '94769940690@s.whatsapp.net') {
+      if (mek.sender == '94772108460@s.whatsapp.net') {
       await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
       }
       if (mek.sender == '94772801923@s.whatsapp.net') {
       await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
       }
-      if (mek.sender == '94774589636@s.whatsapp.net') {
+      if (mek.sender == '94759874797@s.whatsapp.net') {
       await conn.sendMessage(from, { react: { text: `👨‍💻`, key: mek.key }})
       }
       if (mek.sender == '94754487261@s.whatsapp.net') {
@@ -988,30 +1436,35 @@ if (mek.sender == '94774589636@s.whatsapp.net') {
       }
       }
 //==================================================================
-
-if (config.AUTO_STICKER === 'true') {
-const url = 'https://raw.githubusercontent.com/JawadYT36/KHAN-DATA/main/autosticker.json'
+	      
+if (config.AUTO_VOICE === 'true') {
+const url = 'https://gist.github.com/VajiraOfficial/8b7491c0d244de90526cc3ed31f66be6/raw'
 let { data } = await axios.get(url)
 for (vr in data){
-if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: { url : data[vr]},package: 'made by aadhi'},{quoted:mek})   
+if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { url : data[vr]},mimetype: 'audio/mpeg',ptt:true},{quoted:mek})   
  }}
+
  
- 
+if (config.AUTO_STICKER === 'true') {
+const url = 'https://gist.github.com/VajiraOfficial/8597e09fcb83f1ab9217b0ca9336699c/raw'
+let { data } = await axios.get(url)
+for (vr in data){
+if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: { url : data[vr]},package: 'made by vajira'},{quoted:mek})   
+ }}
+
+                                        	      
 if (config.AUTO_REPLY === 'true') {
-const url = 'https://raw.githubusercontent.com/RUKA-BOT-TEST/SOLO_LEVELING_DATA/main/autoreply.json'
+const url = 'https://gist.github.com/VajiraOfficial/f1dc27d6b04c72393d123c973622c99d/raw'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) m.reply(data[vr])
  }}	
- 
- if (config.AUTO_VOICE === 'true') {
-const url = 'https://raw.githubusercontent.com/RUKA-BOT-TEST/SOLO_LEVELING_DATA/main/autovoice.json'
-let { data } = await axios.get(url)
-for (vr in data){
-if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { url : data[vr]},mimetype: 'audio/mpeg',ptt:true},{quoted:mek})   
- }}            
- 
-//==================================================================
+
+//==================================================================	      
+
+
+    
+	      
 let icmd = body ? prefixRegex.test(body[0]) : "false";
 		 if (config.READ_CMD_ONLY === "true" && icmd) {
                     await conn.readMessages([mek.key])
@@ -1032,7 +1485,7 @@ if (config.AUTO_RECORDING === 'true') {
         }    
 
 if (config.AUTO_BIO === 'true') {
-        conn.updateProfileStatus(`Hey, future leaders! 🌟 Solo-leveling-Md is here to inspire and lead, thanks to Bhagya dewmini, Inc. 🚀 ${runtime(process.uptime())} `).catch(_ => _)
+        conn.updateProfileStatus(`Hey, future leaders! 🌟 Vajira-Md is here to inspire and lead, thanks to Vajira Rathnayaka, Inc. 🚀 ${runtime(process.uptime())} `).catch(_ => _)
         }	
 
 if (config.ALWAYS_ONLINE === 'false') {
@@ -1062,6 +1515,16 @@ if (body.match(`https`)) {
 }
 }
 //==================================================================
+
+	
+if (config.ANTI_BOT == "true"){
+if (!isCreator && !isDev && isGroup && !isBotAdmins) {
+   reply(`\`\`\`🤖 Bot Detected!!\`\`\`\n\n_✅ Kicked *@${mek.sender.split("@")[0]}*_`, { mentions: [mek.sender] });
+  conn.groupParticipantsUpdate(from, [mek.sender], 'remove');
+  }}
+//==================================================================
+		    
+    
 const bad = await fetchJson(`https://raw.githubusercontent.com/chamiofficial/server-/main/badby_alpha.json`)
 if (config.ANTI_BAD == "true"){
   if (!isAdmins && !isDev) {
@@ -1077,7 +1540,11 @@ if (config.ANTI_BAD == "true"){
   await conn.groupParticipantsUpdate(from,[sender], 'remove')
   }}}}}}}
    
-//==================================================================
+//==================================================================		    
+
+
+
+
 if(!isOwner) {	//!isOwner) {	
     if(config.ANTI_DELETE === "true" ) {
         
@@ -1273,95 +1740,4 @@ if(!isOwner) {	//!isOwner) {
                 let fileType = require('file-type');
                 let type = fileType.fromBuffer(buff);
                 await fs.promises.writeFile("./" + type.ext, buff);
-    if(originalMessage.message.audioMessage){
-    const audioq = await conn.sendMessage(delfrom, { audio: fs.readFileSync("./" + type.ext), mimetype:  originalMessage.message.audioMessage.mimetype, fileName:  `${m.id}.mp3` })	
-    return await conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n` },{quoted: audioq});
-    
-    }else{
-    if(originalMessage.message.audioMessage.ptt === "true"){
-    
-    const pttt = await conn.sendMessage(delfrom, { audio: fs.readFileSync("./" + type.ext), mimetype:  originalMessage.message.audioMessage.mimetype, ptt: 'true',fileName: `${m.id}.mp3` })	
-    return await conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n` },{quoted: pttt});
-    
-     }
-      }
-     }
-    
-    audioMessageRetrive()
-    }else if(originalMessage.type === 'stickerMessage') {
-          async function stickerMessageRetrive(){      var nameJpg = getRandom('');
-    const ml = sms(conn, originalMessage)
-                let buff =  await ml.download(nameJpg)
-                let fileType = require('file-type');
-                let type = fileType.fromBuffer(buff);
-                await fs.promises.writeFile("./" + type.ext, buff);
-    if(originalMessage.message.stickerMessage){
-     
-    //await conn.sendMessage(from, { audio: fs.readFileSync("./" + type.ext), mimetype:  originalMessage.message.audioMessage.mimetype, fileName:  `${m.id}.mp3` })	
-     const sdata = await conn.sendMessage(delfrom,{sticker: fs.readFileSync("./" + type.ext) ,package: 'SOLO-LEVELING-MD 🌟'})
-    return await conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n` },{quoted: sdata});
-    
-    }else{
-    
-    const stdata = await conn.sendMessage(delfrom,{sticker: fs.readFileSync("./" + type.ext) ,package: 'SOLO-LEVELING-MD 🌟'})
-    return await conn.sendMessage(delfrom, { text: `🚫 *This message was deleted !!*\n\n  🚮 *Deleted by:* _${deletedBy}_\n  📩 *Sent by:* _${sentBy}_\n` },{quoted: stdata});
-    
-      }
-     }
-    
-    stickerMessageRetrive()
-             }
-         
-      } else {
-        console.log('Original message not found for revocation.');
-      }
-    }
-//    if(!isGroup){
-    if (mek.msg && mek.msg.type === 0) {
-      handleMessageRevocation(mek);
-    } else {//if(mek.message && mek.message.conversation && mek.message.conversation !== ''){
-      handleIncomingMessage(mek);
-    
-   //     }
-    }
-    }
-    }	
-    }
-
-
-//==================================================================
-	      
-            switch (command) {
-        case 'jid':
-        reply(from)
-        break
-        
-        default:				
-        if (isOwner && body.startsWith('$')) {
-        let bodyy = body.split('$')[1]
-        let code2 = bodyy.replace("°", ".toString()");
-        try {
-        let resultTest = await eval(code2);
-        if (typeof resultTest === "object") {
-        reply(util.format(resultTest));
-        } else {
-        reply(util.format(resultTest));
-        }
-        } catch (err) {
-        reply(util.format(err));
-        }}}
-        } catch (e) {
-            const isError = String(e)
-            console.log(isError)
-        }
-    })
-}
-
-app.get("/", (req, res) => {
-res.send("📟 solo-leveling Working successfully!");
-});
-app.listen(port, () => console.log(`solo-leveling Server listening on port http://localhost:${port}`));
-
-setTimeout(() => {
-connectToWA()
-}, 3000);
+    if(originalMessage.message.audioMessage
