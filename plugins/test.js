@@ -82,21 +82,16 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
 if (config.MODE === 'nonbutton') {
 
 const category = q.trim().toUpperCase();
-let menuc = `*🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*\n\n*${monspace}👋 කොහිමද ${pushname} I'm alive now${monspace}
-    
-*🚀Version:* ${require("../package.json").version}
-*⌛Memory:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-*🕒Runtime:* ${runtime(process.uptime())}
-*📍Platform:* ${hostname}
+let menuc = `*◈╾──────${category} DOWNLOAD COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        let wm = '*ᴅᴇᴡᴍɪɴɪ ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴋᴏᴅ*'	
 
-🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
-                    
-*🌻Have A Nice Day..*🌻`;
-        let wm = '*🐼This is the result of our teams hard work and our technical suranga ofc team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot*'	
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'download'){
+  if(!commands[i].dontAddCommandList){
 
-menuc += `🧚‍♂️ɪ ᴀᴍ ᴍᴀɴᴜ-ᴍᴅ, ᴀ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ ʙᴀꜱᴇᴅ ᴏɴ ɴᴏᴅᴇᴊꜱ ᴊᴀᴠᴀ ꜱᴄʀɪᴘᴛ. ɪ ᴡᴀꜱ ᴄʀᴇᴀᴛᴇᴅ ʙᴀꜱᴇᴅ ᴏɴ ᴄᴏᴅᴇ, ᴀɴᴅ ᴛʜᴇ ᴘᴇʀꜱᴏɴ ᴡʜᴏ ᴄʀᴇᴀᴛᴇᴅ ᴍᴇ ɪꜱ ᴍᴀɴᴜʟ ᴏꜰꜰɪᴄɪᴀʟ.`
+menuc += `• *${commands[i].pattern}*\n`
 }}};
-  menuc += `> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖`
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
 
 let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
         
