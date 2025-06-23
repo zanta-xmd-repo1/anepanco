@@ -104,15 +104,32 @@ menuc += `• *${commands[i].pattern}*\n`
                     
 > 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖`
 
-let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+let menuc1 = `*◈╾──────${category}MY SYSTEM──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
-if(commands[i].category === 'search'){
+if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
   if(!commands[i].dontAddCommandList){
 
 menuc1 += `• *${commands[i].pattern}*\n`
 }}};
-  menuc1  += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+  menuc1  += `🖥️ *ZANTA-XMD SYSTEM INFO* 🖥️
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┣🔖  _Runtime -: ${runtime(process.uptime())}_
+┣⏳  _Ram Usage -: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB_
+┣🚀  _Bot Version -: ${data.version} Stable_
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+📌  *_Server System informations_*
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+┣⛊  _Platform : ${plat}_
+┣⛊  _Running OS : ${os.platform()}_
+┣⛊  _CPU Manufacture  -: ${ccp.manufacturer}_
+┣⛊  _CPU Brand -: ${ccp.brand}_
+┣⛊  _CPU Speed -: ${ccp.speed}_
+┣⛊ _Engine Version -: ${cinfo}_
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
 
 
 
