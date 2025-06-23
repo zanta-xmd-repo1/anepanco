@@ -1058,7 +1058,7 @@ text: menuc,
     forwardingScore: 1111,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363421846535301@newsletter,
+      newsletterJid: '120363421846535301@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
