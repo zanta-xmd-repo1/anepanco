@@ -344,9 +344,9 @@ else if(os.hostname().length == 8) hostname = 'koyeb'
 else hostname = os.hostname()
 let monspace ='```'
 let monspacenew ='`'
-const cap = `❖──👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻──❖
+const cap = `🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️
 
-╭───═❮ *ᴍᴇɴᴜ ʟɪsᴛ* ❯═───❖
+╭───═❮ *📜 ᴍᴇɴᴜ ʟɪsᴛ 📜* ❯═───❖
 │ *🚀𝙑𝙀𝙍𝙎𝙄𝙊𝙉:* ${require("../package.json").version}
 │ *⌛𝙈𝙀𝙈𝙊𝙍𝙔:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
 │ *🕒𝙍𝙐𝙉𝙏𝙄𝙈𝙀:* ${runtime(process.uptime())}
@@ -356,7 +356,7 @@ var vajiralod = [
 "LOADING ●●○○○○",
 "LOADING ●●●●○○",
 "LOADING ●●●●●●",
-"`COMPLETED ✅`"	
+"`🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️`"	
 ]
 let { key } = await conn.sendMessage(from, {text: ''})
 
@@ -368,8 +368,8 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
 if (config.MODE === 'nonbutton') {
 
 const category = q.trim().toUpperCase();
-let menuc = `*◈╾──────${category} DOWNLOAD COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
-        let wm = '*ᴅᴇᴡᴍɪɴɪ ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴋᴏᴅ*'	
+let menuc = `*◈╾──────${category} DOWNLOAD COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Zanta-xmd md whatsapp bot 👨‍💻\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*'	
 
   for (let i=0;i<commands.length;i++) { 
 if(commands[i].category === 'download'){
