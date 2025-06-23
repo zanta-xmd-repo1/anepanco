@@ -114,9 +114,9 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
 
 cmd({
-    pattern: "sc",
+    pattern: "sc2",
     react: "👨‍💻",
-    alias: ["script","repo"],
+    alias: ["script2","repo2"],
     desc: "Check bot online or no.",
     category: "main",
     use: '.alive',
