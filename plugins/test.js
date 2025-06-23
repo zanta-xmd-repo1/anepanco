@@ -92,4 +92,8 @@ conn.ev.on("messages.upsert", async (msgData) => {
         reply("❌ Invalid option! Please reply with 1, 2, 3, 4, or 5.");
     }
   }
-});
+} catch (e) {
+reply()
+l(e)
+}
+})
