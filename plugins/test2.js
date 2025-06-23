@@ -128,7 +128,7 @@ menuc3 += `• *${commands[i].pattern}*\n`
 let menuc4 = `*◈╾──────${category} MAIN COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
-if(commands[i].category === 'main'){
+if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
   if(!commands[i].dontAddCommandList){
 
 menuc4 += `• *${commands[i].pattern}*\n`
