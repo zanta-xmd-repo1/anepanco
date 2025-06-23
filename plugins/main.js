@@ -628,7 +628,7 @@ header: proto.Message.InteractiveMessage.Header.create({
 
 
         let sections = [{
-                title: '🔑 Select menu type',
+                title: 'ᴛ💖 ᴀᴘ ᴏɴ ᴛʜᴇ ᴍᴇɴᴜ ʏᴏᴜ ᴘʀᴇꜰᴇʀ ꜰʀᴏᴍ ʜᴇʀᴇ ᴀɴᴅ ᴘʀᴇꜱꜱ ᴛʜᴇ ꜱᴇʟᴇᴄᴛ ʙᴜᴛᴛᴏɴ. 💖',
                 rows: [{
                         title: 'DOWNLOAD MENU',
                         description: `Download commands`,
