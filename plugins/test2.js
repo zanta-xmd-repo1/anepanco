@@ -80,7 +80,7 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
 if (config.MODE === 'nonbutton') {
 
 const category = q.trim().toUpperCase();
-let menuc = `*◈╾──────${category} I AM, ALIVE NOW──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+let menuc = `*◈╾──────${category} I,AM ALIVE NOW──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*'	
 
   for (let i=0;i<commands.length;i++) { 
