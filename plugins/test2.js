@@ -40,7 +40,7 @@ else BOTOW = "*You are not bot\'s owner or moderator !*"
 cmd({
   pattern: "alive",
   react: "👨‍💻",
-  alias: ["test","bot","freebot"],
+  alias: ["panel2","help3","commands4"],
   desc: "Get bot\'s command list.",
   category: "main",
   use: '.menu',
@@ -334,3 +334,545 @@ header: proto.Message.InteractiveMessage.Header.create({
             await conn.relayMessage(msg.key.remoteJid, msg.message, {
       messageId: msg.key.id,
     });
+    
+
+} if (config.MODE === 'button') {
+
+
+        let sections = [{
+                title: 'ᴛ💖 ᴀᴘ ᴏɴ ᴛʜᴇ ᴍᴇɴᴜ ʏᴏᴜ ᴘʀᴇꜰᴇʀ ꜰʀᴏᴍ ʜᴇʀᴇ ᴀɴᴅ ᴘʀᴇꜱꜱ ᴛʜᴇ ꜱᴇʟᴇᴄᴛ ʙᴜᴛᴛᴏɴ. 💖',
+                rows: [{
+                        title: 'DOWNLOAD MENU',
+                        description: `Download commands`,
+                        id: `${prefix}downmenu`
+                    },
+                    {
+                        title: `SEARCH MENU`,
+                        description: 'Search commands',
+                        id: `${prefix}searchmenu`
+                    },
+		    {
+                        title: `CONVERT MENU`,
+                        description: 'Convert commands',
+                        id: `${prefix}convertmenu`
+                    },
+                    {
+                        title: `MAIN MENU`,
+                        description: 'Convert commands',
+                        id: `${prefix}mainmenu`
+                    },
+		    {
+                        title: `GROUP MENU`,
+                        description: 'Group commands',
+                        id: `${prefix}groupmenu`
+                    },
+                    {
+                        title: `LOGO MENU`,
+                        description: 'Logo commands',
+                        id: `${prefix}logomenu`
+                    },
+		    {
+                        title: `BUG MENU`,
+                        description: 'Bug commands',
+                        id: `${prefix}bugmenu`
+                    },
+                    {
+                        title: `MOVIE MENU`,
+                        description: 'Movie commands',
+                        id: `${prefix}moviemenu`
+                    },   
+		    {
+                        title: `OTHER MENU`,
+                        description: 'Other commands',
+                        id: `${prefix}othermenu`
+                    },      
+                ]
+            }
+        ]
+
+        let listMessage = {
+            title: 'Click Here⎙ 💖',
+            sections
+        };
+        conn.sendMessage(from, {
+            image: { url: config.LOGO },
+    caption: cap,
+    footer: config.FOOTER,
+                buttons: [
+			{
+                    buttonId: `${prefix}alive`,
+                    buttonText: {
+                        displayText: 'ALIVE 💖'
+                    },
+                },
+		{
+                    buttonId: `${prefix}ping`,
+                    buttonText: {
+                        displayText: 'PING 💖'
+                    },
+                },	
+                {
+                    buttonId: 'action',
+                    buttonText: {
+                        displayText: 'ini pesan interactiveMeta'
+                    },
+                    type: 4,
+                    nativeFlowInfo: {
+                        name: 'single_select',
+                        paramsJson: JSON.stringify(listMessage),
+                    },
+                },
+            ],
+            headerType: 1,
+            viewOnce: true
+        }, {
+            quoted: m
+        });
+	
+}
+	
+} catch (e) {
+reply()
+l(e)
+}
+})   
+
+
+
+
+
+
+
+
+
+
+
+//============================================================================	
+
+cmd({
+    pattern: "downloadmenu",
+    react: "⬇👨‍💻",
+    dontAddCommandList: true,
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*'	
+
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'download'){
+  if(!commands[i].dontAddCommandList){
+
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+
+cmd({
+    pattern: "moviemenu",
+    react: "⬇👨‍💻",
+    dontAddCommandList: true,
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*'	
+
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'movie'){
+  if(!commands[i].dontAddCommandList){
+
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+
+cmd({
+    pattern: "searchmenu",
+    react: "👨‍💻",
+    dontAddCommandList: true,
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'search'){
+  if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+
+cmd({
+    pattern: "convertmenu",
+    react: "👨‍💻",
+    dontAddCommandList: true,
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴛᴅᴅ*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'convert'){
+if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+
+cmd({
+    pattern: "logomenu",
+    react: "👨‍💻",
+    dontAddCommandList: true,
+    filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴛᴅᴅ*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'logo'){
+if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+
+cmd({
+  pattern: "mainmenu",
+  react: "👨‍💻",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴛᴅᴅ*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'main'){
+if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+
+cmd({
+  pattern: "groupmenu",
+  react: "👨‍💻",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴛᴅᴅ*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'group'){
+if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+cmd({
+  pattern: "bugmenu",
+  react: "👨‍💻",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴛᴅᴅ*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'bug'){
+if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+  
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+
+cmd({
+  pattern: "othermenu",
+  react: "👨‍💻",
+  dontAddCommandList: true,
+  filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} SUB COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+        let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴛᴅᴅ*'
+for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'other'){
+if(!commands[i].dontAddCommandList){
+menuc += `╭────────●●►\n│ • *${commands[i].pattern}* \n╰────────────────────●●►\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+  
+        //await conn.sendMessage(from, { text: commandList }, { quoted: mek });
+        await conn.sendMessage(from, {
+text: menuc,
+  contextInfo: {
+    mentionedJid: [ '' ],
+    groupMentions: [],
+    forwardingScore: 1111,
+    isForwarded: true,
+    forwardedNewsletterMessageInfo: {
+      newsletterJid: '120363421846535301@newsletter',
+      serverMessageId: 127
+    },
+externalAdReply: { 
+title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
+mediaType: 1,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
+thumbnailUrl: config.LOGO ,
+renderLargerThumbnail: true,
+showAdAttribution: false
+}
+}}, { quoted: mek})
+    } catch (e) {
+        reply('*Error !!*')
+        console.log(e)
+    }
+})
+ 
+//============================================================================
