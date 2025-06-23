@@ -773,7 +773,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VbAg0qCCHDynz0XCeN0U" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -822,7 +822,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VbAg0qCCHDynz0XCeN0U" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -862,14 +862,14 @@ text: menuc,
     forwardingScore: 1111,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363290448968237@newsletter',
+      newsletterJid: '120363421846535301@newsletter',
       serverMessageId: 127
     },
 externalAdReply: { 
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VbAg0qCCHDynz0XCeN0U" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -916,7 +916,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -963,7 +963,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -1010,7 +1010,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -1050,14 +1050,14 @@ text: menuc,
     forwardingScore: 1111,
     isForwarded: true,
     forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363421846535301@newsletter',
+      newsletterJid: '120363421846535301@newsletter,
       serverMessageId: 127
     },
 externalAdReply: { 
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -1104,7 +1104,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
@@ -1151,7 +1151,7 @@ externalAdReply: {
 title: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
 body: 'ᴀ ꜱɪᴍᴘʟᴇ ᴡʜᴀᴛꜱᴀᴘᴘ ʙᴏᴛ',
 mediaType: 1,
-sourceUrl: "https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z" ,
+sourceUrl: "https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28" ,
 thumbnailUrl: config.LOGO ,
 renderLargerThumbnail: true,
 showAdAttribution: false
