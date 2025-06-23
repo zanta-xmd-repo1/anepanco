@@ -87,11 +87,11 @@ let menuc = `*◈╾──────${category} DOWNLOAD COMMAND LIST───
 
   for (let i=0;i<commands.length;i++) { 
 if(commands[i].category === 'download'){
-  if(!commands[i].dontAddCommandList){
+  if(hello){
 
 menuc += `• *${commands[i].pattern}*\n`
 }}};
-  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+  menuc += `hi sudu`
 
 let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
         
