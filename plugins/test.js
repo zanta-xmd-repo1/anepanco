@@ -38,9 +38,9 @@ else BOTOW = "*You are not bot\'s owner or moderator !*"
 
 
 cmd({
-  pattern: "menu",
+  pattern: "alive",
   react: "👨‍💻",
-  alias: ["panel","help","commands"],
+  alias: ["panel1","help2","commands3"],
   desc: "Get bot\'s command list.",
   category: "main",
   use: '.menu',
