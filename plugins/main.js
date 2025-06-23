@@ -154,31 +154,39 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
     } 
 ]
 const listMessage = {
-caption: `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
+caption: `*🍓🍟  හායි ${pushname} කොහමද ඔයාට😝♦*
 
-   *VAJIRA MD WHATSAPP USER BOT* 💫
-
-                     *OUR MISSION*
-
-🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
-
-
-🐼 The main hope of creating this bot is to take full advantage of the WhatsApp app and make its work easier
-
-
-💡 Various things can be downloaded from this bot.  Also, managing groups, making logos & edit-images in different ways, searching for different things and getting information and more futures included.
+*┏〔${new Date().getHours() < 12 ? '🌄 සුබ උදෑසනක්  🌄*' : '🌛 සුබ රාත්‍රියක් 🌛*'}〕
+*┃🤖 ʙᴏᴛ ɴᴀᴍᴇ : 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
+*┃🔖 ᴠᴇʀsɪᴏɴ : 1.0*
+*┃📟 ᴘʟᴀᴛғᴏʀᴍ : Linux*
+*┃👨‍💻 ᴏᴡɴᴇʀ: : ꜱᴜʀᴀɴɢᴀ ᴄʜᴀᴍɪᴛʜ*
+*┃📆 ʀᴜɴᴛɪᴍᴇ : ${runtime(process.uptime())}* 
+*┃📈 ʀᴀᴍ ᴜsᴀɢᴇ: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB*
+*┗━━━━━━━━━━━━━━𖣔𖣔*  
 
 
-⚠️ Also, if your Whatsapp account gets damaged or banned by using this, we are not responsible and you should take responsibility for it.
+╭━━〔 *𝙕𝘼𝙉𝙏𝘼-𝙓𝙈𝘿* 〕━━┈⊷
+┃◈╭─────────────·๏
+┃◈┃• *🤠 𝐎𝐰𝐧𝐞𝐫: ꜱᴜʀᴀɴɢᴀ ᴄʜᴀᴍɪᴛʜ*
+┃◈┃• *🪪 𝐕𝐞𝐫𝐬𝐢𝐨𝐧*:  1.0*
+┃◈└───────────┈⊷
+╰──────────────┈⊷
 
+🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️
 
-👨‍💻 OWNER VAJIRA
-
-🎡 *GITHUB:*  https://github.com/VajiraTech/VAJIRA_MD
-
-🪩 *OUR GROUP:* https://chat.whatsapp.com/D6w6Qy5yrhp7MmfNcprbO3
-
-*ᴘʟᴇᴀꜱᴇ ꜱᴛᴀʀ ᴛʜᴇ ʀᴇᴘᴏ ᴀɴᴅ ꜰᴏʟʟᴏᴡ ᴍᴇ ᴏɴ ɢɪᴛʜᴜʙ* 
+╭━━〔 *𝙕𝘼𝙉𝙏𝘼-𝙓𝙈𝘿* 〕━━┈⊷
+┃◈╭─────────────·๏
+┃◈┃⛩️ 𝐁𝐎𝐓 𝐑𝐄𝐏𝐎 :
+┃◈┃
+┃◈┃⛩️ 𝐏𝐀𝐈𝐑 𝐖𝐄𝐁 : https://zantax-md-pair-2f8b1bdc5303.herokuapp.com/
+┃◈┃
+┃◈┃⛩️ 𝐁𝐎𝐓 𝐂𝐇𝐀𝐍𝐄𝐋 : https://whatsapp.com/channel/0029VbBNZJcAzNbvfssOXP28
+┃◈┃
+┃◈┃⛩️ 𝐎𝐖𝐍𝐄𝐑S : SURANGA CHAMITH
+┃◈└───────────┈⊷
+╰──────────────┈⊷
+> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖
 `,
 image : { url: config.LOGO },	
 footer: config.FOOTER,
