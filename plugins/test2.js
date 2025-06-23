@@ -100,9 +100,9 @@ menuc += `• *${commands[i].pattern}*\n`
 
 *📍Platform:* ${hostname}
 
-🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
+🎀 i am zanta-xmd, a whatsapp bot based on nodejs java script. i was created based on code, and the person who created me is suranga chamith official 💖
                     
-*🌻Have A Nice Day..*🌻`
+> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖`
 
 let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         
