@@ -1222,7 +1222,7 @@ const cap = `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
 *ᴘʟᴇᴀꜱᴇ ꜱᴛᴀʀ ᴛʜᴇ ʀᴇᴘᴏ ᴀɴᴅ ꜰᴏʟʟᴏᴡ ᴍᴇ ᴏɴ ɢɪᴛʜᴜʙ* 
 `
 	
-if (config.MODE === 'nonbutton') {
+if (config.MODE === 'button') {
 
 
 	
