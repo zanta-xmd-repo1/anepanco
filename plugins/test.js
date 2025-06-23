@@ -56,14 +56,16 @@ else if(os.hostname().length == 8) hostname = 'koyeb'
 else hostname = os.hostname()
 let monspace ='```'
 let monspacenew ='`'
-const cap = `❖──👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻──❖
+const cap = `${monspace}👋 කොහිමද ${pushname} I'm alive now${monspace}
+    
+*🚀Version:* ${require("../package.json").version}
+*⌛Memory:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+*🕒Runtime:* ${runtime(process.uptime())}
+*📍Platform:* ${hostname}
 
-╭───═❮ *ᴍᴇɴᴜ ʟɪsᴛ* ❯═───❖
-│ *🚀𝙑𝙀𝙍𝙎𝙄𝙊𝙉:* ${require("../package.json").version}
-│ *⌛𝙈𝙀𝙈𝙊𝙍𝙔:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-│ *🕒𝙍𝙐𝙉𝙏𝙄𝙈𝙀:* ${runtime(process.uptime())}
-│ *📍𝙋𝙇𝘼𝙏𝙁𝙊𝙍𝙈:* ${hostname}
-╰━━━━━━━━━━━━━━━┈⊷`
+🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
+                    
+*🌻Have A Nice Day..*🌻`
 var vajiralod = [
 "LOADING ●●○○○○",
 "LOADING ●●●●○○",
