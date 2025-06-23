@@ -93,15 +93,13 @@ menuc += `• *${commands[i].pattern}*\n`
 }}};
   menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
 
-let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+let menuc8 = `*◈╾──────${category} MOVIE COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
-if(commands[i].category === 'search'){
+if(commands[i].category === 'movie'){
   if(!commands[i].dontAddCommandList){
 
-menuc1 += `• *${commands[i].pattern}*\n`
-}}};
-  menuc1  += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`• *${commands[i].pattern}*\n`
+menuc8 += `• *${commands[i].pattern}*\n`
 }}};
   menuc8 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
 	
