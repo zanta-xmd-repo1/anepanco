@@ -114,12 +114,6 @@ menuc1 += `• *${commands[i].pattern}*\n`
 }}};
   menuc1  += `🖥️ *ZANTA-XMD SYSTEM INFO* 🖥️
 
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-┣🔖  _Runtime -: ${runtime(process.uptime())}_
-┣⏳  _Ram Usage -: ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB_
-┣🚀  _Bot Version -: ${data.version} Stable_
-━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-
 📌  *_Server System informations_*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
