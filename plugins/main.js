@@ -518,10 +518,10 @@ header: proto.Message.InteractiveMessage.Header.create({
                   {                   
 			  
 header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/5nkov1.jpg' } }, { upload: conn.waUploadToServer })),
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/ird8ce.jpg' } }, { upload: conn.waUploadToServer })),
           title: menuc3,
           gifPlayback: true,
-          subtitle: "DEWMINI-MD",
+          subtitle: "🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️",
           hasMediaAttachment: false
         }),
                     body: { text: ``},
