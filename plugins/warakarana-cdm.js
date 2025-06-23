@@ -40,6 +40,8 @@ var BOTOW = ''
 if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  උපපරිපාලක නොවේ !*"
 else BOTOW = "*You are not bot\'s owner or moderator !*"
 
+//==================================to-url================================
+
 cmd({
   'pattern': "tourl",
   'alias': ["imgtourl", "imgurl", "url", "geturl", "upload"],
@@ -118,7 +120,9 @@ function formatBytes(bytes) {
   return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
 }
 
-    pattern: "botabout",
+//==================================Welcome================================
+
+    pattern: "info",
     alias: ["botingsk","dlflflfcxlslx"], 
     react: "🙈",
     desc: "get owner dec",
@@ -151,7 +155,7 @@ let about = `╭━---------------------------------------------
 *•────────────•⟢*
 `
 
-await conn.sendMessage(from,{image:{url:`https://files.catbox.moe/03bjlj.jpg`},caption:about,
+await conn.sendMessage(from,{image:{url:`https://files.catbox.moe/3rj421.jpg`},caption:about,
                              contextInfo: {
     mentionedJid: [m.sender],
     forwardingScore: 999,
