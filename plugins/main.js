@@ -476,10 +476,10 @@ let msg = generateWAMessageFromContent(
                   {
                     
                     header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/qe6de0.jpg' } }, { upload: conn.waUploadToServer })),
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/mhx8wd.jpg' } }, { upload: conn.waUploadToServer })),
           title: menuc,
           gifPlayback: true,
-          subtitle: "DEWMINI-MD",
+          subtitle: "🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️",
           hasMediaAttachment: false
         }),
                     body: { text: '' },
