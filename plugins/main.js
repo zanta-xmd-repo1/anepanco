@@ -114,9 +114,9 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 
 
 cmd({
-    pattern: "alive",
+    pattern: "sc",
     react: "👨‍💻",
-    alias: ["test","bot"],
+    alias: ["script","repo"],
     desc: "Check bot online or no.",
     category: "main",
     use: '.alive',
@@ -154,16 +154,31 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
     } 
 ]
 const listMessage = {
-caption: `${monspace}👋 කොහිමද ${pushname} I'm alive now${monspace}
-    
-*🚀Version:* ${require("../package.json").version}
-*⌛Memory:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
-*🕒Runtime:* ${runtime(process.uptime())}
-*📍Platform:* ${hostname}
+caption: `[👨‍💻 ＶＡＪＩＲＡ - ＭＤ 👨‍💻]
+
+   *VAJIRA MD WHATSAPP USER BOT* 💫
+
+                     *OUR MISSION*
 
 🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
-                    
-*🌻Have A Nice Day..*🌻 
+
+
+🐼 The main hope of creating this bot is to take full advantage of the WhatsApp app and make its work easier
+
+
+💡 Various things can be downloaded from this bot.  Also, managing groups, making logos & edit-images in different ways, searching for different things and getting information and more futures included.
+
+
+⚠️ Also, if your Whatsapp account gets damaged or banned by using this, we are not responsible and you should take responsibility for it.
+
+
+👨‍💻 OWNER VAJIRA
+
+🎡 *GITHUB:*  https://github.com/VajiraTech/VAJIRA_MD
+
+🪩 *OUR GROUP:* https://chat.whatsapp.com/D6w6Qy5yrhp7MmfNcprbO3
+
+*ᴘʟᴇᴀꜱᴇ ꜱᴛᴀʀ ᴛʜᴇ ʀᴇᴘᴏ ᴀɴᴅ ꜰᴏʟʟᴏᴡ ᴍᴇ ᴏɴ ɢɪᴛʜᴜʙ* 
 `,
 image : { url: config.LOGO },	
 footer: config.FOOTER,
