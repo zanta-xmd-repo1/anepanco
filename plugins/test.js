@@ -1,4 +1,3 @@
-const config = require('../config')
 const config = require('../settings')
 const os = require('os')
 const fs = require('fs')
@@ -37,26 +36,78 @@ var BOTOW = ''
 if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  උපපරිපාලක නොවේ !*"
 else BOTOW = "*You are not bot\'s owner or moderator !*"
 
-cmd({
-    pattern: "botai",
-    alias: ["laki6"], 
-    react: "📑",
-    desc: "ai chat.",
-    category: "main",
+    pattern: "genimg",
+    alias: ["aiimg", "generateimg", "aiimage"],
+    desc: "Generate AI Images using Stable Diffusion",
+    category: "ai",
+    react: "🤖",
     filename: __filename
 },
-async(conn, mek, m, {from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+async (conn, mek, m, { from, q, reply }) => {
     try {
-        // Check if the user is asking who made it
-        if (q.toLowerCase().includes("කවුද හැදුවේ") || q.toLowerCase().includes("who made this")) {
-            return reply(`ZANTA X MD OWNER IS FOUNDER`)
+        if (!q) return reply(`
+*🤖 𝐙𝐀𝐍𝐓𝐀 𝐗𝐌𝐃 𝐀𝐈 𝐈𝐌𝐀𝐆𝐄 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐎𝐑 🖼️*
+
+Usage: .Lod <image description>
+Example: .Lod Beautiful landscape with mountains
+
+> 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
+`);
+        await m.react("🔄");
+
+        const apiUrl = `https://dark-shan-yt.koyeb.app/ai/generate-image-v2?prompt=${encodeURIComponent(q)}`;
+
+        const response = await axios({
+            method: 'get',
+            url: apiUrl,
+            responseType: 'arraybuffer',
+            timeout: 60000 // 60 seconds timeout
+        });
+
+        if (!response.data) {
+            return reply("❌ Failed to generate image. No data received.");
         }
 
-        // Normal AI response
-        let data = await fetchJson(`https://dark-shan-yt.koyeb.app/ai/gemini?q=${q}`)
-        return reply(` ${data.data}\n\n> 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️`)
-    } catch(e) {
-        console.log(e)
-        reply(`අයියෝ බ්‍රෝ, එරර් එකක්! 😂\n${e}`)
+        // Send the generated image
+        await conn.sendMessage(from, {
+            image: response.data,
+            caption: `*𝐙𝐀𝐍𝐓𝐀 𝐗𝐌𝐃 𝐀𝐈 𝐈𝐌𝐀𝐆𝐄 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐎𝐑 🖼️*
+
+*📝 Prompt:* ${q}
+
+*Model:* Stable Diffusion
+> 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
+`,
+            quoted: mek
+        });
+
+        // React to successful image generation
+        await m.react("✅");
+
+    } catch (error) {
+        console.error("Lod x Image Generation Error:", error);
+        
+        // React to error
+        await m.react("❌");
+
+        if (error.response) {
+            console.log(error.response.data);
+            console.log(error.response.status);
+            console.log(error.response.headers);
+
+            if (error.response.status === 429) {
+                return reply("⏳ Too many requests. Please try again later.");
+            } else if (error.response.status === 500) {
+                return reply("🚫 Server error. Unable to generate image.");
+            } else {
+                return reply(`❌ Error: ${error.response.status} - ${error.response.statusText}`);
+            }
+        } else if (error.request) {
+            console.log(error.request);
+            return reply("🌐 No response received from the server. Check your internet connection.");
+        } else {
+            console.log('Error', error.message);
+            return reply(`❌ An unexpected error occurred: ${error.message}`);
+        }
     }
-})
+});
