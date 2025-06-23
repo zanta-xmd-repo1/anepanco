@@ -93,10 +93,3 @@ conn.ev.on("messages.upsert", async (msgData) => {
     }
   }
 });
-
-} catch (error) { console.error("Error:", error); reply("❌ Error fetching the video. Please try again."); } });
-Copy (1 Coin)
-Download (1 Coin)
-Copy (1 Coin)
-Download (1 Coin)
-𝛲𝛩𝑊𝛯𝑅𝐷 𝐵𝑌 𝐿𝛥𝛫𝛪𝑌𝛥
