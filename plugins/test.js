@@ -82,7 +82,7 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
 if (config.MODE === 'nonbutton') {
 
 const category = q.trim().toUpperCase();
-let menuc = `*Version*\n\n> *🚀Version:* ${require("../package.json").version}`;
+let menuc = `*🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*\n\n*🚀Version:* ${require("../package.json").version}`;
         let wm = '*🐼This is the result of our teams hard work and our technical suranga ofc team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot*'	
 
   for (let i=0;i<commands.length;i++) { 
