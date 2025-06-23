@@ -39,7 +39,7 @@ else BOTOW = "*You are not bot\'s owner or moderator !*"
 
 cmd({
   pattern: "alive",
-  react: "👨‍💻",
+  react: "🎀",
   alias: ["panel2","help3","commands4"],
   desc: "Get bot\'s command list.",
   category: "main",
@@ -56,7 +56,9 @@ else if(os.hostname().length == 8) hostname = 'koyeb'
 else hostname = os.hostname()
 let monspace ='```'
 let monspacenew ='`'
-const cap = `🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️
+const cap = `*🍓🍟  හායි ${pushname} කොහමද ඔයාට😝♦*
+
+*〔${new Date().getHours() < 12 ? '🌄 සුබ උදෑසනක්  🌄*' : '🌛 සුබ රාත්‍රියක් 🌛*
 
 ╭───═❮ *📜 ᴍᴇɴᴜ ʟɪsᴛ 📜* ❯═───❖
 │ *🚀𝙑𝙀𝙍𝙎𝙄𝙊𝙉:* ${require("../package.json").version}
@@ -80,7 +82,7 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
 if (config.MODE === 'nonbutton') {
 
 const category = q.trim().toUpperCase();
-let menuc = `*◈╾──────${category} DOWNLOAD COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+let menuc = `*◈╾──────❴ 𝐈 𝐀𝐌 𝐀𝐋𝐈𝐕𝐄 𝐍𝐎𝐖 ❵──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*'	
 
   for (let i=0;i<commands.length;i++) { 
@@ -188,7 +190,7 @@ let msg = generateWAMessageFromContent(
                   {
                     
                     header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/146ndv.jpg' } }, { upload: conn.waUploadToServer })),
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/iex8ou.jpg' } }, { upload: conn.waUploadToServer })),
           title: menuc,
           gifPlayback: true,
           subtitle: "🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️",
