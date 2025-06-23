@@ -40,7 +40,7 @@ else BOTOW = "*You are not bot\'s owner or moderator !*"
 cmd({
   pattern: "alive",
   react: "👨‍💻",
-  alias: ["panel","help","commands"],
+  alias: ["test","bot","freebot"],
   desc: "Get bot\'s command list.",
   category: "main",
   use: '.menu',
