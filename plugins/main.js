@@ -148,7 +148,7 @@ await conn.sendMessage(from, {text: vajiralod[i], edit: key })
 	title: "",
 	rows: [
 	    {title: "1", rowId: prefix + 'menu' , description: 'COMMANDS MENU'},
-	    {title: "2", rowId: prefix + 'ping' , description: 'VAJIRA-MD SPEED'} ,
+	    {title: "2", rowId: prefix + 'ping' , description: 'ZANTA-XMD SPEED'} ,
 
 	]
     } 
