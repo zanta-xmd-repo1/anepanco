@@ -116,7 +116,7 @@ async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sen
 cmd({
     pattern: "alive",
     react: "👨‍💻",
-    alias: ["online","test","bot"],
+    alias: ["test","bot"],
     desc: "Check bot online or no.",
     category: "main",
     use: '.alive',
@@ -163,16 +163,15 @@ caption: `${monspace}👋 කොහිමද ${pushname} I'm alive now${monspace
 
 🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
                     
-*🌻Have A Nice Day..*🌻`,
+*🌻Have A Nice Day..*🌻 
+`,
 image : { url: config.LOGO },	
 footer: config.FOOTER,
 title: '',
 buttonText: '*🔢 Reply below number*',
 sections
 }
-	
 return await conn.replyList(from, listMessage ,{ quoted : mek })
-	
 } catch (e) {
   reply('*ERROR !!*')
   l(e)
