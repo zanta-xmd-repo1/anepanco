@@ -1,3 +1,4 @@
+const { fetchJson } = require('../lib/functions')
 const config = require('../settings')
 const os = require('os')
 const fs = require('fs')
