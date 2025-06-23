@@ -37,100 +37,402 @@ if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  �
 else BOTOW = "*You are not bot\'s owner or moderator !*"
 
 
-cmd({ pattern: "fb",
- alias: ["facebook"], 
-desc: "Download Facebook videos", category: "download",
- filename: __filename },
- async (conn, m, store, { from, quoted, args, q, reply }) => { try { if (!q || !q.startsWith("https://")) { return conn.sendMessage(from, { text: "Need URL" }, { quoted: m }); }
+cmd({
+  pattern: "alive",
+  react: "👨‍💻",
+  alias: ["panel1","help2","commands3"],
+  desc: "Get bot\'s command list.",
+  category: "main",
+  use: '.menu',
+  filename: __filename
+},
+async(conn, mek, m,{from, prefix, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
+try{
 
-await conn.sendMessage(from, {
-  react: { text: '⏳', key: m.key }
-});
 
-const response = await fetch(`https://bk9.fun/download/fb?url=${encodeURIComponent(q)}`);
-const fbData = await response.json();
+if(os.hostname().length == 12 ) hostname = 'replit'
+else if(os.hostname().length == 36) hostname = 'heroku'
+else if(os.hostname().length == 8) hostname = 'koyeb'
+else hostname = os.hostname()
+let monspace ='```'
+let monspacenew ='`'
+const cap = `${monspace}👋 කොහිමද ${pushname} I'm alive now${monspace}
+    
+*🚀Version:* ${require("../package.json").version}
+*⌛Memory:* ${(process.memoryUsage().heapUsed / 1024 / 1024).toFixed(2)}MB / ${Math.round(require('os').totalmem / 1024 / 1024)}MB
+*🕒Runtime:* ${runtime(process.uptime())}
+*📍Platform:* ${hostname}
 
-if (!fbData.status) {
-  return reply("❌ Error fetching the video. Please try again.");
-}
+🐼This is the result of our teams hard work and our technical cybers team owns the bots rights and code rights. Therefore, you have no chance to change and submit our bot under any circumstances And 100 Commands And logo, thumbnail,banner Maker Commands Ai Chatbot feathers On Our Bot
+                    
+*🌻Have A Nice Day..*🌻`
+var vajiralod = [
+"LOADING ●●○○○○",
+"LOADING ●●●●○○",
+"LOADING ●●●●●●",
+"`COMPLETED ✅`"	
+]
+let { key } = await conn.sendMessage(from, {text: ''})
 
-const caption = `╭━〔🐉 *FB DOWNLOADER*🐉 〕━\n`
-  + `┃▸ *Title*: ${fbData.BK9.title}\n`
-  + `╰━━━━━━━━━\n\n`
-  + `🩵 *Download Options:*\n\n`
-  + `1  *SD Quality*\n`
-  + `2  *HD Quality*\n\n`
-  + `🩵 *Audio Options:*\n\n`
-  + `3  *Audio (SD)*\n`
-  + `4  *Document (MP3)*\n`
-  + `5  *Voice (PTT)*\n\n`
-  + `🔢 REPLY THE NUMBER.*
+for (let i = 0; i < vajiralod.length; i++) {
+await conn.sendMessage(from, {text: vajiralod[i], edit: key })
+}	
 
-> ㋛︎ ᴘᴏᴡᴇʀᴅ ʙʏ  ᴍʀ  ʟᴀᴋꜱɪᴅᴜ ᶜᵒᵈᵉʳ`;
 
-const sentMsg = await conn.sendMessage(from, {
-  image: { url: fbData.BK9.thumb },
-  caption: caption
-}, { quoted: m });
+if (config.MODE === 'nonbutton') {
 
-const messageID = sentMsg.key.id;
+const category = q.trim().toUpperCase();
+let menuc = `*◈╾──────${category} DOWNLOAD COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        let wm = '*ᴅᴇᴡᴍɪɴɪ ᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴛʜᴇ ᴛᴇᴀᴍ • ᴋᴏᴅ*'	
 
-conn.ev.on("messages.upsert", async (msgData) => {
-  const receivedMsg = msgData.messages[0];
-  if (!receivedMsg.message) return;
-  
-  const receivedText = receivedMsg.message.conversation || receivedMsg.message.extendedTextMessage?.text;
-  const senderID = receivedMsg.key.remoteJid;
-  const isReplyToBot = receivedMsg.message.extendedTextMessage?.contextInfo?.stanzaId === messageID;
-  
-  if (isReplyToBot) {
-    await conn.sendMessage(senderID, {
-      react: { text: '⬇️', key: receivedMsg.key }
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'download'){
+  if(!commands[i].dontAddCommandList){
+
+menuc += `• *${commands[i].pattern}*\n`
+}}};
+  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'search'){
+  if(!commands[i].dontAddCommandList){
+
+menuc1 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc1  += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+
+
+let menuc2 = `*◈╾──────${category} CONVERT COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'convert'){
+  if(!commands[i].dontAddCommandList){
+
+menuc2 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc2 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+
+let menuc3 = `*◈╾──────${category} LOGO COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'logo'){
+  if(!commands[i].dontAddCommandList){
+
+menuc3 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc3 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+
+let menuc4 = `*◈╾──────${category} MAIN COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'main'){
+  if(!commands[i].dontAddCommandList){
+
+menuc4 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc4 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+	
+let menuc5 = `*◈╾──────${category} GROUP COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'group'){
+  if(!commands[i].dontAddCommandList){
+
+menuc5 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc5 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+
+let menuc6 = `*◈╾──────${category} BUG COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'bug'){
+  if(!commands[i].dontAddCommandList){
+
+menuc6 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc6 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+	
+let menuc7 = `*◈╾──────${category} OTHER COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'other'){
+  if(!commands[i].dontAddCommandList){
+
+menuc7 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc7 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+	
+let menuc8 = `*◈╾──────${category} MOVIE COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy Dewmini md whatsapp bot 👨‍💻\n\n`;
+        
+  for (let i=0;i<commands.length;i++) { 
+if(commands[i].category === 'movie'){
+  if(!commands[i].dontAddCommandList){
+
+menuc8 += `• *${commands[i].pattern}*\n`
+}}};
+  menuc8 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+	
+let msg = generateWAMessageFromContent(
+      m.chat,
+      {
+        viewOnceMessage: {
+          message: {
+            interactiveMessage: {
+              body: {
+                text: `` },
+              carouselMessage: {
+                cards: [
+                  {
+                    
+                    header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/qe6de0.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: '' },
+                    nativeFlowMessage: {
+                      
+                    },
+                  },
+                  {                   
+
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/lazbax.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc1,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+
+                    },
+                  },
+                  {                   
+
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/qaycw6.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc2,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },
+                  {                   
+			  
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/5nkov1.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc3,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },                                    
+
+                  {                   
+			  
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/w76ykx.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc4,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },                                    
+                      {                   
+			  
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/bkii0v.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc5,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },        
+	                  {                   
+			  
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/i7rh4x.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc6,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },         
+	                  {             
+	                  
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/u0ant7.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc8,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },         
+	                  {                                                 
+			  			  
+header: proto.Message.InteractiveMessage.Header.create({
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/qw3o01.jpg' } }, { upload: conn.waUploadToServer })),
+          title: menuc7,
+          gifPlayback: true,
+          subtitle: "DEWMINI-MD",
+          hasMediaAttachment: false
+        }),
+                    body: { text: ``},
+                    nativeFlowMessage: {
+                      
+                    },
+                  },                                    		
+                ],
+                            messageVersion: 1,
+                        },
+                         contextInfo: {
+                         mentionedJid: [m.sender],
+                         forwardingScore: 999,
+                         isForwarded: true,
+                         forwardedNewsletterMessageInfo: {
+                         newsletterJid: '120363292101892024@newsletter',
+                         newsletterName: `⛅ 𝘋𝘌𝘞𝘔𝘐𝘕𝘐 𝘔𝘋 💙`,
+                         serverMessageId: 143
+                            }
+                        }
+                    }
+                }
+            },
+        },
+        { quoted: m })
+        
+            await conn.relayMessage(msg.key.remoteJid, msg.message, {
+      messageId: msg.key.id,
     });
     
-    switch (receivedText) {
-      case "1":
-        await conn.sendMessage(senderID, {
-          video: { url: fbData.BK9.sd },
-          caption: "> ㋛︎ ᴘᴏᴡᴇʀᴅ ʙʏ  ᴍʀ  ʟᴀᴋꜱɪᴅᴜ ᶜᵒᵈᵉʳ"
-        }, { quoted: receivedMsg });
-        break;
 
-      case "2":
-        await conn.sendMessage(senderID, {
-          video: { url: fbData.BK9.hd },
-          caption: "> ㋛︎ ᴘᴏᴡᴇʀᴅ ʙʏ  ᴍʀ  ʟᴀᴋꜱɪᴅᴜ ᶜᵒᵈᵉʳ"
-        }, { quoted: receivedMsg });
-        break;
+} if (config.MODE === 'button') {
 
-      case "3":
-        await conn.sendMessage(senderID, {
-          audio: { url: fbData.BK9.sd },
-          mimetype: "audio/mpeg"
-        }, { quoted: receivedMsg });
-        break;
 
-      case "4":
-        await conn.sendMessage(senderID, {
-          document: { url: fbData.BK9.sd },
-          mimetype: "audio/mpeg",
-          fileName: "Facebook_Audio.mp3",
-          caption: "> ㋛︎ ᴘᴏᴡᴇʀᴅ ʙʏ  ᴍʀ  ʟᴀᴋꜱɪᴅᴜ ᶜᵒᵈᵉʳ"
-        }, { quoted: receivedMsg });
-        break;
+        let sections = [{
+                title: '🔑 Select menu type',
+                rows: [{
+                        title: 'DOWNLOAD MENU',
+                        description: `Download commands`,
+                        id: `${prefix}downmenu`
+                    },
+                    {
+                        title: `SEARCH MENU`,
+                        description: 'Search commands',
+                        id: `${prefix}searchmenu`
+                    },
+		    {
+                        title: `CONVERT MENU`,
+                        description: 'Convert commands',
+                        id: `${prefix}convertmenu`
+                    },
+                    {
+                        title: `MAIN MENU`,
+                        description: 'Convert commands',
+                        id: `${prefix}mainmenu`
+                    },
+		    {
+                        title: `GROUP MENU`,
+                        description: 'Group commands',
+                        id: `${prefix}groupmenu`
+                    },
+                    {
+                        title: `LOGO MENU`,
+                        description: 'Logo commands',
+                        id: `${prefix}logomenu`
+                    },
+		    {
+                        title: `BUG MENU`,
+                        description: 'Bug commands',
+                        id: `${prefix}bugmenu`
+                    },
+                    {
+                        title: `MOVIE MENU`,
+                        description: 'Movie commands',
+                        id: `${prefix}moviemenu`
+                    },   
+		    {
+                        title: `OTHER MENU`,
+                        description: 'Other commands',
+                        id: `${prefix}othermenu`
+                    },      
+                ]
+            }
+        ]
 
-      case "5":
-        await conn.sendMessage(senderID, {
-          audio: { url: fbData.BK9.sd },
-          mimetype: "audio/mp4",
-          ptt: true
-        }, { quoted: receivedMsg });
-        break;
-
-      default:
-        reply("❌ Invalid option! Please reply with 1, 2, 3, 4, or 5.");
-    }
-  }
+        let listMessage = {
+            title: 'Click Here⎙',
+            sections
+        };
+        conn.sendMessage(from, {
+            image: { url: config.LOGO },
+    caption: cap,
+    footer: config.FOOTER,
+                buttons: [
+			{
+                    buttonId: `${prefix}alive`,
+                    buttonText: {
+                        displayText: 'ALIVE'
+                    },
+                },
+		{
+                    buttonId: `${prefix}ping`,
+                    buttonText: {
+                        displayText: 'PING'
+                    },
+                },	
+                {
+                    buttonId: 'action',
+                    buttonText: {
+                        displayText: 'ini pesan interactiveMeta'
+                    },
+                    type: 4,
+                    nativeFlowInfo: {
+                        name: 'single_select',
+                        paramsJson: JSON.stringify(listMessage),
+                    },
+                },
+            ],
+            headerType: 1,
+            viewOnce: true
+        }, {
+            quoted: m
+        });
+	
+}
+	
 } catch (e) {
 reply()
 l(e)
