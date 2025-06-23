@@ -153,14 +153,7 @@ let about = `╭━---------------------------------------------
 `
 
 await conn.sendMessage(from,{image:{url:`https://files.catbox.moe/3rj421.jpg`},caption:about,
-                             contextInfo: {
-    mentionedJid: [m.sender],
-    forwardingScore: 999,
-    isForwarded: true,
-    forwardedNewsletterMessageInfo: {
-      newsletterJid: '120363421846535301@newsletter',
-      newsletterName: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
-      serverMessageId: 999
+
     }
   }
 }, { quoted: mek });
