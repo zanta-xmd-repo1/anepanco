@@ -84,12 +84,12 @@ let menuc = `*◈╾──────${category} I,AM ALIVE NOW─────�
         let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*'	
 
   for (let i=0;i<commands.length;i++) { 
-if(commands[i].category === 'download'){
+if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
   if(!commands[i].dontAddCommandList){
 
 menuc += `• *${commands[i].pattern}*\n`
 }}};
-  menuc += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+  menuc += `\n⭓ *Total Commands List ᴢᴀɴᴛᴀ-xᴍᴅ`
 
 let menuc1 = `*◈╾──────${category} SEARCH COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         
