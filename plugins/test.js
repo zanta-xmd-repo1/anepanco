@@ -36,78 +36,32 @@ var BOTOW = ''
 if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  උපපරිපාලක නොවේ !*"
 else BOTOW = "*You are not bot\'s owner or moderator !*"
 
-    pattern: "genimg",
-    alias: ["aiimg", "generateimg", "aiimage"],
-    desc: "Generate AI Images using Stable Diffusion",
+cmd(
+  {
+    pattern: "aiimgs",
+    alias: ["genboys", "genimgs"],
+    desc: "Generate AI profile picture",
     category: "ai",
-    react: "🤖",
-    filename: __filename
-},
-async (conn, mek, m, { from, q, reply }) => {
+    react: "🖼️",
+    filename: __filename,
+  },
+  async (conn, mek, m, { from, args, reply }) => {
     try {
-        if (!q) return reply(`
-*🤖 𝐙𝐀𝐍𝐓𝐀 𝐗𝐌𝐃 𝐀𝐈 𝐈𝐌𝐀𝐆𝐄 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐎𝐑 🖼️*
+      let prompt = args.join(" ");
+      if (!prompt) return reply("⚠️ Please provide a prompt! (Example: `.genpfp Red flowers`)");
 
-Usage: .Lod <image description>
-Example: .Lod Beautiful landscape with mountains
+      let apiUrl = `https://manul-ofc-tech-api-1e5585f5ebef.herokuapp.com/fluxai?prompt=${encodeURIComponent(prompt)}`;
+      let response = await axios.get(apiUrl, { responseType: "arraybuffer" });
 
-> 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
-`);
-        await m.react("🔄");
+      await conn.sendMessage(
+        from,
+        { image: response.data, caption: `🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️ *AI Generated Image for:* _${prompt}_` },
+        { quoted: m }
+      );
 
-        const apiUrl = `https://dark-shan-yt.koyeb.app/ai/generate-image-v2?prompt=${encodeURIComponent(q)}`;
-
-        const response = await axios({
-            method: 'get',
-            url: apiUrl,
-            responseType: 'arraybuffer',
-            timeout: 60000 // 60 seconds timeout
-        });
-
-        if (!response.data) {
-            return reply("❌ Failed to generate image. No data received.");
-        }
-
-        // Send the generated image
-        await conn.sendMessage(from, {
-            image: response.data,
-            caption: `*𝐙𝐀𝐍𝐓𝐀 𝐗𝐌𝐃 𝐀𝐈 𝐈𝐌𝐀𝐆𝐄 𝐆𝐄𝐍𝐄𝐑𝐀𝐓𝐎𝐑 🖼️*
-
-*📝 Prompt:* ${q}
-
-*Model:* Stable Diffusion
-> 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
-`,
-            quoted: mek
-        });
-
-        // React to successful image generation
-        await m.react("✅");
-
-    } catch (error) {
-        console.error("Lod x Image Generation Error:", error);
-        
-        // React to error
-        await m.react("❌");
-
-        if (error.response) {
-            console.log(error.response.data);
-            console.log(error.response.status);
-            console.log(error.response.headers);
-
-            if (error.response.status === 429) {
-                return reply("⏳ Too many requests. Please try again later.");
-            } else if (error.response.status === 500) {
-                return reply("🚫 Server error. Unable to generate image.");
-            } else {
-                return reply(`❌ Error: ${error.response.status} - ${error.response.statusText}`);
-            }
-        } else if (error.request) {
-            console.log(error.request);
-            return reply("🌐 No response received from the server. Check your internet connection.");
-        } else {
-            console.log('Error', error.message);
-            return reply(`❌ An unexpected error occurred: ${error.message}`);
-        }
+    } catch (e) {
+      console.error("GenPFP Command Error:", e);
+      reply(`❌ Error: ${e.message}`);
     }
-});
+  }
+);
