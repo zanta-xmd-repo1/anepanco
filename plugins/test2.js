@@ -303,13 +303,7 @@ let menuc6 = `╭━━〔${new Date().getHours() < 12 ? '*🌄 සුබ උද
 ┃◈┃• *🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
 ┃◈└───────────┈⊷
 ╰──────────────┈
-       
-╭━━━〔 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*〕━━━┈⊷
-┃★╭──────────────
-┃★│ 👑 Owner : *ᴍʀ ꜱᴜʀᴀɴɢᴀ*
-┃★│ 📚 Version : *1.0*
-┃★╰──────────────
-╰━━━━━━━━━━━━━━━┈⊷
+
 *◈╾──────${category}MY INFO──────╼◈*\n\n> 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉  💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
@@ -318,7 +312,13 @@ if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
 
 
 }}};
-  menuc6 += `⛩️ *MY OWNER ABOUT :-* *My ultimate goal is not just to find success, but to create it — by building a powerful brand that will be known and respected worldwide. Every step I take is a move towards that vision — driven by hard work, dedication, and a desire to give my mother the life she deserves.*
+  menuc6 += `╭━━━〔 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*〕━━━┈⊷
+┃★╭──────────────
+┃★│ 👑 Owner : *ᴍʀ ꜱᴜʀᴀɴɢᴀ*
+┃★│ 📚 Version : *1.0*
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+⛩️ *MY OWNER ABOUT :-* *My ultimate goal is not just to find success, but to create it — by building a powerful brand that will be known and respected worldwide. Every step I take is a move towards that vision — driven by hard work, dedication, and a desire to give my mother the life she deserves.*
 
 *This is just the beginning of my journey. One day, the world will know the name suranga .*
 
