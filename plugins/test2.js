@@ -85,7 +85,7 @@ let menuc = `╭━━〔${new Date().getHours() < 12 ? '*🌄 සුබ උද�
 ┃◈┃• *🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
 ┃◈└───────────┈⊷
 ╰──────────────┈
-*◈╾──────${category} I,AM ALIVE NOW──────╼◈*\n\n 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉 💖\n\n`;
+*◈╾──────${category} I,AM ALIVE NOW──────╼◈*\n\n> 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉 💖\n\n`;
         let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*'	
 
   for (let i=0;i<commands.length;i++) { 
@@ -114,7 +114,7 @@ let menuc1 = `╭━━〔${new Date().getHours() < 12 ? '*🌄 සුබ උද
 ┃◈┃• *🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
 ┃◈└───────────┈⊷
 ╰──────────────┈
-*◈╾──────${category}MY SYSTEM──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+*◈╾──────${category}MY SYSTEM──────╼◈*\n\n> 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉 💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
 if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
@@ -148,7 +148,7 @@ let menuc2 = `╭━━〔${new Date().getHours() < 12 ? '*🌄 සුබ උද
 ┃◈┃• *🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
 ┃◈└───────────┈⊷
 ╰──────────────┈
-*◈╾──────${category}MY OWNER──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+*◈╾──────${category}MY OWNER──────╼◈*\n\n> 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉 💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
 if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
@@ -174,7 +174,7 @@ if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
 > *𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - : 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*`
 
 
-let menuc3 = `*◈╾──────${category} LOGO COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖 \n\n`;
+let menuc3 = `*◈╾──────${category} LOGO COMMAND LIST──────╼◈*\n\n> 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉 💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
 if(commands[i].category === 'logo'){
@@ -276,7 +276,7 @@ header: proto.Message.InteractiveMessage.Header.create({
                   {                   
 
 header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/p1t4kk.jpg' } }, { upload: conn.waUploadToServer })),
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/ko9219.jpg' } }, { upload: conn.waUploadToServer })),
           title: menuc2,
           gifPlayback: true,
           subtitle: "🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️",
