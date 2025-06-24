@@ -118,28 +118,3 @@ reply('*Error !!*')
 l(e)
 }
 })
-
-
-
-cmd({
-    pattern: "tomp3",
-    react: "🔊",
-    alias: ["toaudio","tosong"],
-    desc: descg,
-    category: "convert",
-    use: '.toptt <Reply to video>',
-    filename: __filename
-},
-async(conn, mek, m,{from, l, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
-try{
-    let isquotedvid = m.quoted ? (m.quoted.type === 'videoMessage') : m ? (m.type === 'videoMessage') : false
-    if(!isquotedvid) return await reply(imgmsg)
-    let media = m.quoted ? await m.quoted.download() : await m.download()
-    let auddio = await toPTT(media, 'mp4')
-    let senda =  await conn.sendMessage(m.chat, {audio: auddio.options, mimetype:'audio/mpeg'}, {quoted:m})
-    await conn.sendMessage(from, { react: { text: '🎼', key: senda.key }})
-} catch (e) {
-reply('*Error !!*')
-l(e)
-}
-})
