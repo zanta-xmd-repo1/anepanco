@@ -408,9 +408,7 @@ ______________________________________
 ║❒ *WaGroup:* https://chat.whatsapp.com/LNugsdDGbQx8Q5hb09hJ2I
 ║
 ╚════════════════════════╝
-_____________________________________
-
- `;
+_____________________________________`;
 
 
 conn.sendMessage('94760264995@s.whatsapp.net', { image: { url: `https://i.ibb.co/d4JYdcGX/Golden-Queen-MD-VIMAMODS-30d6761c45d43402.jpg` }, caption: up })
