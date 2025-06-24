@@ -456,7 +456,7 @@ header: proto.Message.InteractiveMessage.Header.create({
 
 
         let sections = [{
-                title: 'ᴛ💖 ᴀᴘ ᴏɴ ᴛʜᴇ ᴍᴇɴᴜ ʏᴏᴜ ᴘʀᴇꜰᴇʀ ꜰʀᴏᴍ ʜᴇʀᴇ ᴀɴᴅ ᴘʀᴇꜱꜱ ᴛʜᴇ ꜱᴇʟᴇᴄᴛ ʙᴜᴛᴛᴏɴ. 💖',
+                title: '💙 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐘 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂',
                 rows: [{
                         title: 'DOWNLOAD MENU',
                         description: `Download commands`,
@@ -507,7 +507,7 @@ header: proto.Message.InteractiveMessage.Header.create({
         ]
 
         let listMessage = {
-            title: 'Click Here⎙ 💖',
+            title: 'Click Here⎙',
             sections
         };
         conn.sendMessage(from, {
@@ -518,13 +518,13 @@ header: proto.Message.InteractiveMessage.Header.create({
 			{
                     buttonId: `${prefix}alive`,
                     buttonText: {
-                        displayText: 'ALIVE 💖'
+                        displayText: 'ALIVE'
                     },
                 },
 		{
                     buttonId: `${prefix}ping`,
                     buttonText: {
-                        displayText: 'PING 💖'
+                        displayText: 'PING'
                     },
                 },	
                 {
