@@ -414,8 +414,7 @@ conn.sendMessage('94760264995@s.whatsapp.net', { image: { url: `https://i.ibb.co
 
 conn.sendMessage('120363419789643430@g.us', { image: { url: `https://i.ibb.co/d4JYdcGX/Golden-Queen-MD-VIMAMODS-30d6761c45d43402.jpg` }, caption: up })
 
-- ==================================================================
-+ // ==================================================================
+//==================================================================
 
 	
 conn.ev.on("call", async(json) => {
