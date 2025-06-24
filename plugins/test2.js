@@ -262,6 +262,9 @@ if(commands[i].category === 'group'){
 *DAWNLOAD OPTIONS ⬇️*
 ◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
 
+  const endTime = Date.now()
+        const ping = endTime - startTime
+        await conn.sendMessage(from, { text: `> *🔥 SPEED : ${ping}ms*` }, { quoted: message })
 
 │ 1️⃣ ᴄᴏᴍᴍᴀɴᴅ ꜱᴘᴇᴇᴅ        
 │ 2️⃣ ʙᴜɢ ꜱᴘᴇᴇᴅ
