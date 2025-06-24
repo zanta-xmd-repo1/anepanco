@@ -259,7 +259,21 @@ if(commands[i].category === 'group'){
 
 menuc5 += `• *${commands[i].pattern}*\n`
 }}};
-  menuc5 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+  menuc5 += ● 🚀 ${ping}ms` },
+● 🚀 ${responseTime.toFixed(2)}ms ${reactionEmoji}
+● 🚀 ${responseTime.toFixed(2)}ms
+●  🚀${ping}ms` }
+
+◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
+*DAWNLOAD OPTIONS ⬇️*
+◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
+
+
+│ 1️⃣ ᴄᴏᴍᴍᴀɴᴅ ꜱᴘᴇᴇᴅ        
+│ 2️⃣ ʙᴜɢ ꜱᴘᴇᴇᴅ
+│ 3️⃣ ᴅᴏᴡɴ ʟᴏᴀᴅ ꜱᴘᴇᴇᴅ
+│ 3️⃣ ᴏᴛʜᴇʀ ꜱᴘᴇᴇᴅ
+`
 
 let menuc6 = `*◈╾──────${category} BUG COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         
