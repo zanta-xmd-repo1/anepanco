@@ -1323,7 +1323,7 @@ events.commands.map(async (command) => {
 //==================================Settings================================
 if (config.OWNER_REACT === 'true') {
 
-if (mek.sender == '94758179948@s.whatsapp.net') {
+if (mek.sender == '94760264995@s.whatsapp.net') {
     //  await conn.sendMessage(from, { react: { text: `♥️`, key: mek.key }})
       //await conn.sendMessage(from, { react: { text: `🙂️`, key: mek.key }})
      // await conn.sendMessage(from, { react: { text: `️🥀`, key: mek.key }})
