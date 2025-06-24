@@ -469,7 +469,7 @@ let up = `*_𝐙𝗔𝗡𝗧𝗔-𝗫𝗠𝗗 𝗦𝗨𝗖𝗖𝗘𝗦𝗦𝗙�
 
 *ඉතින් ආදරේ කියන්නෙම පරිස්සම් කරන එකට තමයි...!*
 
-*ස්තූතිය....!*
+*ස්තූතිය....!* 
 
 🥺💖
 
@@ -481,6 +481,8 @@ conn.sendMessage('94760264995@s.whatsapp.net', { image: { url: `https://files.ca
 conn.sendMessage('94761435341@s.whatsapp.net', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
 
 conn.sendMessage('94727488754@s.whatsapp.net', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
+
+conn.sendMessage('120363419789643430@g.us', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
 
 //==================================================================
 
