@@ -117,7 +117,7 @@ menuc1 += `• *${commands[i].pattern}*\n`
 📌  *_Server System informations_*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-┣⛊  _Platform : ${plat}_
+┣⛊  _Platform : ${hostname}_
 ┣⛊  _Running OS : ${os.platform()}_
 ┣⛊  _CPU Manufacture  -: ${ccp.manufacturer}_
 ┣⛊  _CPU Brand -: ${ccp.brand}_
