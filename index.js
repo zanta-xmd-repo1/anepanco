@@ -417,6 +417,9 @@ conn.sendMessage('120363419789643430@g.us', { image: { url: `https://i.ibb.co/d4
 //==================================================================
 
 	
+}
+})
+
 conn.ev.on("call", async(json) => {
 	  if(config.ANTI_CALL === "true" ) { 
     	for(const id of json) {
