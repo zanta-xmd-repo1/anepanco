@@ -298,15 +298,36 @@ if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*`
 
 
-let menuc6 = `*◈╾──────${category} BUG COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+let menuc6 = `╭━━〔${new Date().getHours() < 12 ? '*🌄 සුබ උදෑසනක් 🌄*' : '*🌛 සුබ රාත්‍රියක්  🌛*'}〕━━┈⊷
+┃◈╭─────────────·๏
+┃◈┃• *🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
+┃◈└───────────┈⊷
+╰──────────────┈
+       
+╭━━━〔 🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*〕━━━┈⊷
+┃★╭──────────────
+┃★│ 👑 Owner : *ᴍʀ ꜱᴜʀᴀɴɢᴀ*
+┃★│ 📚 Version : *1.0*
+┃★╰──────────────
+╰━━━━━━━━━━━━━━━┈⊷
+*◈╾──────${category}MY INFO──────╼◈*\n\n> 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉  💖\n\n`;
         
   for (let i=0;i<commands.length;i++) { 
-if(commands[i].category === 'bug'){
+if(commands[i].category === 'ᴢᴀɴᴛᴀ-xᴍᴅ'){
   if(!commands[i].dontAddCommandList){
 
-menuc6 += `• *${commands[i].pattern}*\n`
+
 }}};
-  menuc6 += `\n⭓ *Total Commands List ${category}*: ${commands.filter(cmd => cmd.category.toUpperCase() === category).length}\n\n${wm}`
+  menuc6 += `⛩️ *MY OWNER ABOUT :-* *My ultimate goal is not just to find success, but to create it — by building a powerful brand that will be known and respected worldwide. Every step I take is a move towards that vision — driven by hard work, dedication, and a desire to give my mother the life she deserves.*
+
+*This is just the beginning of my journey. One day, the world will know the name suranga .*
+
+*🐉 If you need any help from me, you can type the "alive" command and get the "menu" thanks*
+*────────────────────────┈⊷*
+⊷
+*•────────────•⟢*
+> 𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖
+*•────────────•⟢*`
 	
 let menuc7 = `*◈╾──────${category} OTHER COMMAND LIST──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
         
