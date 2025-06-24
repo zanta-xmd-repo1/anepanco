@@ -261,8 +261,6 @@ if(commands[i].category === 'group'){
   menuc5 += `◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
 *DAWNLOAD OPTIONS ⬇️*
 ◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
-
-  const endTime = Date.now()
         const ping = endTime - startTime
         await conn.sendMessage(from, { text: `> *🔥 SPEED : ${ping}ms*` }, { quoted: message })
 
