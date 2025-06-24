@@ -260,9 +260,9 @@ if(commands[i].category === 'group'){
 menuc5 += `• *${commands[i].pattern}*\n`
 }}};
   menuc5 += ● 🚀 ${ping}ms},
-● 🚀 ${responseTime.toFixed(2)}ms ${reactionEmoji}
-● 🚀 ${responseTime.toFixed(2)}ms
-●  🚀${ping}ms }
+● 🚀 ${responseTime.toFixed(2)}ms ${reactionEmoji},
+● 🚀 ${responseTime.toFixed(2)}ms},
+●  🚀${ping}ms},
 
 ◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
 *DAWNLOAD OPTIONS ⬇️*
