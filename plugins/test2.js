@@ -85,7 +85,7 @@ let menuc = `╭━━〔${new Date().getHours() < 12 ? '*🌄 සුබ උද�
 ┃◈┃• *🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️*
 ┃◈└───────────┈⊷
 ╰──────────────┈
-*◈╾──────${category} I,AM ALIVE NOW──────╼◈*\n\n> Select you want command type and enjoy ZANTA-XMD whatsapp bot 💖\n\n`;
+*◈╾──────${category} I,AM ALIVE NOW──────╼◈*\n\n 𝚃𝙷𝙴 𝚉𝙰𝙽𝚃𝙰-𝚇𝙼𝙳 𝙲𝚁𝙴𝙰𝚃𝙴𝙳 𝙱𝚈 𝙼𝚁 𝚂𝚄𝚁𝙰𝙽𝙶𝙰 𝙼𝙾𝙳-𝚉 💖\n\n`;
         let wm = '*ᴢᴀɴᴛᴀ-xᴍᴅ ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*'	
 
   for (let i=0;i<commands.length;i++) { 
