@@ -391,8 +391,7 @@ checkForNewsUpdates8();
             });
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
-let up = `
-*Connected successfully✅ 🚬🗿_*
+let up = `*Connected successfully✅ 🚬🗿_*
 ______________________________________
 ╔════◇
 ║ _*DushanX Multi Device WhatsApp User bot*._
