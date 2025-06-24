@@ -258,11 +258,7 @@ if(commands[i].category === 'group'){
   if(!commands[i].dontAddCommandList){
 
 }}};
-  menuc4 += `● 🚀 ${responseTime.toFixed(2)}ms ${reactionEmoji},
-● 🚀 ${responseTime.toFixed(2)}ms},
-●  🚀${ping}ms},
-
-◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
+  menuc4 += `◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
 *DAWNLOAD OPTIONS ⬇️*
 ◖┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉┉◗
 
