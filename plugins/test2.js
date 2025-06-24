@@ -335,7 +335,7 @@ header: proto.Message.InteractiveMessage.Header.create({
                   {                   
 			  
 header: proto.Message.InteractiveMessage.Header.create({
-          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/cvkpl6.jpg' } }, { upload: conn.waUploadToServer })),
+          ...(await prepareWAMessageMedia({ image: { url: 'https://files.catbox.moe/b3lm4s.jpg' } }, { upload: conn.waUploadToServer })),
           title: menuc4,
           gifPlayback: true,
           subtitle: "🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️",
