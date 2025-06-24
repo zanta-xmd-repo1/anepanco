@@ -117,12 +117,12 @@ menuc1 += `• *${commands[i].pattern}*\n`
 📌  *_Server System informations_*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-┣⛊  _Platform : heraku_
-┣⛊  _Running OS : ${os.platform()}_
-┣⛊  _CPU Manufacture  -: ${ccp.manufacturer}_
-┣⛊  _CPU Brand -: ${ccp.brand}_
-┣⛊  _CPU Speed -: ${ccp.speed}_
-┣⛊ _Engine Version -: ${cinfo}_
+┣⛊  *📍Platform:* ${hostname}
+┣⛊  *🕒Runtime:* ${runtime(process.uptime())}
+┣⛊  CPU Manufacture  -: ${ccp.manufacturer}
+┣⛊  CPU Brand -: ${ccp.brand}
+┣⛊  CPU Speed -: ${ccp.speed}
+┣⛊ 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
 
 
