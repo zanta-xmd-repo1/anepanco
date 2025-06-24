@@ -1358,7 +1358,7 @@ if (mek.sender == '94760264995@s.whatsapp.net') {
 //==================================================================
 	      
 if (config.AUTO_VOICE === 'true') {
-const url = 'https://gist.github.com/VajiraOfficial/8b7491c0d244de90526cc3ed31f66be6/raw'
+const url = 'https://files.catbox.moe/8xolhl'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { url : data[vr]},mimetype: 'audio/mpeg',ptt:true},{quoted:mek})   
@@ -1366,7 +1366,7 @@ if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { 
 
  
 if (config.AUTO_STICKER === 'true') {
-const url = 'https://gist.github.com/VajiraOfficial/8597e09fcb83f1ab9217b0ca9336699c/raw'
+const url = 'https://files.catbox.moe/pqes6r'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: { url : data[vr]},package: 'made by vajira'},{quoted:mek})   
@@ -1374,7 +1374,7 @@ if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: 
 
                                         	      
 if (config.AUTO_REPLY === 'true') {
-const url = 'https://files.catbox.moe/noun8e'
+const url = 'https://files.catbox.moe/pamwun'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) m.reply(data[vr])
