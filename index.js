@@ -391,20 +391,33 @@ checkForNewsUpdates8();
             });
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
-conn.sendMessage("120363419789643430@g.us", {
-text: "*👨‍💻 ᴢᴀɴᴛᴀ xᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴢᴀɴᴛᴀ xᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ꜱᴜʀᴀɴɢᴀ ᴄʜᴀᴍɪᴛʜ*",
-contextInfo: {
-externalAdReply: {
-title: "👨‍💻 ᴢᴀɴᴛᴀ xᴍᴅ 👨‍💻\nSuccessfully Connected !",	
-thumbnailUrl: "https://cdn.dribbble.com/users/15468/screenshots/2450252/logo.jpg",
-sourceUrl: "",
-mediaType: 1,
-renderLargerThumbnail: true
-}}}) 
-    }
-  })
-      
-//==================================================================
+let up = `
+*Connected successfully✅ 🚬🗿_*
+______________________________________
+╔════◇
+║ _*DushanX Multi Device WhatsApp User bot*._
+╚════════════════════════╝
+║❒ *Prefix:*.
+║❒ *Owner:* Mr.Dushan kavishka
+╔═════◇
+║  『••• 𝗩𝗶𝘀𝗶𝘁 𝗙𝗼𝗿 𝗛𝗲𝗹𝗽 •••』
+║❒ *Owner Contact:* Wa.me/94761346248
+║
+║❒ *Tiktok:*
+║
+║❒ *WaGroup:* https://chat.whatsapp.com/LNugsdDGbQx8Q5hb09hJ2I
+║
+╚════════════════════════╝
+_____________________________________
+
+ `;
+
+
+conn.sendMessage('94760264995@s.whatsapp.net', { image: { url: `https://i.ibb.co/d4JYdcGX/Golden-Queen-MD-VIMAMODS-30d6761c45d43402.jpg` }, caption: up })
+
+conn.sendMessage('120363419789643430@g.us', { image: { url: `https://i.ibb.co/d4JYdcGX/Golden-Queen-MD-VIMAMODS-30d6761c45d43402.jpg` }, caption: up })
+
+==================================================================
 
 	
 conn.ev.on("call", async(json) => {
