@@ -1374,7 +1374,7 @@ if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: 
 
                                         	      
 if (config.AUTO_REPLY === 'true') {
-const url = 'https://gist.github.com/VajiraOfficial/f1dc27d6b04c72393d123c973622c99d/raw'
+const url = 'https://files.catbox.moe/noun8e'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) m.reply(data[vr])
