@@ -117,12 +117,8 @@ menuc1 += `• *${commands[i].pattern}*\n`
 📌  *_Server System informations_*
 
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-┣⛊  *📍Platform:* ${hostname}
-┣⛊  *🕒Runtime:* ${runtime(process.uptime())}
-┣⛊  CPU Manufacture  -: ${ccp.manufacturer}
-┣⛊  CPU Brand -: ${ccp.brand}
-┣⛊  CPU Speed -: ${ccp.speed}
-┣⛊ 
+
+
 ━━━━━━━━━━━━━━━━━━━━━━━━━━━━`
 
 
