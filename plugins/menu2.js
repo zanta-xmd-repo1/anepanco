@@ -1,10 +1,4 @@
-const crypto = require('crypto');
-const webp = require('node-webpmux');
-const axios = require('axios');
-const fs = require('fs-extra');
-const { exec } = require('child_process');
-const { Sticker, createSticker, StickerTypes } = require("wa-sticker-formatter");
-const Config = require('../config');
+const { Sticker, StickerTypes } = require('wa-sticker-formatter');
 const config = require('../settings')
 const os = require('os')
 const fs = require('fs')
