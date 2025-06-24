@@ -391,7 +391,7 @@ checkForNewsUpdates8();
             });
             console.log('Plugins installed ✅')
             console.log('Bot connected ✅')
-conn.sendMessage("120363419789643430@g.", {,conn.sendMessage("94760264995@s.whatsapp.net.", {
+conn.sendMessage("120363419789643430@g.us", {
 text: "*👨‍💻 ᴢᴀɴᴛᴀ xᴍᴅ 👨‍💻 successfully connected* ✓\n\n Use .Update command to see Vajira md new update news \n\n> ◦ *Official GitHub* - ```https://github.com/VajiraTech```\n> ◦ ᴊᴏɪɴ ᴏᴜʀ sᴜᴘᴘᴏʀᴛ ɢʀᴏᴜᴘ ᴠɪᴀ ᴛʏᴘᴇ: .joinsup\n*👨‍💻 ᴢᴀɴᴛᴀ xᴍᴅ 👨‍💻 ᴡʜᴀᴛꜱᴀᴘᴘ ᴜꜱᴇʀ ʙᴏᴛ*\n*ᴄʀᴇᴀᴛᴇᴅ ʙʏ • ꜱᴜʀᴀɴɢᴀ ᴄʜᴀᴍɪᴛʜ*",
 contextInfo: {
 externalAdReply: {
