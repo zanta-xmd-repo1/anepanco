@@ -1,3 +1,5 @@
+const bugres = '𝙋𝙧𝙤𝙘𝙘𝙚𝙨 👾'
+const { beta1, beta2, buk1 } = require("../lib/hdr.js")
 const config = require('../settings')
 const os = require('os')
 const fs = require('fs')
