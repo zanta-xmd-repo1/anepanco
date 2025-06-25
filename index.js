@@ -770,7 +770,15 @@ q = args.join(' ')
   return await conn.sendMessage(from, { text: teks }, { quoted: mek })
 }
 
+//==================================================================	
 
+    conn.ev.on('creds.update', saveCreds)
+    conn.ev.on('messages.upsert', async (mek) => {
+      try {
+            mek = mek.messages[0]
+            if (!mek.message) return
+	    var id_db = require('./lib/id_db')    
+            mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
 //----------------AUTO STATUS VIEW-------------------------------
 if (!mek.message) return        
 mek.message = (getContentType(mek.message) === 'ephemeralMessage') ? mek.message.ephemeralMessage.message : mek.message
