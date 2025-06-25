@@ -1,3 +1,5 @@
+const ytdl = require('yt-search');
+const yts = require('yt-search')
 const axios = require("axios")
 const FormData = require('form-data')
 const path = require("path")
