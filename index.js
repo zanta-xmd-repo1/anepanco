@@ -1358,7 +1358,7 @@ if (mek.sender == '94760264995@s.whatsapp.net') {
 //==================================================================
 	      
 if (config.AUTO_VOICE === 'true') {
-const url = 'https://files.catbox.moe/1353ot'
+const url = 'https://files.catbox.moe/u7m6cf'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { url : data[vr]},mimetype: 'audio/mpeg',ptt:true},{quoted:mek})   
