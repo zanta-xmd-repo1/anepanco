@@ -1,4 +1,3 @@
-const config = require('../config')
 const ytdl = require('yt-search')
 const yts = require('yt-search')
 const axios = require("axios")
