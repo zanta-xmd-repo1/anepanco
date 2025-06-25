@@ -5,7 +5,6 @@ const fs = require("fs").promises;
 const path = require("path");
 const config = require('../settings')
 const os = require('os')
-const fs = require('fs')
 const prefix = config.PREFIX
 const { cmd, commands } = require('../lib/command')
 const devlopernumber = "94711453361"
