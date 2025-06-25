@@ -6,7 +6,6 @@
 "balaganim":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Balaganin.mp3?raw=true",
 "balagena":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Balagena.mp3?raw=true",
 "balli":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Balli.mp3?raw=true",
-"bot":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Bot.mp3?raw=true",
 "bye":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Bye.mp3?raw=true",
 "denavawa":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Denawada.mp3?raw=true",
 "enne nane":"https://github.com/ravindu01manoj/Sew-Queen/blob/master/VoiceClip/Enne%20nane.mp3?raw=true",
