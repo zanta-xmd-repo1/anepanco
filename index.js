@@ -1366,7 +1366,7 @@ if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{audio: { 
 
  
 if (config.AUTO_STICKER === 'true') {
-const url = 'https://files.catbox.moe/pqes6r'
+const url = 'https://files.catbox.moe/azx1zc'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: { url : data[vr]},package: 'made by vajira'},{quoted:mek})   
