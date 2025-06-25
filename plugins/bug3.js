@@ -4,10 +4,6 @@ const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, 
 const fs = require('fs');
 const bugres = '𝙋𝙧𝙤𝙘𝙘𝙚𝙨 👾'
 const { beta1, beta2, buk1 } = require("../lib/hdr.js")
-const {
-    default: makeWASocket,
-    generateWAMessageFromContent,
-    proto
 
 cmd({
     pattern: "zanta1",
