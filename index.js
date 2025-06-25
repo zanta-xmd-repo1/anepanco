@@ -558,186 +558,118 @@ conn.forwardMessage = async (jid, message, forceForward = false, options = {}) =
 
 	
 
-  //farewell/welcome
-    conn.ev.on('group-participants.update', async (anu) => {
-    	if (config.WELCOME === 'true') {
-console.log(anu)
-try {
-let metadata = await conn.groupMetadata(anu.id)
-let participants = anu.participants
-for (let num of participants) {
-try {
-ppuser = await conn.profilePictureUrl(num, 'image')
-} catch (err) {
-ppuser = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
-}
-try {
-ppgroup = await conn.profilePictureUrl(anu.id, 'image')
-} catch (e) {
-ppgroup = 'https://telegra.ph/file/b11123c61f6b970118a46.jpg'
-}
-//welcome\\
-memb = metadata.participants.length
-connWlcm = await getBuffer(ppuser)
-connLft = await getBuffer(ppuser)
-                if (anu.action == 'add') {
-                const connbuffer = await getBuffer(ppuser)
-                let connName = num
-                const xtime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-	            const xdate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-	            const xmembers = metadata.participants.length
-                connbody = `┌─❖
-│「 𝗛𝗶 👋 」
-└┬❖ 「  @${connName.split("@")[0]}  」
-   │✑  𝗪𝗲𝗹𝗰𝗼𝗺𝗲 𝘁𝗼 
-   │✑  ${metadata.subject}
-   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
-   │✑ ${xmembers}th
-   │✑  𝗝𝗼𝗶𝗻𝗲𝗱 : 
-   │✑ ${xtime} ${xdate}
-   └───────────────┈ ⳹
-   DESCRIPTION
 
-   OWNER NAME = Vajira Rathnayaka
-
-   TEAM = Technical Cybers (T.C)
-
-   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
-
-   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
-
-👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
-			    
-   `
-conn.sendMessage(anu.id,
- { text: connbody,
- contextInfo:{
-mentionedJid:[num],
-"externalAdReply": {
-"showAdAttribution": true,
-"renderLargerThumbnail": true,
-"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
-"body": `${metadata.subject}`,	
-"containsAutoReply": true,
-"mediaType": 1, 
-"thumbnail": connLft,
-"sourceUrl": `${ppuser}`
-}
-}
-})
-                } else if (anu.action == 'remove') {
-                	const connbuffer = await getBuffer(ppuser)
-                    const conntime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-	                const conndate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-                	let connName = num
-                    const connmembers = metadata.participants.length
-                    connbody = `┌─❖
-│「 𝗚𝗼𝗼𝗱𝗯𝘆𝗲 👋 」
-└┬❖ 「 @${connName.split("@")[0]}  」
-   │✑  𝗟𝗲𝗳𝘁 
-   │✑ ${metadata.subject}
-   │✑  𝗠𝗲𝗺𝗯𝗲𝗿 : 
-   │✑ ${connmembers}th
-   │✑  𝗧𝗶𝗺𝗲 : 
-   │✑  ${conntime} ${conndate}
-   └───────────────┈ ⳹
-   DESCRIPTION
-
-   OWNER NAME = Vajira Rathnayaka
-
-   TEAM = Technical Cybers (T.C)
-
-   JOIN MY WHATSAPP CHANNEL = https://whatsapp.com/channel/0029VahMZasD8SE5GRwzqn3Z
-
-   SUBSCRIBE MY YT CHANNEL = https://youtube.com/@gamingewingyt6216?si=fTgQw094lJrXWQlg
-
-👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
-			    `
-conn.sendMessage(anu.id,
- { text: connbody,
- contextInfo:{
-mentionedJid:[num],
-"externalAdReply": {
-"showAdAttribution": true,
-"renderLargerThumbnail": true,
-"title": ` 👨‍💻 ＶＡＪＩＲＡ ＭＤ 👨‍💻`, 
-"body": `${metadata.subject}`,	
-"containsAutoReply": true,
-"mediaType": 1, 
-"thumbnail": connLft,
-"sourceUrl": `${ppuser}`
-}
-}
-})
-
-			
-	  }
-}
-} catch (e) {
-console.log(e)
-}
-}
-})      
-                  
+	
 //==================================================================
 
-conn.ev.on('group-participants.update', async (anu) => {
-    	if (config.ADMIN_EVENT === 'true') {
-console.log(anu)
-try {
-let participants = anu.participants
-for (let num of participants) {
-try {
-ppuser = await conn.profilePictureUrl(num, 'image')
-} catch (err) {
-ppuser = 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png?q=60'
+
+	
+// respon cmd pollMessage
+async function getMessage(key) {
+    if (store) {
+        const msg = await store.loadMessage(key.remoteJid, key.id);
+        return msg?.message;
+    }
+    return {
+        conversation: "Hai",
+    };
 }
-try {
-ppgroup = await conn.profilePictureUrl(anu.id, 'image')
-} catch (err) {
-ppgroup = 'https://i.ibb.co/RBx5SQC/avatar-group-large-v2.png?q=60'
-}
- if (anu.action == 'promote') {
-const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let xeonName = num
-xeonbody = ` 𝗖𝗼𝗻𝗴𝗿𝗮𝘁𝘀🎉 @${xeonName.split("@")[0]}, you have been *promoted* to *admin* 🥳`
-   conn.sendMessage(anu.id,
- { text: xeonbody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": "VAJIRA MD",
-"body": "Vajira Rathnayaka",
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": XeonWlcm,
-"sourceUrl": `${wagc}`}}})
-} else if (anu.action == 'demote') {
-const xeontime = moment.tz('Asia/Kolkata').format('HH:mm:ss')
-const xeondate = moment.tz('Asia/Kolkata').format('DD/MM/YYYY')
-let xeonName = num
-xeonbody = `𝗢𝗼𝗽𝘀‼️ @${xeonName.split("@")[0]}, you have been *demoted* from *admin* 😬`
-conn.sendMessage(anu.id,
- { text: xeonbody,
- contextInfo:{
- mentionedJid:[num],
- "externalAdReply": {"showAdAttribution": true,
- "containsAutoReply": true,
- "title": "VAJIRA MD",
-"body": "Vajira Rathnayaka",
- "previewType": "PHOTO",
-"thumbnailUrl": ``,
-"thumbnail": XeonLft,
-"sourceUrl": `${wagc}`}}})
-}
-}
-} catch (err) {
-console.log(err)
-}
-}
-}
+
+conn.ev.on('messages.update', async chatUpdate => {
+    for (const { key, update } of chatUpdate) {
+        if (update.pollUpdates && key.fromMe) {
+            const pollCreation = await getMessage(key);
+            if (pollCreation) {
+                const pollUpdate = await getAggregateVotesInPollMessage({
+                    message: pollCreation,
+                    pollUpdates: update.pollUpdates,
+                });
+                var toCmd = pollUpdate.filter(v => v.voters.length !== 0)[0]?.name;
+                if (toCmd == undefined) return;
+                var prefCmd = prefix + toCmd;
+
+                try {
+                    setTimeout(async () => {
+                        await gss.sendMessage(key.remoteJid, { delete: key });
+                    }, 10000);
+                } catch (error) {
+                    console.error("Error deleting message:", error);
+                }
+
+                gss.appenTextMessage(prefCmd, chatUpdate);
+            }
+        }
+    }
+});
+
+
+
+conn.ev.on('messages.update', async(mes) => {
+        for(const { key, update } of mes) {
+            if(update.pollUpdates) {
+                const pollCreationmg = await getMessage(key)
+                const pollCreation = pollCreationmg.message;
+                if(pollCreation) {
+                    const from = key.remoteJid;
+                    const botNumber = await jidNormalizedUser(conn.user.id);
+                    const pollMessage = await getAggregateVotesInPollMessage({
+                        message: pollCreation,
+                        pollUpdates: update.pollUpdates,
+                    })
+                    let bodyName = pollMessage.find(poll => poll.voters.length > 0)?.name || '';
+                    let bodyIndex = pollMessage.findIndex(poll => poll.name === bodyName) || '';
+                    
+                    let voter = (pollMessage.find(poll => poll.voters.length > 0)?.voters[0] == 'me')?botNumber  :pollMessage.find(poll => poll.voters.length > 0)?.voters[0];
+                    function extractMentionedJid(data) {
+                        let messageKeys = ['pollCreationMessage', 'pollCreationMessageV1', 'pollCreationMessageV2', 'pollCreationMessageV3'];
+                    
+                        for (let key of messageKeys) {
+                            if (data[key]  && data[key].mentionedJid) {
+                                return data[key].mentionedJid;
+                            }
+                        }
+                    
+                        return null; 
+                    }function extractpollname(data) {
+                        let messageKeys = ['pollCreationMessage', 'pollCreationMessageV1', 'pollCreationMessageV2', 'pollCreationMessageV3'];
+                    
+                        for (let key of messageKeys) {
+                            if (data[key]  && data[key].name) {
+                                return data[key].name;
+                            }
+                        }
+                    
+                        return null; 
+                    }
+                    const mentionedJid = extractMentionedJid(pollCreation);
+                    const poll = extractpollname(pollCreation);
+                    const isRequester= mentionedJid?.includes(voter)
+                    const pollSender = pollCreationmg.key.remoteJid.includes('@g.us') ? pollCreationmg.key.participant : pollCreationmg.key.remoteJid;
+                    const dat = {
+                                body: bodyIndex+ 1,
+                                voted:bodyName,
+                                from: from,
+                                isRequester : isRequester? isRequester:false,
+                                mentionedJid: mentionedJid,
+                                pollSender: pollSender,
+                                poll:poll,
+                                voter: voter,
+                                type: 'poll'
+                }
+                
+                    await conn.sendMessage(botNumber, { text: JSON.stringify(dat,null,2) } )
+                    //conn.sendMessage(botNumber, { text: JSON.stringify(pollCreation,null,2) } )
+                    //conn.sendMessage(botNumber, { text: JSON.stringify(pollMessage,null,2) } )
+                    //conn.sendMessage(botNumber, { text: JSON.stringify(update?.pollUpdates,null,2) } )
+                   
+                    //events.commands.map(async(command) => {
+                      //  if (body && command.on === "poll") {
+                        //command.function(conn, mes, m,{from, l,  body, isGroup, sender,  botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants,  isItzcp, groupAdmins, isBotAdmins, isAdmins, reply,react})
+                        //}});
+                }
+            }
+        }
+    })	
 
 
 
