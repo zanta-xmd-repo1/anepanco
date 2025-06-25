@@ -1374,7 +1374,7 @@ if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) conn.sendMessage(from,{sticker: 
 
                                         	      
 if (config.AUTO_REPLY === 'true') {
-const url = 'https://files.catbox.moe/70rbc9'
+const url = 'https://files.catbox.moe/8g7g4d'
 let { data } = await axios.get(url)
 for (vr in data){
 if((new RegExp(`\\b${vr}\\b`,'gi')).test(body)) m.reply(data[vr])
