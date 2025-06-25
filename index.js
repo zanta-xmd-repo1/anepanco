@@ -494,12 +494,6 @@ USE 1ST COMMAND
 
 conn.sendMessage('94760264995@s.whatsapp.net', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
 
-conn.sendMessage('94761435341@s.whatsapp.net', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
-
-conn.sendMessage('94727488754@s.whatsapp.net', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
-
-conn.sendMessage('120363419789643430@g.us', { image: { url: `https://files.catbox.moe/jb9h77.jpg` }, caption: up })
-
 //==================================================================
 
 }
