@@ -1,4 +1,3 @@
-const bugres = '𝙋𝙧𝙤𝙘𝙘𝙚𝙨 👾'
 const config = require('../settings')
 const os = require('os')
 const fs = require('fs')
