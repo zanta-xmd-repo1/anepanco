@@ -8,8 +8,6 @@ const {
     default: makeWASocket,
     generateWAMessageFromContent,
     proto
-} = require('@whiskeysockets/baileys')
-
 
 cmd({
     pattern: "zanta1",
