@@ -1,225 +1,105 @@
-const axios = require('axios')
-const ytdl = require('yt-search')
-const yts = require('yt-search')
-const config = require('../settings')
-const os = require('os')
-const fs = require('fs')
-const prefix = config.PREFIX
-const { cmd, commands } = require('../lib/command')
-const devlopernumber = "94711453361"
-const { getBuffer, getGroupAdmins, getRandom, h2k, isUrl, Json, runtime, sleep, fetchJson,clockString, jsonformat} = require('../lib/functions')
-var { updateCMDStore,isbtnID,getCMDStore,getCmdForCmdId,connectdb,input,get, updb,updfb } = require("../lib/database")
-const {
-    default: makeWASocket,
-    generateWAMessageFromContent,
-    prepareWAMessageMedia,
-    proto
-} = require('@whiskeysockets/baileys')
+const { default: makeWASocket, useMultiFileAuthState, DisconnectReason, jidNormalizedUser, getContentType, fetchLatestBaileysVersion, generateWAMessageFromContent, prepareWAMessageMedia , downloadContentFromMessage,  generateWAMessageContent,proto, Browsers, jidDecode,  WAMessage, delay} = require('@whiskeysockets/baileys');
 
-
- function genMsgId() {
-  const prefix = "3EB";
-  const characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-  let randomText = prefix;
-
-  for (let i = prefix.length; i < 22; i++) {
-    const randomIndex = Math.floor(Math.random() * characters.length);
-    randomText += characters.charAt(randomIndex);
-  }
-
-  return randomText;
-} 
-
-const reportedMessages = {}
-//const isBan = banUser.includes(mek.sender)
-	    
-
-	
-var BOTOW = ''
-if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  උපපරිපාලක නොවේ !*"
-else BOTOW = "*You are not bot\'s owner or moderator !*"
-
+const config = require('../config');
+const {cmd , commands} = require('../command');
+const axios = require('axios');
 
 cmd({
-  pattern: "song",
-  alias: ["mp3", "ytmp3"],
-  react: '🎧',
-  desc: "Download audio from YouTube",
-  category: "music",
-  use: ".song <song name>",
-  filename: __filename
-}, async (conn, mek, msg, { from, args, reply, location, userTime, pushname }) => {
-  try {
-    if (!args.length) {
-      await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-      return reply("Please provide a song name. Example: .song Moye Moye");
-    }
+    pattern: "tiks",
+    desc: "Search TikTok videos",
+    use: "<query>",
+    category: "search",
+    react: "📱",
+    filename: __filename
+},
+async (conn, mek, m, { from, quoted, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply }) => {
+    let text = q;
+    if (!text) return conn.sendMessage(from, { text: '[❗] What do you want to search on TikTok?' }, { quoted: mek });
 
-    await conn.sendMessage(from, { react: { text: '🎧', key: mek.key } });
-
-    // Search for the song on YouTube
-    const query = args.join(" ");
-    const searchResults = await yts(query);
-    if (!searchResults.videos.length) {
-      await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-      return reply("❌ No results found.");
-    }
-
-    const video = searchResults.videos[0];
-    const videoUrl = video.url;
-    const thumbnail = video.thumbnail;
-    const title = video.title;
-    const duration = video.timestamp;
-    const channel = video.author.name;
-
-    // Fetch MP3 download link using the API
-    const apiUrl = `https://apis.davidcyriltech.my.id/download/ytmp3?url=${videoUrl}`;
-    const response = await axios.get(apiUrl);
-
-    if (!response.data.success || !response.data.result.download_url) {
-      await conn.sendMessage(from, { react: { text: '❌', key: mek.key } });
-      return reply("❌ Failed to fetch the MP3 file.");
-    }
-
-    const mp3Url = response.data.result.download_url;
-
-    // Send song details with thumbnail
-    const captionText = `🎵 *'🎧DushanX-MD Song Downloader'🎧*\n\n
-👋 *►Hello❤️* ${pushname}\n
-📌 *►Tital:* ${title}\n
-⏳ *►Duration:* ${duration}\n
-📺 *►channel:* ${channel}\n
-🔗 *►Link:* ${videoUrl}\n
-
-*►1.Audio*
-*►2.Voice note*
-*►3.Document*
-
-*◄❪ Reply This Message With Nambars ❫►*
-
-*⚡ᴅᴜꜱʜᴀɴ x ᴍᴅ ʙᴏᴛ⚡*`;
-      
-
-const dula = `DUSHAN X MD`;
-
-    // Short message
-   // const shortMessage = `Here's your song, *${title}* 🎶 Enjoy!`;
-
+    try {
     
-   const vv = await conn.sendMessage(from, {
-      image: { url: thumbnail },
-      caption: captionText,
-     contextInfo: {
-        forwardingScore: 999,
-        isForwarded: true,
-        forwardedNewsletterMessageInfo: {
-            newsletterName: config.CHANNEL_NAME,
-            newsletterJid: config.NEWSLETTER_ID,
-        }
-     }
-    }, { quoted: mek });
 
-
-      
-    
-        conn.ev.on('messages.upsert', async (msgUpdate) => {
-            const msg = msgUpdate.messages[0];
-            if (!msg.message || !msg.message.extendedTextMessage) return;
-
-            const selectedOption = msg.message.extendedTextMessage.text.trim();
-
-            if (msg.message.extendedTextMessage.contextInfo && msg.message.extendedTextMessage.contextInfo.stanzaId === vv.key.id) {
-                switch (selectedOption) {
-                    case '1':
-                  //  const response = await axios.get(apiUrl);
-
-                    //const mp3Url = response.data.result.download_url;
-
-    await conn.sendMessage(from, {
-  audio: { url: mp3Url },
-  mimetype: 'audio/mpeg',
-  ptt: false, // Standard audio message
-  fileName: `${title}.mp3`,
-  contextInfo: {
-    forwardingScore: 999,
-    isForwarded: true,
-    externalAdReply: {
-      title: config.TITLE,
-      body: config.BODY,
-      thumbnailUrl: config.MENU_IMG, // image -> thumbnailUrl
-      sourceUrl: config.WEBURL,
-      mediaType: 1,
-      renderLargerThumbnail: true
-    }
-  }
-}, { quoted: mek });
-break;
-                     case '2':  
-                  //  const response = await axios.get(apiUrl);
-
-                   // const mp3Url = response.data.result.download_url;
-
-      await conn.sendMessage(from, {
-      audio: { url: mp3Url },
-      mimetype: 'audio/mpeg',
-      ptt: true,   // This makes it a voice note
-      fileName: `${title}.mp3` ,
-        contextInfo: {
-    forwardingScore: 999,
-    isForwarded: true,
-    externalAdReply: {
-      title: config.TITLE,
-      body: config.BODY,
-      thumbnailUrl: config.MENU_IMG, // image -> thumbnailUrl
-      sourceUrl: config.WEBURL,
-      mediaType: 1,
-      renderLargerThumbnail: false
-    }
-  }
-}, { quoted: mek });
-break;
-                    case '3':  
-                    //const response = await axios.get(apiUrl);
-
-                    //const mp3Url = response.data.result.download_url;
-
-    await conn.sendMessage(from, {
-      document: { url: mp3Url },
-      mimetype: 'audio/mpeg',
-      fileName: `${title}.mp3` ,
-      contextInfo: {
-    forwardingScore: 999,
-    isForwarded: true,
-    externalAdReply: {
-      title: config.TITLE,
-      body: config.BODY,
-      thumbnailUrl: config.MENU_IMG, // image -> thumbnailUrl
-      sourceUrl: config.WEBURL,
-      mediaType: 1,
-      renderLargerThumbnail: true
-    }
-  }
-}, { quoted: mek });
-                    default:
-                        reply(" ");
-
-                
+        
+        
+        let response = await tiktokSearch(text);
+        if (!response.status) throw new Error(response.result);
+        let searchResults = response.result;
+        shuffleArray(searchResults);
+        let selectedResults = searchResults.slice(0, 7);
+        let videoMessages = await Promise.all(selectedResults.map(result => createVideoMessage(result.videoUrl, conn)));
+        let results = videoMessages.map((videoMessage, index) => ({
+            body: proto.Message.InteractiveMessage.Body.fromObject({ text: '' }),
+            footer: proto.Message.InteractiveMessage.Footer.fromObject({ text: `*DUSHANX X MD ` }),
+            header: proto.Message.InteractiveMessage.Header.fromObject({
+                title: selectedResults[index].description, hasMediaAttachment: true, videoMessage: videoMessage
+            }),
+            nativeFlowMessage: proto.Message.InteractiveMessage.NativeFlowMessage.fromObject({ buttons: [                            {
+                        name: "quick_reply",
+                        buttonParamsJson: JSON.stringify({
+                            display_text: "Audio",
+                            id: ".play lelena",
+                        }),
+                    },] })
+        }));
+        const responseMessage = generateWAMessageFromContent(from, {
+            viewOnceMessage: {
+                message: {
+                    messageContextInfo: {
+                        deviceListMetadata: {},
+                        deviceListMetadataVersion: 2
+                    },
+                    interactiveMessage: proto.Message.InteractiveMessage.fromObject({
+                        body: proto.Message.InteractiveMessage.Body.create({ text: `*ᴅᴜꜱʜᴀɴ x ᴍᴅ ᴛɪᴋᴛᴏᴋ ꜱᴇᴀʀᴄʜ**\n📌 *ꜱᴇᴀʀᴄʜᴇᴅ ᴛᴇxᴛ::* ${text}\n📈 *ʀᴇꜱᴜʟᴛꜱ ᴏʙᴛᴀɪɴᴇᴅ:*` }),
+                        footer: proto.Message.InteractiveMessage.Footer.create({ text: '' }),
+                        header: proto.Message.InteractiveMessage.Header.create({ hasMediaAttachment: false }),
+                        carouselMessage: proto.Message.InteractiveMessage.CarouselMessage.fromObject({ cards: results })
+                    })
                 }
+            }
+        }, { quoted: mek });
+        await conn.relayMessage(from, responseMessage.message, { messageId: responseMessage.key.id });
+    } catch (error) {
+        await conn.sendMessage(from, { text: error.toString() }, { quoted: mek });
+    }
+});
 
+async function tiktokSearch(query) {
+    try {
+        const response = await axios.post("https://tikwm.com/api/feed/search", new URLSearchParams({ keywords: query, count: '10', cursor: '0', HD: '1' }), {
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded; charset=UTF-8",
+                Cookie: "current_language=en",
+                "User-Agent": "Mozilla/5.0 (Linux Android 10 K) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Mobile Safari/537.36",
             }
         });
+        const videos = response.data.data.videos;
+        if (videos.length === 0) return { status: false, result: "No videos found." };
+        return {
+            status: true,
+            result: videos.map(v => ({
+                description: v.title ? v?.title : "No description",
+                videoUrl: v.play ? v.play : "No URL"
+            }))
+        };
+    } catch (error) {
+        return { status: false, result: error.message };
+    }
+}
 
-  } catch (error) {
-    console.error("Error:", error);
-     // Send the error to bot owner (94765)
-    const errorMessage = `🚨 *Bot Error Alert!*\n\n`
-      + `📌 *Command:* .song\n`
-      + `👤 *User:* ${pushname}\n`
-      + `📍 *Group/Chat:* ${from}\n`
-      + `⏳ *Time:* ${new Date().toLocaleString()}\n\n`
-      + `💢 *Error:* ${error.message}\n`
-      + `📜 *Stack Trace:* ${error.stack ? error.stack.split("\n")[0] : "N/A"}`;
+async function createVideoMessage(url, conn) {
+    try {
+        const response = await axios.get(url, { responseType: 'arraybuffer' });
+        const buffer = response.data;
+        const { videoMessage } = await generateWAMessageContent({ video: buffer }, { upload: conn.waUploadToServer });
+        return videoMessage;
+    } catch (error) {
+        throw new Error(`Error creating video message: ${error.message}`);
+    }
+}
 
-    await conn.sendMessage("94767881838s.whatsapp.net", { text: errorMessage });
-  }
-});
+function shuffleArray(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+          }
