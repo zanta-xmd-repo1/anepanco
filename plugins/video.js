@@ -1,7 +1,4 @@
-const axios = require('axios');
-const ytdl = require('yt-search');
-const yts = require('yt-search')
-const config = require('../settings')
+
 const os = require('os')
 const fs = require('fs')
 const prefix = config.PREFIX
