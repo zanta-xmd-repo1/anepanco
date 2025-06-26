@@ -1,8 +1,8 @@
 const config = require('../config');
 const axios = require('axios');
 const ytdl = require('yt-search');
-const yts = require('yt-search')
-const config = require('../settings')
+const yts = require('yt-search');
+const config = require('../settings');
 
 cmd({
   pattern: "song",
