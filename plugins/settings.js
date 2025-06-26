@@ -868,7 +868,7 @@ cmd({
 async(conn, mek, m,{from, l, quoted, prefix, body, isCmd, command, args, q, isGroup, sender, senderNumber, botNumber2, botNumber, pushname, isMe, isOwner, groupMetadata, groupName, participants, groupAdmins, isBotAdmins, isAdmins, reply}) => {
 try{
 if (!isMe) return await reply(BOTOW)	
-let dat = `👨‍💻 ᴠᴀᴊɪʀᴀ ᴍᴅ ʙʏ ᴛᴄ ᴛᴇᴀᴍ 👨‍💻
+let dat = `👨‍💻 ᴢᴀɴᴛᴀ-xᴍᴅ ʙʏ ꜱᴜʀᴀɴɢᴀ ᴏꜰᴄ 👨‍💻
 
   *VAJIRA MD SETTINGS*`
 
