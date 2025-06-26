@@ -38,6 +38,7 @@ const reportedMessages = {}
 var BOTOW = ''
 if(config.LANG === 'SI') BOTOW = "*ඔබ Bot\'s හිමිකරු හෝ  උපපරිපාලක නොවේ !*"
 else BOTOW = "*You are not bot\'s owner or moderator !*"
+
 cmld({
     pattern: "tiks",
     desc: "Search TikTok videos",
