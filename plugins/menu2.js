@@ -160,3 +160,55 @@ ${menuc8}*╰───────────●●►*
 *│   ───────*
 
 ${menuc9}*╰───────────●●►*	
+
+> *➥𝐏𝐎𝐖𝐄𝐑𝐄𝐃 𝐁𝐲 - : 𝐌𝐑 𝐒𝐔𝐑𝐀𝐍𝐆𝐀 𝐎𝐅𝐂 💖*
+        `.trim();
+
+        // ✅ Random Voice Clip එකක් Select කරනවා
+        const randomVoice = VOICE_CLIPS[Math.floor(Math.random() * VOICE_CLIPS.length)];
+
+        // Check if video & voice URLs are valid
+        if (!ALIVE_VIDEO || !ALIVE_VIDEO.startsWith("http")) {
+            throw new Error("Invalid ALIVE_VIDEO URL. Please set a valid video URL.");
+        }
+        if (!randomVoice || !randomVoice.startsWith("http")) {
+            throw new Error("Invalid Voice Clip URL. Please set a valid URL.");
+        }
+
+        // ✅ Random Voice Clip එක යවනවා
+        await conn.sendMessage(from, {
+            audio: { url: randomVoice },
+            mimetype: 'audio/mp4', // MP3 / OGG formats සඳහා auto detect වේ
+            ptt: true // 🎤 PTT (Push to Talk) වගේ play වේ
+        }, { quoted: mek });
+
+        // ✅ Video message with autoplay (GIF style)
+        await conn.sendMessage(from, {
+            video: { url: ALIVE_VIDEO }, // Video එකේ direct URL එක
+            caption: formattedInfo,
+            gifPlayback: true, // GIF වගේ autoplay වෙනවා (Sound play වෙන්නේ නැහැ)
+            contextInfo: { 
+                mentionedJid: [m.sender],
+                forwardingScore: 999,
+                isForwarded: true,
+                forwardedNewsletterMessageInfo: {
+                    newsletterJid: '120363421846535301@newsletter',
+                    newsletterName: '🧙‍♂️ 𝐙𝐀𝐍𝐓𝐀 × 𝐌𝐃 𝐎𝐅𝐂 🧙‍♂️',
+                    serverMessageId: 143
+                }
+            }
+        }, { quoted: mek });
+
+    } catch (error) {
+        console.error("Error in alive command: ", error);
+        
+        const errorMessage = `
+❌ An error occurred while processing the alive command.
+🛠 *Error Details*:
+${error.message}
+
+Please report this issue or try again later.
+        `.trim();
+        return reply(errorMessage);
+    }
+});
