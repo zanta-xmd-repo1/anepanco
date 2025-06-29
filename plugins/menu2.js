@@ -1,3 +1,32 @@
+const { cmd } = require("../command");
+const moment = require("moment");
+
+let botStartTime = Date.now(); // Bot start time record
+
+// ✅ Random Voice Clips List එක
+const VOICE_CLIPS = [
+    "https://files.catbox.moe/r4r0hz.mp3",
+    "https://files.catbox.moe/3pzzgr.mp3",
+    "https://files.catbox.moe/qvpa5o.mp3",
+    "https://files.catbox.moe/y29b3n.mp3",
+    "https://files.catbox.moe/w7yg8f.mp3",
+    "https://files.catbox.moe/4rm2fz.mp3",
+    "https://files.catbox.moe/gr8wlt.mp3",
+    "https://files.catbox.moe/xvue61.mp3",
+    "https://files.catbox.moe/uosvov.mp3",
+    "https://files.catbox.moe/2vgkwr.mp3",
+    "https://files.catbox.moe/gqw8fl.m4a",
+    "https://files.catbox.moe/mc5r2s.mp3",
+    "https://files.catbox.moe/ck4reh.mp3",
+    "https://files.catbox.moe/ypbfyt.mp3",
+    "https://files.catbox.moe/75p1zt.mp3",
+    "https://files.catbox.moe/rd21pi.mp3",
+    "https://files.catbox.moe/ggebie.mp3",
+    "https://files.catbox.moe/r4r0hz.mp3"
+];
+
+const ALIVE_VIDEO = "https://files.catbox.moe/52py80.mp4"; // මෙතැන valid MP4 video link එකක් දාන්න
+
 cmd({
     pattern: "menu2",
     react: "📂",
