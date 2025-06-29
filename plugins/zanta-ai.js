@@ -3,8 +3,8 @@ const axios = require("axios");
 const fs = require("fs");
 
 cmd({
-  pattern: "fluxai2",
-  alias: ["aiflux2", "imagine2"],
+  pattern: "zanta ai",
+  alias: ["ia image", "logo"],
   react: "🚀",
   desc: "Generate an image using AI.",
   category: "main",
